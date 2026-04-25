@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hướng Dẫn Cài Đặt Tracking — Sata Robo</title>
+<style>
+:root{--p:#6B21A8;--p2:#7C3AED;--gold:#F59E0B;--green:#10B981;--red:#EF4444;--dark:#0F0A1E;--gray:#6B7280}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8f9fa;color:#1f2937;line-height:1.7}
+.header{background:linear-gradient(135deg,var(--dark),#1e0a3c);color:#fff;padding:40px 20px;text-align:center}
+.header h1{font-size:clamp(22px,4vw,36px);font-weight:900;margin-bottom:8px}
+.header p{color:rgba(255,255,255,.7);font-size:15px}
+.container{max-width:900px;margin:0 auto;padding:40px 20px}
+/* Nav tabs */
+.nav-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;background:#fff;
+  padding:12px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.nav-tab{padding:9px 18px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;
+  border:none;background:transparent;color:var(--gray);transition:.25s}
+.nav-tab.active{background:var(--p);color:#fff}
+.nav-tab:hover:not(.active){background:#f3e8ff;color:var(--p)}
+/* Sections */
+.section{display:none;background:#fff;border-radius:16px;padding:32px;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:24px}
+.section.active{display:block}
+/* Steps */
+.step{display:flex;gap:16px;margin-bottom:24px;padding-bottom:24px;
+  border-bottom:1px solid #f3f4f6}
+.step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.step-num{width:36px;height:36px;background:linear-gradient(135deg,var(--p),var(--p2));
+  color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:16px;flex-shrink:0}
+.step-content{}
+.step-title{font-weight:800;font-size:16px;color:#111;margin-bottom:8px}
+.step-desc{font-size:14px;color:#4b5563;line-height:1.75;margin-bottom:12px}
+/* Code blocks */
+pre{background:#0f0a1e;color:#e2e8f0;padding:20px;border-radius:10px;
+  font-size:13px;overflow-x:auto;margin:12px 0;line-height:1.7;position:relative}
+code{font-family:'Consolas','Monaco',monospace}
+.code-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--gray);margin-bottom:6px;display:block}
+/* Highlight */
+.hi{color:#a78bfa} .hi2{color:#34d399} .hi3{color:#fbbf24} .hi4{color:#f87171}
+/* Copy button */
+.copy-btn{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 12px;border-radius:6px;
+  font-size:11px;font-weight:700;cursor:pointer;transition:.25s}
+.copy-btn:hover{background:rgba(255,255,255,.2)}
+/* Alerts */
+.alert{padding:14px 18px;border-radius:10px;font-size:14px;margin:14px 0;line-height:1.7}
+.alert-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.alert-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.alert-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.alert-danger{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+/* Tags */
+.tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:11px;
+  font-weight:700;margin-left:8px}
+.tag-req{background:#fef2f2;color:#991b1b}
+.tag-opt{background:#f0fdf4;color:#166534}
+/* Result row */
+.result-row{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:#f9fafb;border-radius:8px;margin:6px 0;font-size:14px}
+.result-icon{font-size:18px}
+/* Table */
+table{width:100%;border-collapse:collapse;margin:14px 0}
+th{background:#f3f4f6;padding:10px 14px;text-align:left;font-size:13px;font-weight:700;color:#374151}
+td{padding:10px 14px;font-size:13px;color:#4b5563;border-bottom:1px solid #f3f4f6}
+tr:hover td{background:#f9fafb}
+/* Badge */
+.badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.badge-p{background:#f3e8ff;color:var(--p)}
+.badge-gold{background:#fef3c7;color:#92400e}
+.badge-green{background:#f0fdf4;color:#166534}
+/* Section title */
+.section-title{font-size:22px;font-weight:900;color:#111;margin-bottom:6px}
+.section-sub{font-size:14px;color:var(--gray);margin-bottom:24px}
+hr{border:none;border-top:1px solid #f3f4f6;margin:24px 0}
+@media(max-width:600px){.step{flex-direction:column}.step-num{align-self:flex-start}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="font-size:36px;margin-bottom:12px">🛠️</div>
+  <h1>Hướng Dẫn Cài Đặt Tracking<br>Sata Robo Landing Page</h1>
+  <p>Google Sheets · Facebook Pixel · Google Analytics GA4</p>
+  <p style="margin-top:8px;font-size:13px;color:rgba(255,255,255,.5)">File: sp2-offline_landing_v2.html · Phiên bản 2.0</p>
+</div>
+
+<div class="container">
+
+  <!-- NAV TABS -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('sheets')">📊 Google Sheets</button>
+    <button class="nav-tab" onclick="showSection('pixel')">📘 Facebook Pixel</button>
+    <button class="nav-tab" onclick="showSection('ga4')">📈 Google Analytics GA4</button>
+    <button class="nav-tab" onclick="showSection('test')">✅ Kiểm Tra & Test</button>
+  </div>
+
+  <!-- ════ SECTION 1: GOOGLE SHEETS ════ -->
+  <div id="sec-sheets" class="section active">
+    <div class="section-title">📊 Kết Nối Google Sheets</div>
+    <div class="section-sub">Lưu thông tin đăng ký của phụ huynh vào Google Sheets tự động qua Google Apps Script.</div>
+
+    <div class="alert alert-info">
+      ℹ️ <strong>Cách hoạt động:</strong> Phụ huynh điền form → Web gọi Apps Script → Apps Script lưu vào Sheet.
+      Không cần server, không cần database — hoàn toàn miễn phí.
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Mở Google Sheet của bạn</div>
+        <div class="step-desc">
+          Mở link Google Sheet đã cung cấp:
+          <a href="https://docs.google.com/spreadsheets/d/1sN0s_l71m9SrAm8hzdUmJEnsRM23FZuUJOFCbUSIAx0/edit" target="_blank" style="color:var(--p);font-weight:700">
+            📊 Mở Google Sheet →
+          </a><br>
+          Đảm bảo bạn đã đăng nhập bằng tài khoản Google có quyền chỉnh sửa sheet này.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Mở Apps Script Editor</div>
+        <div class="step-desc">
+          Trong Google Sheet, click vào menu: <strong>Extensions (Tiện ích mở rộng)</strong> → <strong>Apps Script</strong><br>
+          Một cửa sổ mới sẽ mở ra. Xóa toàn bộ code mặc định trong editor.
+        </div>
+        <div class="alert alert-warn">
+          ⚠️ Nếu không thấy menu "Extensions", Sheet có thể đang ở chế độ xem. Nhấn nút "Open in Sheets" hoặc "Edit" để vào chế độ chỉnh sửa.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Dán code Apps Script</div>
+        <div class="step-desc">Copy toàn bộ đoạn code dưới đây và dán vào Apps Script Editor:</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="hi3">// Sata Robo — Google Sheets Integration</span>
+<span class="hi3">// Sheet ID: 1sN0s_l71m9SrAm8hzdUmJEnsRM23FZuUJOFCbUSIAx0</span>
+
+<span class="hi">function</span> <span class="hi2">doPost</span>(e) {
+  <span class="hi">try</span> {
+    <span class="hi3">// Mở Sheet đầu tiên</span>
+    <span class="hi">var</span> ss = SpreadsheetApp.openById(
+      <span class="hi4">'1sN0s_l71m9SrAm8hzdUmJEnsRM23FZuUJOFCbUSIAx0'</span>
+    );
+    <span class="hi">var</span> sheet = ss.getSheets()[<span class="hi4">0</span>];
+
+    <span class="hi3">// Tạo header nếu sheet trống</span>
+    <span class="hi">if</span> (sheet.getLastRow() === <span class="hi4">0</span>) {
+      sheet.appendRow([
+        <span class="hi4">'Thời gian'</span>, <span class="hi4">'Họ và tên'</span>, <span class="hi4">'Điện thoại'</span>,
+        <span class="hi4">'Email'</span>, <span class="hi4">'Cơ sở'</span>, <span class="hi4">'Khóa học'</span>
+      ]);
+      <span class="hi3">// Format header row</span>
+      sheet.getRange(<span class="hi4">1</span>, <span class="hi4">1</span>, <span class="hi4">1</span>, <span class="hi4">6</span>).setFontWeight(<span class="hi4">'bold'</span>)
+        .setBackground(<span class="hi4">'#6B21A8'</span>).setFontColor(<span class="hi4">'#ffffff'</span>);
+    }
+
+    <span class="hi3">// Parse data từ request</span>
+    <span class="hi">var</span> data = JSON.parse(e.postData.contents);
+
+    <span class="hi3">// Thêm row mới</span>
+    sheet.appendRow([
+      <span class="hi">new</span> Date().toLocaleString(<span class="hi4">'vi-VN'</span>, {timeZone:<span class="hi4">'Asia/Ho_Chi_Minh'</span>}),
+      data.name    || <span class="hi4">''</span>,
+      data.phone   || <span class="hi4">''</span>,
+      data.email   || <span class="hi4">''</span>,
+      data.center  || <span class="hi4">''</span>,
+      data.course  || <span class="hi4">''</span>
+    ]);
+
+    <span class="hi3">// Trả về success</span>
+    <span class="hi">return</span> ContentService
+      .createTextOutput(JSON.stringify({status:<span class="hi4">'ok'</span>}))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } <span class="hi">catch</span>(err) {
+    <span class="hi">return</span> ContentService
+      .createTextOutput(JSON.stringify({status:<span class="hi4">'error'</span>, msg: err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+<span class="hi3">// Test function — chạy thử trong editor</span>
+<span class="hi">function</span> <span class="hi2">testDoPost</span>() {
+  <span class="hi">var</span> mockEvent = {
+    postData: {
+      contents: JSON.stringify({
+        name: <span class="hi4">'Nguyễn Test'</span>,
+        phone: <span class="hi4">'0912345678'</span>,
+        email: <span class="hi4">'test@gmail.com'</span>,
+        center: <span class="hi4">'60 Lê Lợi'</span>,
+        course: <span class="hi4">'Ươm Mầm Tài Năng - Lớp 1–2'</span>
+      })
+    }
+  };
+  Logger.log(doPost(mockEvent));
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Chạy test thử (khuyến nghị)</div>
+        <div class="step-desc">
+          Trước khi deploy, test thử bằng cách:<br>
+          1. Chọn function <strong>testDoPost</strong> từ dropdown phía trên<br>
+          2. Nhấn nút <strong>▶ Run</strong><br>
+          3. Lần đầu chạy sẽ hỏi cấp quyền — chọn <strong>"Allow"</strong><br>
+          4. Kiểm tra Google Sheet xem có thêm dòng dữ liệu không
+        </div>
+        <div class="alert alert-success">✅ Nếu dòng dữ liệu xuất hiện trong Sheet → Apps Script hoạt động đúng. Tiếp tục bước 5.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Deploy Apps Script thành Web App</div>
+        <div class="step-desc">
+          1. Nhấn nút <strong>Deploy</strong> (góc phải trên) → <strong>New deployment</strong><br>
+          2. Nhấn biểu tượng ⚙️ (cài đặt) → chọn <strong>"Web app"</strong><br>
+          3. Điền thông tin:
+        </div>
+        <table>
+          <tr><th>Trường</th><th>Giá trị cần chọn</th></tr>
+          <tr><td>Description</td><td>Sata Robo Landing Page v2</td></tr>
+          <tr><td>Execute as</td><td><strong>Me</strong> (tài khoản Google của bạn)</td></tr>
+          <tr><td>Who has access</td><td><strong>Anyone</strong> ← Bắt buộc phải chọn này!</td></tr>
+        </table>
+        <div class="alert alert-danger">
+          🚨 <strong>Bắt buộc chọn "Anyone"</strong> cho "Who has access". Nếu chọn sai, landing page sẽ không gửi được dữ liệu vào Sheet.
+        </div>
+        <div class="step-desc" style="margin-top:12px">
+          5. Nhấn <strong>Deploy</strong><br>
+          6. Copy <strong>Web app URL</strong> — dạng: <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px">https://script.google.com/macros/s/AKfycb.../exec</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <div class="step-title">Cập nhật SCRIPT_URL vào HTML</div>
+        <div class="step-desc">Mở file <strong>sp2-offline_landing_v2.html</strong> bằng Notepad, VS Code hoặc bất kỳ text editor nào. Tìm dòng:</div>
+        <pre><code><span class="hi">var</span> SCRIPT_URL = <span class="hi4">'YOUR_GOOGLE_APPS_SCRIPT_URL'</span>;</code></pre>
+        <div class="step-desc">Thay bằng URL vừa copy:</div>
+        <pre><code><span class="hi">var</span> SCRIPT_URL = <span class="hi4">'https://script.google.com/macros/s/AKfycb.../exec'</span>;</code></pre>
+        <div class="alert alert-success">✅ Lưu file và reload trên browser. Form đăng ký giờ đây sẽ lưu dữ liệu vào Google Sheets!</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <div class="step-title">Cấu hình Sheet nhận thông báo email (tùy chọn)</div>
+        <div class="step-desc">
+          Để nhận email mỗi khi có đăng ký mới, thêm đoạn code này vào Apps Script ngay sau <code>sheet.appendRow(...)</code>:
+        </div>
+        <pre><code><span class="hi3">// Gửi email thông báo</span>
+MailApp.sendEmail({
+  to: <span class="hi4">'satarobo@gmail.com'</span>, <span class="hi3">// Email nhận thông báo</span>
+  subject: <span class="hi4">'[Sata Robo] Đăng ký mới: '</span> + data.name,
+  body: [
+    <span class="hi4">'Phụ huynh: '</span> + data.name,
+    <span class="hi4">'Điện thoại: '</span> + data.phone,
+    <span class="hi4">'Email: '</span> + data.email,
+    <span class="hi4">'Cơ sở: '</span> + data.center,
+    <span class="hi4">'Khóa học: '</span> + data.course,
+    <span class="hi4">'Thời gian: '</span> + <span class="hi">new</span> Date().toLocaleString(<span class="hi4">'vi-VN'</span>)
+  ].join(<span class="hi4">'\n'</span>)
+});</code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════ SECTION 2: FACEBOOK PIXEL ════ -->
+  <div id="sec-pixel" class="section">
+    <div class="section-title">📘 Facebook Pixel & Retargeting</div>
+    <div class="section-sub">Theo dõi khách truy cập để chạy quảng cáo bám đuổi (retargeting) trên Facebook/Instagram.</div>
+
+    <div class="alert alert-info">
+      ℹ️ <strong>Pixel hoạt động thế nào?</strong> Pixel theo dõi ai đã vào web nhưng chưa đăng ký → cho phép bạn chạy quảng cáo hiển thị lại cho đúng những người đó trên Facebook/Instagram.
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Tạo Facebook Pixel</div>
+        <div class="step-desc">
+          1. Vào <a href="https://business.facebook.com" target="_blank" style="color:var(--p)">Facebook Business Manager</a><br>
+          2. Menu trái → <strong>Events Manager</strong><br>
+          3. Nhấn <strong>+ Connect Data Sources</strong> → <strong>Web</strong> → <strong>Next</strong><br>
+          4. Chọn <strong>Facebook Pixel</strong> → đặt tên (vd: <em>Sata Robo Landing</em>) → <strong>Create Pixel</strong><br>
+          5. Chọn <strong>"Add code manually"</strong><br>
+          6. Copy đoạn code Base Code (dạng <code>!function(f,b,e,v...</code>)
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Dán Pixel code vào HTML</div>
+        <div class="step-desc">Mở file HTML, tìm đoạn comment này trong thẻ &lt;head&gt;:</div>
+        <pre><code><span class="hi3">&lt;!-- [FACEBOOK PIXEL - BẮT ĐẦU] --&gt;</span>
+<span class="hi3">&lt;!-- !function(f,b,e,v ...</span>
+<span class="hi3">fbq('init', 'THAY_BANG_PIXEL_ID_CUA_BAN'); --&gt;</span>
+<span class="hi3">&lt;!-- [FACEBOOK PIXEL - KẾT THÚC] --&gt;</span></code></pre>
+        <div class="step-desc" style="margin-top:12px">Bỏ dấu comment (xóa <code>&lt;!-- </code> và <code>--&gt;</code>) và thay <code>THAY_BANG_PIXEL_ID_CUA_BAN</code> bằng Pixel ID thật:</div>
+        <pre><code><span class="hi3">&lt;!-- [FACEBOOK PIXEL - BẮT ĐẦU] --&gt;</span>
+<span class="hi">&lt;script&gt;</span>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){
+  n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+  s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', <span class="hi4">'123456789012345'</span>); <span class="hi3">// ← Thay bằng Pixel ID thật</span>
+  fbq('track', 'PageView');
+<span class="hi">&lt;/script&gt;</span>
+<span class="hi3">&lt;!-- [FACEBOOK PIXEL - KẾT THÚC] --&gt;</span></code></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Các sự kiện đã được tích hợp sẵn</div>
+        <div class="step-desc">Landing page đã tự động gửi các sự kiện sau khi phụ huynh đăng ký:</div>
+        <table>
+          <tr><th>Sự kiện</th><th>Khi nào kích hoạt</th><th>Dùng để</th></tr>
+          <tr><td><code>PageView</code></td><td>Khi mở trang</td><td>Retargeting tất cả người truy cập</td></tr>
+          <tr><td><code>Lead</code></td><td>Sau khi đăng ký thành công</td><td>Tối ưu chiến dịch tìm khách tương tự</td></tr>
+        </table>
+        <div class="alert alert-success">
+          ✅ Code sự kiện Lead đã có sẵn trong HTML — hoạt động ngay khi bạn thêm Pixel ID đúng.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Xác minh Pixel hoạt động</div>
+        <div class="step-desc">
+          1. Cài extension <a href="https://chrome.google.com/webstore/detail/facebook-pixel-helper" target="_blank" style="color:var(--p)">Facebook Pixel Helper</a> cho Chrome<br>
+          2. Mở landing page → icon Pixel Helper sẽ hiện màu xanh nếu Pixel hoạt động<br>
+          3. Trong Events Manager → <strong>Test Events</strong> → nhập URL trang để test real-time
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Tạo Custom Audience để retargeting</div>
+        <div class="step-desc">
+          Vào Facebook Ads Manager → <strong>Audiences</strong> → <strong>Create Audience</strong> → <strong>Custom Audience</strong> → <strong>Website</strong><br>
+          Tạo các nhóm audience:
+        </div>
+        <table>
+          <tr><th>Tên Audience</th><th>Điều kiện</th><th>Dùng để</th></tr>
+          <tr><td>Sata - All Visitors</td><td>Tất cả người vào web (30 ngày)</td><td>Retarget chung</td></tr>
+          <tr><td>Sata - Leads</td><td>Sự kiện Lead (90 ngày)</td><td>Lookalike audience</td></tr>
+          <tr><td>Sata - No Lead</td><td>Vào web NHƯNG không có Lead</td><td>Retarget chưa đăng ký</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ SECTION 3: GOOGLE ANALYTICS ════ -->
+  <div id="sec-ga4" class="section">
+    <div class="section-title">📈 Google Analytics 4 (GA4)</div>
+    <div class="section-sub">Phân tích hành vi người dùng, nguồn traffic, tỷ lệ chuyển đổi và hiệu quả từng kênh.</div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Tạo tài sản GA4</div>
+        <div class="step-desc">
+          1. Vào <a href="https://analytics.google.com" target="_blank" style="color:var(--p)">Google Analytics</a><br>
+          2. Nhấn <strong>Admin</strong> (bánh răng) → <strong>Create Property</strong><br>
+          3. Đặt tên: <em>Sata Robo Landing SP2</em><br>
+          4. Timezone: <strong>Vietnam (GMT+7)</strong><br>
+          5. Currency: <strong>Vietnamese Dong (VND)</strong><br>
+          6. Nhấn <strong>Next</strong> → chọn <strong>Web</strong> → Nhập URL trang web<br>
+          7. Copy <strong>Measurement ID</strong> (dạng: <code>G-XXXXXXXXXX</code>)
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Dán GA4 code vào HTML</div>
+        <div class="step-desc">Tìm đoạn comment trong &lt;head&gt;:</div>
+        <pre><code><span class="hi3">&lt;!-- [GOOGLE ANALYTICS GA4 - BẮT ĐẦU] --&gt;</span>
+<span class="hi3">&lt;!-- &lt;script async src="...G-THAY_BANG_MA_GA4"&gt;&lt;/script&gt; --&gt;</span>
+<span class="hi3">&lt;!-- [GOOGLE ANALYTICS GA4 - KẾT THÚC] --&gt;</span></code></pre>
+        <div class="step-desc" style="margin-top:12px">Bỏ comment và thay Measurement ID thật:</div>
+        <pre><code><span class="hi3">&lt;!-- [GOOGLE ANALYTICS GA4 - BẮT ĐẦU] --&gt;</span>
+<span class="hi">&lt;script</span> async src=<span class="hi4">"https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"</span><span class="hi">&gt;&lt;/script&gt;</span>
+<span class="hi">&lt;script&gt;</span>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag(<span class="hi4">'js'</span>, new Date());
+  gtag(<span class="hi4">'config'</span>, <span class="hi4">'G-XXXXXXXXXX'</span>); <span class="hi3">// ← Thay bằng Measurement ID thật</span>
+<span class="hi">&lt;/script&gt;</span>
+<span class="hi3">&lt;!-- [GOOGLE ANALYTICS GA4 - KẾT THÚC] --&gt;</span></code></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Sự kiện GA4 đã tích hợp sẵn</div>
+        <div class="step-desc">Khi phụ huynh đăng ký thành công, sự kiện sau được gửi tự động:</div>
+        <pre><code>gtag(<span class="hi4">'event'</span>, <span class="hi4">'generate_lead'</span>, {
+  course_name: <span class="hi4">'Tên khóa học đã chọn'</span>,
+  center: <span class="hi4">'Cơ sở đã chọn'</span>
+});</code></pre>
+        <div class="step-desc" style="margin-top:12px">
+          Để xem trong GA4: <strong>Reports → Engagement → Events</strong> → tìm <strong>generate_lead</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Thiết lập Conversion trong GA4</div>
+        <div class="step-desc">
+          1. Vào GA4 → <strong>Admin</strong> → <strong>Events</strong><br>
+          2. Tìm event <strong>generate_lead</strong><br>
+          3. Bật nút <strong>"Mark as conversion"</strong><br>
+          4. Sau 24-48h sẽ thấy trong <strong>Reports → Conversions</strong>
+        </div>
+        <div class="alert alert-success">
+          ✅ Khi đã mark conversion, Google Ads sẽ tự tối ưu chiến dịch để tìm đúng người có khả năng đăng ký cao nhất.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Dashboard báo cáo khuyến nghị</div>
+        <div class="step-desc">Các báo cáo quan trọng cần theo dõi:</div>
+        <table>
+          <tr><th>Báo cáo</th><th>Vị trí trong GA4</th><th>Dùng để</th></tr>
+          <tr><td>Users by Source</td><td>Reports → Acquisition</td><td>Biết traffic đến từ đâu (Facebook, Zalo, Google...)</td></tr>
+          <tr><td>Landing Page</td><td>Reports → Engagement → Landing page</td><td>Tỷ lệ bounced rate</td></tr>
+          <tr><td>Conversions</td><td>Reports → Conversions</td><td>Số người đăng ký mỗi ngày</td></tr>
+          <tr><td>Real-time</td><td>Reports → Real-time</td><td>Theo dõi trực tiếp khi chạy ads</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ SECTION 4: TEST ════ -->
+  <div id="sec-test" class="section">
+    <div class="section-title">✅ Kiểm Tra & Test Toàn Bộ Hệ Thống</div>
+    <div class="section-sub">Checklist hoàn chỉnh để đảm bảo mọi thứ hoạt động trước khi chạy quảng cáo.</div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Test Google Sheets</div>
+        <div class="step-desc">
+          1. Mở landing page trên browser<br>
+          2. Điền form với thông tin test: Tên = "Test ABC", SĐT = "0900000001"<br>
+          3. Nhấn "Đăng Ký" — đợi trang cảm ơn hiện lên<br>
+          4. Mở Google Sheet → kiểm tra có dòng dữ liệu mới không<br>
+        </div>
+        <div class="result-row"><div class="result-icon">✅</div><div>Dòng dữ liệu xuất hiện trong Sheet → <strong>THÀNH CÔNG</strong></div></div>
+        <div class="result-row"><div class="result-icon">❌</div><div>Không có dòng dữ liệu → Kiểm tra SCRIPT_URL trong HTML (có thể chưa thay placeholder)</div></div>
+        <div class="result-row"><div class="result-icon">❌</div><div>Lỗi CORS trong console → Đảm bảo Apps Script deploy với "Who has access: Anyone"</div></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Test Trang Cảm Ơn & Redirect Zalo</div>
+        <div class="step-desc">
+          1. Sau khi submit form, trang cảm ơn hiện lên<br>
+          2. Đếm ngược từ 5 → 0 phải hiển thị đúng<br>
+          3. Khi countdown về 0 → <strong>tự động mở nhóm Zalo</strong><br>
+          4. Nút "Vào Nhóm Zalo Ngay" phải click được ngay lập tức<br>
+          5. Nút "Quay lại trang" phải đóng overlay và scroll về đầu trang
+        </div>
+        <div class="alert alert-info">
+          ℹ️ Trên điện thoại: Nếu app Zalo đã cài → sẽ mở thẳng app. Nếu chưa cài → mở web Zalo trên browser.
+          <br>Trên máy tính: Sẽ mở web Zalo trên browser.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Test Facebook Pixel</div>
+        <div class="step-desc">
+          1. Cài <a href="https://chrome.google.com/webstore/detail/facebook-pixel-helper" target="_blank" style="color:var(--p)">Facebook Pixel Helper</a> extension<br>
+          2. Mở landing page → icon Pixel Helper phải xanh<br>
+          3. Submit form → Pixel Helper phải hiện sự kiện "Lead"
+        </div>
+        <div class="result-row"><div class="result-icon">🟢</div><div>Icon xanh + "PageView" detected → Pixel cài đúng</div></div>
+        <div class="result-row"><div class="result-icon">🔴</div><div>Icon đỏ → Pixel ID sai hoặc code bị comment chưa bỏ</div></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Test Google Analytics GA4</div>
+        <div class="step-desc">
+          1. Mở GA4 → <strong>Reports → Real-time</strong><br>
+          2. Mở landing page trên tab khác → GA4 Real-time phải hiện "1 user"<br>
+          3. Submit form → trong Real-time phải hiện sự kiện <strong>generate_lead</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Test Responsive (Mobile)</div>
+        <div class="step-desc">
+          1. Chrome DevTools (F12) → Toggle Device Toolbar (Ctrl+Shift+M)<br>
+          2. Test các kích thước: iPhone SE (375px), iPhone 14 (390px), iPad (768px)<br>
+          3. Kiểm tra tiêu đề H1 không bị rớt chữ xấu<br>
+          4. Countdown lớn phải hiển thị gọn trên mobile<br>
+          5. Form điền được trên mobile không bị che keyboard
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <h3 style="font-size:18px;font-weight:800;color:#111;margin-bottom:16px">📋 Checklist Tổng Hợp</h3>
+    <table>
+      <tr><th>Hạng mục</th><th>Trạng thái</th></tr>
+      <tr><td>SCRIPT_URL đã thay vào HTML</td><td><span class="badge badge-p">Cần làm</span></td></tr>
+      <tr><td>Apps Script deploy với "Anyone"</td><td><span class="badge badge-p">Cần làm</span></td></tr>
+      <tr><td>Test form → Sheet có data</td><td><span class="badge badge-p">Cần test</span></td></tr>
+      <tr><td>Facebook Pixel ID đã thay</td><td><span class="badge badge-p">Cần làm</span></td></tr>
+      <tr><td>GA4 Measurement ID đã thay</td><td><span class="badge badge-p">Cần làm</span></td></tr>
+      <tr><td>Test Pixel Helper xanh</td><td><span class="badge badge-p">Cần test</span></td></tr>
+      <tr><td>Test GA4 Real-time</td><td><span class="badge badge-p">Cần test</span></td></tr>
+      <tr><td>Trang cảm ơn → redirect Zalo</td><td><span class="badge badge-green">✅ Có sẵn</span></td></tr>
+      <tr><td>Popup 60 giây</td><td><span class="badge badge-green">✅ Có sẵn</span></td></tr>
+      <tr><td>Countdown lớn</td><td><span class="badge badge-green">✅ Có sẵn</span></td></tr>
+      <tr><td>Responsive mobile</td><td><span class="badge badge-green">✅ Có sẵn</span></td></tr>
+    </table>
+
+    <div class="alert alert-warn" style="margin-top:20px">
+      📞 <strong>Cần hỗ trợ?</strong> Nếu gặp lỗi trong quá trình cài đặt, ghi lại thông báo lỗi từ browser console (F12 → Console) và liên hệ đội ngũ kỹ thuật để được hỗ trợ.
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+function copyCode(btn) {
+  var pre = btn.parentNode;
+  var text = pre.textContent.replace('Copy','').trim();
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = 'Copied!';
+    setTimeout(function(){ btn.textContent = 'Copy'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
