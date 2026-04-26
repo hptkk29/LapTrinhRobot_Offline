@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzL_pQgB0NivwwVl9Dz8EJv5CTkRFhI7v_F9zKg5lZiBFSO0jqgo4ylqWXpNgotzSdX/exec'
 const ZALO_GROUP = 'https://zalo.me/g/ovma9qgjuedypjy8mnxc'
@@ -6,6 +6,43 @@ const FACEBOOK_PIXEL_ID = '2157352735031955'
 const GA4_MEASUREMENT_ID = 'G-0K2CW1DQK1'
 const SALE_END_DATE = new Date('2026-05-31T23:59:59+07:00')
 const LOGO_SRC = '/image/LogoSataROBO.png'
+const TESTI_VIDEO_IDS = [
+  'anInoYFGrF0',
+  'bqB2c7AlSfE',
+  '9MJFC4v8cbU',
+]
+
+function TestiVideo({ videoId }) {
+  const [playing, setPlaying] = useState(false)
+  return (
+    <div
+      className={`tv-ph${playing ? ' playing' : ''}`}
+      onClick={() => !playing && setPlaying(true)}
+    >
+      {playing ? (
+        <iframe
+          className="tv-iframe"
+          src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`}
+          title="Video cảm nhận phụ huynh"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      ) : (
+        <>
+          <img
+            src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+            className="tv-thumb"
+            alt="Thumbnail video cảm nhận"
+            onError={e => { e.currentTarget.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` }}
+          />
+          <div className="tv-overlay" />
+          <div className="tplay">▶</div>
+          <p>Bấm để xem</p>
+        </>
+      )}
+    </div>
+  )
+}
 
 export default function OfflinePage() {
   const [countdown, setCountdown] = useState({ d: '00', h: '00', m: '00', s: '00' })
@@ -199,16 +236,6 @@ export default function OfflinePage() {
     }, 1400)
   }
 
-  const loadVideo = (placeholder, videoId) => {
-    if (videoId.startsWith('VIDEO_ID')) { alert('Admin: Replace VIDEO_ID_X with real YouTube ID!'); return }
-    const wrap = placeholder.parentNode
-    const iframe = document.createElement('iframe')
-    iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0'
-    iframe.allow = 'autoplay; encrypted-media; picture-in-picture'; iframe.allowFullscreen = true
-    Object.assign(iframe.style, { position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', border: 'none' })
-    wrap.innerHTML = ''; wrap.appendChild(iframe)
-  }
-
   const openModalThi = () => { setModalThi(true); document.body.style.overflow = 'hidden' }
   const closeModalThi = () => { setModalThi(false); document.body.style.overflow = '' }
   const openModalDaihan = () => { setModalDaihan(true); document.body.style.overflow = 'hidden' }
@@ -285,8 +312,8 @@ export default function OfflinePage() {
           <div className="nav-brand">
             <img src={LOGO_SRC} className="nav-logo-img" alt="Sata Robo" />
             <div className="nav-brand-text">
-              <div className="nav-sl">🚀 Khơi Nguồn Sáng Tạo — Chắp Cánh Tương Lai</div>
-              <div className="nav-slogan-sub">Robotics Offline · 4 Cơ Sở Đà Nẵng</div>
+              <div className="nav-sl">🚀 Khơi Nguồn Sáng Tạo</div>
+              <div className="nav-sl">Chắp Cánh Tương Lai</div>
             </div>
           </div>
           <div className="nav-links">
@@ -518,20 +545,44 @@ export default function OfflinePage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="sec-mid">
-        <div className="container text-center">
-          <div className="sbadge">💬 Cảm nhận thực tế</div>
-          <h2 className="st">Phụ Huynh &amp; Học Sinh<br /><span className="acc">Nói Gì</span> Về Sata Robo?</h2>
-          <p className="ssub" style={{ maxWidth: '640px', margin: '0 auto 40px' }}>Không quảng cáo, không PR — đây là lời chia sẻ thật từ những phụ huynh và học viên đã và đang học tại Sata Robo.</p>
-          <div className="tg">
-            <div className="tc anim"><div className="tc-stars">⭐⭐⭐⭐⭐</div><div className="tc-quote">"Con học 1 học phần, từ chỗ ngại ngùng không biết nói trước đám đông, đến lúc thuyết trình dự án mini trước toàn bộ phụ huynh. Tôi khóc vì xúc động."</div><div className="tc-author">Chị Nguyễn Thị Lan</div><div className="tc-role">Phụ huynh học sinh lớp 6 · Đà Nẵng</div></div>
-            <div className="tc anim"><div className="tc-stars">⭐⭐⭐⭐⭐</div><div className="tc-quote">"Con giành Giải Ba Championship tháng trước. Quan trọng hơn là con học được cách xử lý khi robot lỗi mà không bỏ cuộc. Kỹ năng đó không sách vở nào dạy được!"</div><div className="tc-author">Anh Trần Văn Hùng</div><div className="tc-role">Phụ huynh học sinh lớp 7 · Quận Hải Châu</div></div>
-            <div className="tc anim"><div className="tc-stars">⭐⭐⭐⭐⭐</div><div className="tc-quote">"Em tham gia khóa Chiến Binh Robot, sau đó thi vòng đấu bản TW Đoàn và vào vòng trong. Robot của em lần đầu hoàn thành đủ điểm trên sa bàn!"</div><div className="tc-author">Nguyễn Minh Khoa</div><div className="tc-role">Học sinh lớp 8 · Đội thi Robotics 2026</div></div>
+      <section id="testi">
+        <div className="container">
+          <div style={{ textAlign: 'center' }}>
+            <div className="sbadge">💬 Phụ huynh và học sinh nói gì</div>
+            <h2 className="st">Hàng trăm học sinh đã tham gia khóa học<br /><span className="gold">và hào hứng làm được bài tập thực tế</span></h2>
+            <p className="ssub" style={{ margin: '0 auto 28px', maxWidth: '620px' }}>Cảm nhận thực tế từ phụ huynh và học sinh đã trải qua hành trình luyện thi cùng Sata Robo</p>
           </div>
-          <div className="video-grid">
-            <div className="video-wrap anim"><div className="video-inner"><div className="video-placeholder" onClick={e => loadVideo(e.currentTarget, 'VIDEO_ID_1')}><div className="vp-play">▶</div><div className="vp-label">Video chia sẻ của<br /><strong style={{ color: '#fff' }}>Chị Nguyễn Thị Lan</strong></div></div></div><div className="video-caption"><div className="vc-name">Chị Nguyễn Thị Lan</div><div className="vc-role">Phụ huynh học sinh lớp 6 · Đà Nẵng</div><div className="vc-tag">🎓 Khóa Dài Hạn 48 buổi</div></div></div>
-            <div className="video-wrap anim"><div className="video-inner"><div className="video-placeholder" onClick={e => loadVideo(e.currentTarget, 'VIDEO_ID_2')}><div className="vp-play">▶</div><div className="vp-label">Video chia sẻ của<br /><strong style={{ color: '#fff' }}>Anh Trần Văn Hùng</strong></div></div></div><div className="video-caption"><div className="vc-name">Anh Trần Văn Hùng</div><div className="vc-role">Phụ huynh học sinh lớp 7 · Quận Hải Châu</div><div className="vc-tag">🏆 Giải Ba Championship</div></div></div>
-            <div className="video-wrap anim"><div className="video-inner"><div className="video-placeholder" onClick={e => loadVideo(e.currentTarget, 'VIDEO_ID_3')}><div className="vp-play">▶</div><div className="vp-label">Video chia sẻ của<br /><strong style={{ color: '#fff' }}>Nguyễn Minh Khoa</strong></div></div></div><div className="video-caption"><div className="vc-name">Nguyễn Minh Khoa</div><div className="vc-role">Học sinh lớp 8 · Đội thi Robotics 2026</div><div className="vc-tag">🏆 Vào vòng trong TW Đoàn 2026</div></div></div>
+          <div className="tg">
+            {/* Phụ huynh 1 */}
+            <div className="tc">
+              <div className="ts">★★★★★</div>
+              <div className="tq">"Con học 3 tuần, từ chỗ không biết bắt đầu từ đâu đến khi thi thử đạt 85% điểm. Điều tôi thích nhất là AI chấm bài ngay — tôi biết chắc con hiểu bài trước khi học tiếp, khác hoàn toàn so với xem YouTube."</div>
+              <div className="ta">
+                <div className="tav">NA</div>
+                <div><div className="tn">Anh Ngọc Anh</div><div className="ti">Phụ huynh bạn Duy Tùng · Đà Nẵng</div></div>
+              </div>
+              <TestiVideo videoId={TESTI_VIDEO_IDS[0]} />
+            </div>
+            {/* Phụ huynh 2 */}
+            <div className="tc">
+              <div className="ts">★★★★★</div>
+              <div className="tq">"Ban đầu lo con học online không hiệu quả. Nhưng 27.000 đồng mỗi buổi — rẻ hơn cả nửa cốc trà sữa — mà con tiến bộ rõ rệt sau 2 tuần. Con học hào hứng và làm được bài tập thực hành rất tốt."</div>
+              <div className="ta">
+                <div className="tav">TS</div>
+                <div><div className="tn">Anh Trường Sơn</div><div className="ti">Phụ huynh bạn Minh Châu · Đà Nẵng</div></div>
+              </div>
+              <TestiVideo videoId={TESTI_VIDEO_IDS[1]} />
+            </div>
+            {/* Phụ huynh 3 */}
+            <div className="tc">
+              <div className="ts">★★★★★</div>
+              <div className="tq">"Con thi Robotics năm ngoái không vào được vòng chung kết vì không có chiến lược. Năm nay học khóa này, con tự làm được bài tập và hiểu rõ cách sắp xếp thứ tự nhiệm vụ. Tự tin hơn hẳn khi bước vào phòng thi!"</div>
+              <div className="ta">
+                <div className="tav">MT</div>
+                <div><div className="tn">Chị Mỹ Trang</div><div className="ti">Phụ huynh bạn Gia Hân · Đà Nẵng</div></div>
+              </div>
+              <TestiVideo videoId={TESTI_VIDEO_IDS[2]} />
+            </div>
           </div>
         </div>
       </section>
@@ -1290,6 +1341,7 @@ footer{background:var(--pvery);border-top:1px solid rgba(168,85,247,.2);padding:
 /* ── FLOATING PANEL ──────────────────────────────────────── */
 #float-panel{position:fixed;bottom:80px;right:16px;z-index:9990;display:flex;
   flex-direction:column;gap:8px;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .4s}
+#float-panel.show{opacity:1;pointer-events:auto}
 .fp-btn{display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:9px;
   font-weight:800;font-size:13px;cursor:pointer;border:none;transition:all .25s;
   text-decoration:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.4)}
@@ -1794,6 +1846,61 @@ img { -webkit-user-drag: none; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
+/* ── OnlinePage testimonial match ───────────────────────── */
+#testi { background:#0D0820; padding:64px 20px; }
+#testi .tg { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+#testi .tc {
+  background:rgba(168,85,247,.07); border:1px solid rgba(168,85,247,.15);
+  border-radius:var(--rlg); padding:22px; transition:all .3s;
+}
+#testi .tc:hover { border-color:var(--p3); box-shadow:var(--neon-p); transform:translateY(-4px); }
+#testi .ts { color:var(--gold); font-size:15px; margin-bottom:12px; letter-spacing:1px; }
+#testi .tq { font-size:13px; color:rgba(255,255,255,.7); line-height:1.75; margin-bottom:16px; font-style:italic; }
+#testi .ta { display:flex; align-items:center; gap:10px; }
+#testi .tav {
+  width:38px; height:38px; border-radius:50%;
+  background:linear-gradient(135deg,var(--p),var(--p2));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; color:#fff; font-size:13px; flex-shrink:0;
+  border:1px solid rgba(168,85,247,.4);
+}
+#testi .tn { font-weight:700; font-size:13px; color:#fff; }
+#testi .ti { font-size:11px; color:rgba(255,255,255,.45); }
+#testi .tv-ph {
+  margin-top:14px; background:#000;
+  border:1px solid rgba(168,85,247,.3); border-radius:8px;
+  aspect-ratio:16/9; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; cursor:pointer; transition:border-color .25s; position:relative;
+  overflow:hidden;
+}
+#testi .tv-ph:hover { border-color:var(--p3); }
+#testi .tv-ph.playing { cursor:default; }
+#testi .tv-thumb {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;
+  transition:transform .4s ease;
+}
+#testi .tv-ph:hover .tv-thumb { transform:scale(1.04); }
+#testi .tv-overlay {
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 50%,rgba(0,0,0,.1) 100%);
+}
+#testi .tplay {
+  width:44px; height:44px; background:rgba(168,85,247,.9); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; margin-bottom:6px; color:#fff; position:relative; z-index:2;
+  box-shadow:0 2px 12px rgba(0,0,0,.5); transition:transform .3s;
+}
+#testi .tv-ph:hover .tplay { transform:scale(1.1); }
+#testi .tv-ph p {
+  font-size:11px; color:rgba(255,255,255,.8); text-align:center;
+  position:relative; z-index:2; text-shadow:0 1px 3px rgba(0,0,0,.8);
+}
+#testi .tv-iframe { position:absolute; inset:0; width:100%; height:100%; border:none; display:block; z-index:2; }
+
+@media(max-width:900px) {
+  #testi .tg { grid-template-columns:1fr; }
+}
+
 /* ── Cross-device stability overrides ───────────────────── */
 html, body, #root { min-height: 100%; width: 100%; }
 body { min-width: 320px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -1860,6 +1967,145 @@ img, video, iframe, canvas { max-width: 100%; }
   #float-panel { left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); flex-direction: row; justify-content: center; }
   .fp-btn { flex: 1; justify-content: center; }
   .fp-zalo { flex: 0 0 42px; }
+}
+
+/* Mobile polish requested for header, section titles, and floating CTAs */
+.sbadge, .sbadge-gold, .sbadge-cyan, .sbadge-red, .sbadge-orange {
+  margin-bottom: 18px;
+  line-height: 1.35;
+}
+h2.st {
+  line-height: 1.28;
+  margin-bottom: 20px;
+}
+.ssub {
+  margin-top: 4px;
+  line-height: 1.82;
+}
+
+@media (max-width: 768px) {
+  .nav-in {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 10px 12px;
+  }
+  .nav-brand {
+    min-width: 0;
+    gap: 9px;
+  }
+  .nav-brand-text {
+    min-width: 0;
+    gap: 3px;
+  }
+  .nav-sl {
+    line-height: 1.25;
+    white-space: normal;
+  }
+  .nav-cta {
+    justify-self: end;
+    width: auto;
+    white-space: nowrap;
+  }
+  h2.st {
+    line-height: 1.3;
+    margin-bottom: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  nav {
+    min-height: 96px;
+  }
+  .nav-in {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    gap: 8px;
+    padding-top: 10px;
+    padding-bottom: 12px;
+  }
+  .nav-brand {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .nav-logo-img {
+    height: 42px;
+  }
+  .nav-sl {
+    width: fit-content;
+    max-width: 100%;
+    padding: 2px 4px;
+    background: rgba(168,85,247,.2);
+    font-size: 9px;
+  }
+  .nav-cta {
+    justify-self: start;
+    min-height: 40px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .sbadge, .sbadge-gold, .sbadge-cyan, .sbadge-red, .sbadge-orange {
+    margin-bottom: 16px;
+  }
+  .ssub {
+    line-height: 1.78;
+  }
+  #float-panel {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    max-width: calc(100vw - 16px);
+  }
+  #float-panel .fp-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 40px;
+    justify-content: center;
+    padding: 0 8px;
+    border-radius: 9px;
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  #float-panel .fp-zalo {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 999px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav-logo-img {
+    height: 38px;
+  }
+  .nav-sl {
+    font-size: 8px;
+  }
+  .nav-cta {
+    min-height: 38px;
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+  #float-panel .fp-btn {
+    height: 38px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+  #float-panel .fp-zalo {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+  }
 }
 
 `
