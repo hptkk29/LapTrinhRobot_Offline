@@ -361,19 +361,43 @@ export default function OfflinePage() {
             </div>
             <div className="hero-right">
               <div className="hero-card">
-                <div className="hero-card-title">📍 4 CƠ SỞ TẠI ĐÀ NẴNG</div>
-                <div className="hero-loc">
-                  <div className="loc-row"><div className="loc-dot"></div><div className="loc-name">60 Lê Lợi</div></div>
-                  <div className="loc-row"><div className="loc-dot"></div><div className="loc-name">258 Lê Thanh Nghị</div></div>
-                  <div className="loc-row"><div className="loc-dot"></div><div className="loc-name">232 Nguyễn Phước Lan</div></div>
-                  <div className="loc-row"><div className="loc-dot"></div><div className="loc-name">269 Điện Biên Phủ</div></div>
+                <div className="hc-header">
+                  <div className="hc-icon-wrap"><span>📍</span></div>
+                  <div>
+                    <div className="hero-card-title">4 CƠ SỞ TẠI ĐÀ NẴNG</div>
+                    <div className="hc-subtitle">Gần nhà — Phòng Lab hiện đại</div>
+                  </div>
                 </div>
+                <div className="hero-loc">
+                  <div className="loc-row">
+                    <div className="loc-num-badge">01</div>
+                    <div className="loc-info"><div className="loc-name">60 Lê Lợi</div><div className="loc-dist">P. Hải Châu</div></div>
+                    <div className="loc-active"></div>
+                  </div>
+                  <div className="loc-row">
+                    <div className="loc-num-badge">02</div>
+                    <div className="loc-info"><div className="loc-name">258 Lê Thanh Nghị</div><div className="loc-dist">P. Hoà Cường</div></div>
+                    <div className="loc-active"></div>
+                  </div>
+                  <div className="loc-row">
+                    <div className="loc-num-badge">03</div>
+                    <div className="loc-info"><div className="loc-name">232 Nguyễn Phước Lan</div><div className="loc-dist">P. Cẩm Lệ</div></div>
+                    <div className="loc-active"></div>
+                  </div>
+                  <div className="loc-row">
+                    <div className="loc-num-badge">04</div>
+                    <div className="loc-info"><div className="loc-name">269 Điện Biên Phủ</div><div className="loc-dist">P. Hoà Khê</div></div>
+                    <div className="loc-active"></div>
+                  </div>
+                </div>
+                <div className="hc-divider"></div>
                 <div className="hero-stats">
                   <div className="hstat"><div className="hstat-n">5</div><div className="hstat-l">Khóa dài hạn</div></div>
                   <div className="hstat"><div className="hstat-n">2</div><div className="hstat-l">Khóa thi đấu</div></div>
                   <div className="hstat"><div className="hstat-n">48</div><div className="hstat-l">Buổi/module</div></div>
                   <div className="hstat"><div className="hstat-n">36M</div><div className="hstat-l">Giải thưởng/năm</div></div>
                 </div>
+                <a href="#register" className="hc-cta-btn">🎯 Đăng Ký Test Miễn Phí →</a>
               </div>
             </div>
           </div>
@@ -854,18 +878,45 @@ export default function OfflinePage() {
 
       {/* THANK YOU OVERLAY */}
       <div id="ty-overlay" className={thankYouVisible ? 'show' : ''}>
+        <div className="ty-particles">
+          {['🎊','🎉','✨','⭐','💜','🌟','🎊','✨','⭐','🎉'].map((e, i) => (
+            <span key={i} className="ty-particle" style={{ left: `${5 + i * 10}%`, animationDelay: `${i * 0.18}s`, animationDuration: `${2.5 + (i % 3) * 0.4}s` }}>{e}</span>
+          ))}
+        </div>
         <div className="ty-box">
-          <span className="ty-emoji">🎉</span>
+          <div className="ty-success-ring">
+            <span className="ty-emoji">🎉</span>
+          </div>
+          <div className="ty-badge-success">✅ Đăng ký thành công</div>
           <h1 className="ty-h1">Đăng Ký <span>Thành Công!</span></h1>
-          <div className="ty-expect">
-            <div className="ty-expect-title">📋 Những gì sẽ xảy ra tiếp theo</div>
-            <div className="ty-expect-item">Đội ngũ Sata Robo sẽ liên hệ bạn trong vòng <strong>2 giờ</strong> để xếp lịch buổi Test miễn phí</div>
-            <div className="ty-expect-item">Nhóm Zalo phụ huynh sẽ gửi cho bạn <strong>tài liệu giới thiệu khóa học</strong> và thông tin chi tiết</div>
-            <div className="ty-expect-item">Bạn có thể <strong>hỏi đáp trực tiếp</strong> với đội ngũ và gặp gỡ các phụ huynh khác trong nhóm</div>
+          <p className="ty-subtitle">Cảm ơn bạn đã tin tưởng Sata Robo!<br />Chúng tôi sẽ liên hệ bạn trong thời gian sớm nhất.</p>
+          <div className="ty-steps">
+            <div className="ty-step">
+              <div className="ty-step-num">1</div>
+              <div className="ty-step-body">
+                <div className="ty-step-title">⏰ Liên hệ trong 2 giờ</div>
+                <div className="ty-step-desc">Đội ngũ Sata Robo gọi/nhắn để xếp lịch buổi Test miễn phí cho con</div>
+              </div>
+            </div>
+            <div className="ty-step">
+              <div className="ty-step-num">2</div>
+              <div className="ty-step-body">
+                <div className="ty-step-title">📚 Nhận tài liệu ngay</div>
+                <div className="ty-step-desc">Nhóm Zalo gửi tài liệu giới thiệu khóa học và thông tin chi tiết đến bạn</div>
+              </div>
+            </div>
+            <div className="ty-step">
+              <div className="ty-step-num">3</div>
+              <div className="ty-step-body">
+                <div className="ty-step-title">👨‍👩‍👧 Kết nối cộng đồng</div>
+                <div className="ty-step-desc">Hỏi đáp trực tiếp với đội ngũ và gặp gỡ các phụ huynh khác trong nhóm</div>
+              </div>
+            </div>
           </div>
           <div className="ty-zalo-box">
-            <div className="ty-zalo-title">💬 Bước tiếp theo: Tham gia nhóm Zalo</div>
-            <p style={{ fontSize: '13px', color: 'rgba(255,255,255,.65)', marginBottom: '4px', lineHeight: '1.65' }}>Trong khi chờ đội ngũ liên hệ, hãy vào nhóm Zalo để nhận hướng dẫn ngay!</p>
+            <div className="ty-zalo-icon">💬</div>
+            <div className="ty-zalo-title">Tham gia nhóm Zalo ngay!</div>
+            <p className="ty-zalo-desc">Trong khi chờ đội ngũ liên hệ, vào nhóm Zalo để nhận hướng dẫn và kết nối phụ huynh.</p>
             <div className="ty-cd-wrap">
               <div className="ty-cd">{tyCount}</div>
               <div className="ty-cd-sub">giây nữa sẽ mở nhóm Zalo tự động</div>
@@ -973,14 +1024,15 @@ nav{position:sticky;top:0;z-index:900;background:rgba(15,10,30,.95);
 .btn-ghost:hover{background:rgba(168,85,247,.15);border-color:var(--p3)}
 
 /* ── BADGES ──────────────────────────────────────────────── */
-.sbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(168,85,247,.15);
-  color:var(--p4);border:1px solid rgba(168,85,247,.3);padding:5px 14px;
+.sbadge,.sbadge-gold,.sbadge-cyan,.sbadge-orange,.sbadge-red{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 14px;
   border-radius:100px;font-size:11px;font-weight:700;margin-bottom:16px;
-  letter-spacing:.6px;text-transform:uppercase;box-shadow:var(--neon-p)}
+  letter-spacing:.6px;text-transform:uppercase;border:1px solid}
+.sbadge{background:rgba(168,85,247,.15);color:var(--p4);border-color:rgba(168,85,247,.3);box-shadow:var(--neon-p)}
 .sbadge-gold{background:rgba(245,158,11,.15);color:var(--gold);border-color:rgba(245,158,11,.3);box-shadow:var(--neon-gold)}
-.sbadge-orange{background:rgba(249,115,22,.15);color:var(--orange);border-color:rgba(249,115,22,.3)}
-.sbadge-cyan{background:rgba(6,182,212,.15);color:var(--cyan2);border-color:rgba(6,182,212,.3)}
-.sbadge-red{background:rgba(239,68,68,.15);color:#fca5a5;border-color:rgba(239,68,68,.3)}
+.sbadge-orange{background:rgba(249,115,22,.15);color:var(--orange);border-color:rgba(249,115,22,.3);box-shadow:var(--neon-orange)}
+.sbadge-cyan{background:rgba(6,182,212,.15);color:var(--cyan2);border-color:rgba(6,182,212,.3);box-shadow:var(--neon-cyan)}
+.sbadge-red{background:rgba(239,68,68,.15);color:#fca5a5;border-color:rgba(239,68,68,.3);box-shadow:var(--neon-red)}
 
 /* ── TYPOGRAPHY ──────────────────────────────────────────── */
 h2.st{font-family:var(--fh);font-size:clamp(24px,3.2vw,40px);font-weight:900;
@@ -1014,23 +1066,47 @@ section{padding:72px 20px}
   font-size:12px;font-weight:700;white-space:nowrap}
 .hero-btns{display:flex;flex-direction:column;gap:12px;margin-top:28px}
 .hero-row{display:flex;gap:12px;flex-wrap:wrap}
-.hero-card{background:linear-gradient(135deg,rgba(107,33,168,.28),rgba(30,10,60,.85));
-  border:1px solid rgba(168,85,247,.35);border-radius:var(--rlg);padding:28px;
-  box-shadow:var(--shlg);backdrop-filter:blur(10px)}
-.hero-card-title{font-family:var(--fh);font-size:12px;font-weight:700;color:var(--gold);
-  letter-spacing:1px;text-transform:uppercase;margin-bottom:18px;text-align:center}
-.hero-loc{display:flex;flex-direction:column;gap:8px}
-.loc-row{display:flex;align-items:center;gap:10px;background:rgba(168,85,247,.07);
-  border:1px solid rgba(168,85,247,.18);border-radius:8px;padding:9px 13px}
-.loc-dot{width:7px;height:7px;background:var(--p3);border-radius:50%;
-  box-shadow:var(--neon-p);flex-shrink:0}
-.loc-name{font-size:13px;font-weight:700;white-space:nowrap}
-.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
-.hstat{background:rgba(255,255,255,.04);border:1px solid rgba(168,85,247,.2);
-  border-radius:9px;padding:11px 6px;text-align:center}
-.hstat-n{font-family:var(--fh);font-size:20px;font-weight:900;color:var(--p4);
-  text-shadow:var(--neon-p)}
-.hstat-l{font-size:10px;color:var(--gray);margin-top:3px;line-height:1.3}
+.hero-card{background:linear-gradient(135deg,rgba(107,33,168,.3),rgba(30,10,60,.9));
+  border:1px solid rgba(168,85,247,.5);border-radius:var(--rlg);padding:24px;
+  box-shadow:var(--shlg),0 0 40px rgba(107,33,168,.2);backdrop-filter:blur(12px);
+  position:relative;overflow:hidden}
+.hero-card::before{content:"";position:absolute;top:-50%;right:-30%;width:200px;height:200px;
+  background:radial-gradient(circle,rgba(168,85,247,.12) 0%,transparent 70%);
+  pointer-events:none}
+.hc-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.hc-icon-wrap{width:44px;height:44px;background:linear-gradient(135deg,var(--p),var(--p2));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;box-shadow:var(--neon-p);flex-shrink:0}
+.hero-card-title{font-family:var(--fh);font-size:13px;font-weight:800;color:var(--gold);
+  letter-spacing:1px;text-transform:uppercase;line-height:1.2}
+.hc-subtitle{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.hero-loc{display:flex;flex-direction:column;gap:7px}
+.loc-row{display:flex;align-items:center;gap:10px;background:rgba(168,85,247,.08);
+  border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:9px 12px;
+  transition:all .2s;cursor:default}
+.loc-row:hover{background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.4);transform:translateX(3px)}
+.loc-num-badge{width:26px;height:26px;background:linear-gradient(135deg,var(--p),var(--p2));
+  border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900;color:#fff;flex-shrink:0;font-family:var(--fh)}
+.loc-info{flex:1;min-width:0}
+.loc-name{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc-dist{font-size:10px;color:rgba(255,255,255,.45);margin-top:1px}
+.loc-active{width:8px;height:8px;background:var(--green);border-radius:50%;
+  box-shadow:0 0 6px rgba(16,185,129,.8);flex-shrink:0;animation:act-pulse 2s ease-in-out infinite}
+@keyframes act-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
+.hc-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,247,.3),transparent);margin:16px 0}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hstat{background:rgba(255,255,255,.04);border:1px solid rgba(168,85,247,.18);
+  border-radius:9px;padding:10px 4px;text-align:center;transition:all .2s}
+.hstat:hover{border-color:rgba(168,85,247,.4);background:rgba(168,85,247,.08)}
+.hstat-n{font-family:var(--fh);font-size:18px;font-weight:900;color:var(--p4);
+  text-shadow:var(--neon-p);line-height:1}
+.hstat-l{font-size:9px;color:var(--gray);margin-top:4px;line-height:1.3}
+.hc-cta-btn{display:block;margin-top:16px;background:linear-gradient(135deg,var(--green),#059669);
+  color:#fff;text-align:center;padding:12px 16px;border-radius:10px;font-weight:800;
+  font-size:13px;box-shadow:0 0 14px rgba(16,185,129,.45);transition:all .25s;
+  text-decoration:none}
+.hc-cta-btn:hover{transform:translateY(-2px);opacity:.9}
 
 /* ── LARGE COUNTDOWN SECTION ─────────────────────────────── */
 #countdown-urgency{
@@ -1432,45 +1508,77 @@ footer{background:var(--pvery);border-top:1px solid rgba(168,85,247,.2);padding:
 
 /* ── THANK YOU OVERLAY ───────────────────────────────────── */
 #ty-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;
-  justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .6s;
-  background:linear-gradient(135deg,#0a001f,#0f0a1e 50%,#030715)}
+  justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .5s;
+  background:linear-gradient(135deg,#0a001f 0%,#0f0a1e 50%,#030715 100%);
+  overflow-y:auto}
 #ty-overlay.show{opacity:1;pointer-events:auto}
-.ty-box{max-width:600px;width:100%;text-align:center}
-.ty-emoji{font-size:72px;margin-bottom:16px;display:block;
+/* Confetti particles */
+.ty-particles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.ty-particle{position:absolute;top:-20px;font-size:20px;
+  animation:ty-fall linear infinite both}
+@keyframes ty-fall{0%{top:-30px;opacity:1;transform:rotate(0) scale(1)}
+  80%{opacity:.8}100%{top:110vh;opacity:0;transform:rotate(360deg) scale(.5)}}
+/* Main box */
+.ty-box{max-width:560px;width:100%;text-align:center;position:relative;z-index:1;
+  padding:10px 0}
+/* Success ring */
+.ty-success-ring{width:90px;height:90px;margin:0 auto 14px;
+  background:linear-gradient(135deg,rgba(168,85,247,.3),rgba(107,33,168,.5));
+  border:2px solid rgba(168,85,247,.6);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 30px rgba(168,85,247,.4),0 0 60px rgba(107,33,168,.2);
+  animation:ring-pulse 2s ease-in-out infinite}
+@keyframes ring-pulse{0%,100%{box-shadow:0 0 20px rgba(168,85,247,.4),0 0 40px rgba(107,33,168,.2)}
+  50%{box-shadow:0 0 40px rgba(168,85,247,.7),0 0 80px rgba(107,33,168,.4)}}
+.ty-emoji{font-size:48px;display:block;
   animation:bounce-in .6s cubic-bezier(0.68,-0.55,0.27,1.55) both}
 @keyframes bounce-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.ty-h1{font-family:var(--fh);font-size:clamp(26px,5vw,44px);font-weight:900;color:#fff;
-  margin-bottom:10px;line-height:1.15}
+.ty-badge-success{display:inline-flex;align-items:center;gap:6px;
+  background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.4);
+  padding:4px 14px;border-radius:100px;font-size:11px;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px}
+.ty-h1{font-family:var(--fh);font-size:clamp(28px,5vw,46px);font-weight:900;color:#fff;
+  margin-bottom:6px;line-height:1.15}
 .ty-h1 span{color:var(--p4);text-shadow:var(--neon-p)}
-/* What to expect bullets */
-.ty-expect{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);
-  border-radius:var(--r);padding:20px 24px;margin:20px auto;text-align:left;
-  max-width:500px}
-.ty-expect-title{font-size:13px;font-weight:800;color:var(--p4);margin-bottom:12px;
-  text-align:center;text-transform:uppercase;letter-spacing:.5px}
-.ty-expect-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;
-  color:rgba(255,255,255,.8);margin-bottom:10px;line-height:1.6}
-.ty-expect-item::before{content:"✓";color:var(--green);font-weight:900;flex-shrink:0;margin-top:2px}
+.ty-subtitle{font-size:14px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:20px}
+/* Steps */
+.ty-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;text-align:left}
+.ty-step{display:flex;align-items:flex-start;gap:14px;
+  background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.2);
+  border-radius:14px;padding:14px 16px;transition:all .2s}
+.ty-step:hover{background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.4)}
+.ty-step-num{width:32px;height:32px;background:linear-gradient(135deg,var(--p),var(--p2));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-size:14px;font-weight:900;color:#fff;
+  flex-shrink:0;box-shadow:var(--neon-p)}
+.ty-step-body{flex:1;min-width:0}
+.ty-step-title{font-size:13px;font-weight:800;color:#fff;margin-bottom:3px}
+.ty-step-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6}
 /* Zalo box */
-.ty-zalo-box{background:linear-gradient(135deg,rgba(0,104,255,.15),rgba(0,68,200,.08));
-  border:2px solid rgba(0,104,255,.45);border-radius:var(--rlg);padding:24px;
-  margin-top:22px;position:relative}
-.ty-zalo-title{font-size:14px;font-weight:800;color:#93c5fd;margin-bottom:8px;
-  text-transform:uppercase;letter-spacing:.5px}
-.ty-cd-wrap{margin:14px 0}
-.ty-cd{font-family:monospace;font-size:52px;font-weight:900;color:var(--gold);
+.ty-zalo-box{background:linear-gradient(135deg,rgba(0,104,255,.18),rgba(0,68,200,.1));
+  border:2px solid rgba(0,104,255,.5);border-radius:var(--rlg);padding:22px 20px;
+  position:relative;overflow:hidden}
+.ty-zalo-box::before{content:"";position:absolute;top:-30px;right:-30px;
+  width:120px;height:120px;background:radial-gradient(circle,rgba(0,104,255,.15),transparent 70%);
+  pointer-events:none}
+.ty-zalo-icon{font-size:28px;margin-bottom:6px}
+.ty-zalo-title{font-size:16px;font-weight:900;color:#93c5fd;margin-bottom:6px;font-family:var(--fh)}
+.ty-zalo-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:4px}
+.ty-cd-wrap{margin:12px 0}
+.ty-cd{font-family:monospace;font-size:56px;font-weight:900;color:var(--gold);
   text-shadow:var(--neon-gold);line-height:1;animation:glow-pulse 1s ease-in-out infinite}
-@keyframes glow-pulse{0%,100%{text-shadow:var(--neon-gold)}50%{text-shadow:0 0 20px rgba(245,158,11,1),0 0 50px rgba(245,158,11,.6)}}
-.ty-cd-sub{font-size:13px;color:rgba(255,255,255,.45);margin-top:6px}
-.ty-zalo-btn{display:inline-flex;align-items:center;gap:10px;background:#0068FF;color:#fff;
-  padding:15px 32px;border-radius:12px;font-weight:900;font-size:16px;margin-top:14px;
-  box-shadow:0 0 20px rgba(0,104,255,.55);transition:.25s;cursor:pointer;border:none;
-  font-family:var(--fb);width:100%;justify-content:center;animation:btn-pulse 2s infinite}
-@keyframes btn-pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,104,255,.5)}50%{box-shadow:0 0 0 10px rgba(0,104,255,0)}}
+@keyframes glow-pulse{0%,100%{text-shadow:var(--neon-gold)}50%{text-shadow:0 0 24px rgba(245,158,11,1),0 0 56px rgba(245,158,11,.6)}}
+.ty-cd-sub{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px}
+.ty-zalo-btn{display:flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(135deg,#0068FF,#0050CC);color:#fff;
+  padding:14px 28px;border-radius:12px;font-weight:900;font-size:15px;margin-top:14px;
+  box-shadow:0 4px 20px rgba(0,104,255,.5);transition:.25s;cursor:pointer;border:none;
+  font-family:var(--fb);width:100%;animation:btn-pulse 2s infinite}
+@keyframes btn-pulse{0%,100%{box-shadow:0 4px 20px rgba(0,104,255,.5)}50%{box-shadow:0 4px 30px rgba(0,104,255,.8),0 0 0 6px rgba(0,104,255,.1)}}
 .ty-zalo-btn:hover{transform:translateY(-2px);opacity:.92}
-.ty-later{background:none;border:none;color:rgba(255,255,255,.35);cursor:pointer;
-  font-size:12px;margin-top:12px;text-decoration:underline;font-family:var(--fb);transition:.25s}
-.ty-later:hover{color:rgba(255,255,255,.65)}
+.ty-later{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;
+  font-size:11px;margin-top:10px;text-decoration:underline;font-family:var(--fb);transition:.25s;display:block;width:100%;text-align:center}
+.ty-later:hover{color:rgba(255,255,255,.6)}
 
 /* ── ANIMATIONS ──────────────────────────────────────────── */
 .anim{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
@@ -1580,17 +1688,22 @@ img { -webkit-user-drag: none; }
   .cd-u { padding: 2px 5px; min-width: 28px; }
   .cd-n { font-size: 13px; }
   nav { height: 56px; }
-  .nav-in { padding: 0 14px; }
+  .nav-in { padding: 0 14px; flex-wrap: nowrap; }
   .nav-logo-img { height: 34px; }
   .nav-sl { font-size: 9px; letter-spacing: 0; }
   .nav-links { display: none; }
-  .nav-cta { padding: 7px 12px; font-size: 11px; border-radius: 7px; }
+  .nav-cta { padding: 7px 10px; font-size: 10px; border-radius: 7px; white-space: nowrap; flex-shrink: 0; }
+}
+@media (max-width: 420px) {
+  .nav-brand-text { display: none; }
+  .nav-cta { font-size: 11px; padding: 8px 12px; }
 }
 
 /* ── Hero mobile ── */
 @media (max-width: 600px) {
   #hero { padding: 40px 14px 36px; }
-  .hero-grid { gap: 28px; }
+  .hero-grid { gap: 28px; grid-template-columns: 1fr; }
+  .hero-right { order: 1; }
   .hero-proof { gap: 6px; }
   .hero-proof-badge { font-size: 10px; padding: 3px 8px; }
   .hook { font-size: 13px; margin-bottom: 12px; }
@@ -1745,14 +1858,20 @@ img { -webkit-user-drag: none; }
 
 /* ── Thank you overlay mobile ── */
 @media (max-width: 480px) {
-  .ty-box { padding: 0 4px; }
-  .ty-emoji { font-size: 54px; }
-  .ty-h1 { font-size: 22px; }
-  .ty-expect { padding: 14px 16px; }
-  .ty-expect-item { font-size: 12px; }
-  .ty-zalo-box { padding: 18px 14px; }
-  .ty-cd { font-size: 38px; }
-  .ty-zalo-btn { padding: 13px 20px; font-size: 14px; }
+  .ty-box { padding: 6px 0; }
+  .ty-success-ring { width: 72px; height: 72px; }
+  .ty-emoji { font-size: 38px; }
+  .ty-h1 { font-size: 24px; }
+  .ty-subtitle { font-size: 12px; margin-bottom: 14px; }
+  .ty-steps { gap: 8px; }
+  .ty-step { padding: 11px 12px; gap: 10px; }
+  .ty-step-num { width: 28px; height: 28px; font-size: 12px; }
+  .ty-step-title { font-size: 12px; }
+  .ty-step-desc { font-size: 11px; }
+  .ty-zalo-box { padding: 16px 14px; }
+  .ty-zalo-title { font-size: 14px; }
+  .ty-cd { font-size: 44px; }
+  .ty-zalo-btn { padding: 12px 16px; font-size: 13px; }
 }
 
 /* ── Float panel mobile ── */
@@ -1925,8 +2044,10 @@ img, video, iframe, canvas { max-width: 100%; }
 @media (max-width: 1100px) {
   .container, .nav-in { max-width: 100%; }
   .hero-grid { grid-template-columns: 1fr; gap: 36px; }
-  .hero-right { order: -1; }
   .nav-links { gap: 14px; font-size: 12px; }
+}
+@media (min-width: 601px) and (max-width: 1100px) {
+  .hero-right { order: -1; }
 }
 
 @media (min-width: 901px) and (max-width: 1100px) {
@@ -1936,7 +2057,7 @@ img, video, iframe, canvas { max-width: 100%; }
   .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 601px) and (max-width: 768px) {
   nav { height: auto; min-height: 64px; }
   .nav-in { flex-wrap: wrap; gap: 10px; padding: 10px 14px; }
   .nav-brand { flex: 1 1 auto; min-width: 190px; }
