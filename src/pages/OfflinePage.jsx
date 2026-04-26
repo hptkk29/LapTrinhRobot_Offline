@@ -1,665 +1,817 @@
-import { useEffect, useState, useRef } from 'react'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import { useScrollReveal } from '../hooks/useScrollReveal'
+import { useEffect, useRef, useState } from 'react'
+import './OfflinePage.css'
 
-const GOOGLE_SHEET_WEBHOOK_URL =
-  import.meta.env.VITE_GOOGLE_SHEET_WEBHOOK_URL ||
-  'https://script.google.com/macros/s/AKfycby_PIwLWQ7h-lS-WWBVr12m3mvx6rt40xJQgtaj40lB1sYlWELZoayMeTbrtY589K7qlg/exec'
-
-const CENTERS = [
-  'Cơ sở 1: 60 Lê Lợi',
-  'Cơ sở 2: 258 Lê Thanh Nghị',
-  'Cơ sở 3: 269 Điện Biên Phủ',
-  'Cơ sở 4: 232 Nguyễn Phước Lan',
-]
-
-function FAQItem({ question, children }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className={`faq-item${open ? ' open' : ''}`} role="listitem">
-      <button className="faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
-        {question}
-        <span className="faq-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-        </span>
-      </button>
-      <div className="faq-a">
-        <div className="faq-a-inner">{children}</div>
-      </div>
-    </div>
-  )
-}
-
-function RegistrationForm() {
-  const [form, setForm] = useState({
-    parentName: '',
-    phone: '',
-    email: '',
-    center: '',
-    grade: '',
-    note: '',
-  })
-  const [errors, setErrors] = useState({})
-  const [loading, setLoading] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [submitError, setSubmitError] = useState(false)
-
-  const validate = () => {
-    const e = {}
-    if (!form.parentName.trim()) e.parentName = 'Vui lòng nhập họ và tên'
-    if (!form.phone.trim()) e.phone = 'Vui lòng nhập số điện thoại'
-    if (!form.email.trim()) e.email = 'Vui lòng nhập email'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Email không đúng định dạng'
-    if (!form.center) e.center = 'Vui lòng chọn cơ sở học'
-    if (!form.grade) e.grade = 'Vui lòng chọn khối'
-    return e
-  }
-
-  const set = field => e => {
-    setForm(f => ({ ...f, [field]: e.target.value }))
-    if (errors[field]) setErrors(ev => { const n = { ...ev }; delete n[field]; return n })
-  }
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-    const errs = validate()
-    if (Object.keys(errs).length) { setErrors(errs); return }
-
-    setLoading(true)
-    setSubmitError(false)
-
-    try {
-      await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8',
-        },
-        body: JSON.stringify({
-          parentName: form.parentName,
-          phone: form.phone,
-          email: form.email,
-          center: form.center,
-          grade: form.grade,
-          note: form.note,
-          sourcePage: 'khoa-hoc-robosim-offline',
-          submittedAt: new Date().toISOString(),
-        }),
-      })
-      setSubmitted(true)
-    } catch {
-      setSubmitError(true)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (submitted) {
-    return (
-      <div className="form-success">
-        <span className="form-success-icon">✅</span>
-        <h3>Đăng ký thành công!</h3>
-        <p>
-          Cảm ơn quý phụ huynh đã đăng ký. Sata Robo sẽ liên hệ trong thời gian sớm nhất
-          để tư vấn và giữ chỗ.
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <form onSubmit={handleSubmit} noValidate>
-      {submitError && (
-        <div className="form-error-box">
-          Thông tin chưa được gửi thành công. Vui lòng thử lại hoặc liên hệ Zalo{' '}
-          <strong>0818.823.720</strong> để được hỗ trợ.
-        </div>
-      )}
-
-      <div className="form-row">
-        <div className="form-group">
-          <label className="form-label" htmlFor="parentName">
-            Họ và tên phụ huynh <span className="req">*</span>
-          </label>
-          <input
-            id="parentName"
-            type="text"
-            className={`form-input${errors.parentName ? ' error' : ''}`}
-            placeholder="Nhập họ và tên phụ huynh"
-            value={form.parentName}
-            onChange={set('parentName')}
-          />
-          {errors.parentName && <span className="form-error-msg">{errors.parentName}</span>}
-        </div>
-
-        <div className="form-group">
-          <label className="form-label" htmlFor="phone">
-            Số điện thoại <span className="req">*</span>
-          </label>
-          <input
-            id="phone"
-            type="tel"
-            className={`form-input${errors.phone ? ' error' : ''}`}
-            placeholder="Nhập số điện thoại để tư vấn viên liên hệ"
-            value={form.phone}
-            onChange={set('phone')}
-          />
-          {errors.phone && <span className="form-error-msg">{errors.phone}</span>}
-          <span className="form-hint">Tư vấn viên sẽ gọi điện tư vấn và sắp lớp phù hợp.</span>
-        </div>
-      </div>
-
-      <div className="form-group">
-        <label className="form-label" htmlFor="email">
-          Email <span className="req">*</span>
-        </label>
-        <input
-          id="email"
-          type="email"
-          className={`form-input${errors.email ? ' error' : ''}`}
-          placeholder="Nhập email để nhận quà tặng Ebook công nghệ"
-          value={form.email}
-          onChange={set('email')}
-        />
-        {errors.email && <span className="form-error-msg">{errors.email}</span>}
-        <span className="form-hint">
-          Ebook công nghệ sẽ được gửi qua Email. Quý phụ huynh vui lòng nhập đúng Email để nhận quà.
-        </span>
-      </div>
-
-      <div className="form-row">
-        <div className="form-group">
-          <label className="form-label" htmlFor="center">
-            Chọn cơ sở học <span className="req">*</span>
-          </label>
-          <select
-            id="center"
-            className={`form-select${errors.center ? ' error' : ''}`}
-            value={form.center}
-            onChange={set('center')}
-          >
-            <option value="">-- Chọn cơ sở học --</option>
-            {CENTERS.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-          {errors.center && <span className="form-error-msg">{errors.center}</span>}
-        </div>
-
-        <div className="form-group">
-          <label className="form-label" htmlFor="grade">
-            Chọn khối <span className="req">*</span>
-          </label>
-          <select
-            id="grade"
-            className={`form-select${errors.grade ? ' error' : ''}`}
-            value={form.grade}
-            onChange={set('grade')}
-          >
-            <option value="">-- Chọn khối --</option>
-            <option value="Tiểu học (R1)">Tiểu học (R1)</option>
-            <option value="THCS (R2)">THCS (R2)</option>
-          </select>
-          {errors.grade && <span className="form-error-msg">{errors.grade}</span>}
-        </div>
-      </div>
-
-      <div className="form-group">
-        <label className="form-label" htmlFor="note">Ghi chú thêm</label>
-        <textarea
-          id="note"
-          className="form-textarea"
-          placeholder="Ví dụ: thời gian thuận tiện, học sinh đã từng học RoboSim chưa..."
-          value={form.note}
-          onChange={set('note')}
-          rows={4}
-        />
-      </div>
-
-      <button type="submit" className="submit-btn" disabled={loading}>
-        {loading ? 'Đang gửi...' : 'Đăng ký tư vấn ngay'}
-      </button>
-    </form>
-  )
-}
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzL_pQgB0NivwwVl9Dz8EJv5CTkRFhI7v_F9zKg5lZiBFSO0jqgo4ylqWXpNgotzSdX/exec'
+const ZALO_GROUP = 'https://zalo.me/g/ovma9qgjuedypjy8mnxc'
+const SALE_END_DATE = new Date('2026-05-31T23:59:59+07:00')
+const LOGO_B64 = 'data:image/png;base64,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'
 
 export default function OfflinePage() {
-  useScrollReveal()
-  const formRef = useRef(null)
+  const [countdown, setCountdown] = useState({ d: '00', h: '00', m: '00', s: '00' })
+  const [popupVisible, setPopupVisible] = useState(false)
+  const [floatVisible, setFloatVisible] = useState(false)
+  const [thankYouVisible, setThankYouVisible] = useState(false)
+  const [tyCount, setTyCount] = useState(5)
+  const [modalThi, setModalThi] = useState(false)
+  const [modalDaihan, setModalDaihan] = useState(false)
+  const [openFaq, setOpenFaq] = useState(null)
+  const [activeTab, setActiveTab] = useState(0)
+  const [formData, setFormData] = useState({ name: '', phone: '', email: '', center: '', course: '' })
+  const [formLoading, setFormLoading] = useState(false)
 
+  // Tracking injection
   useEffect(() => {
-    document.title = 'Khóa học RoboSim Offline Đà Nẵng 2026 | Luyện thi Robotics R1 R2 | Sata Robo'
-    const desc = document.querySelector('meta[name="description"]')
-    if (desc) desc.setAttribute('content', 'Khóa học RoboSim Offline 16 buổi tại Đà Nẵng dành cho học sinh Tiểu học R1 và THCS R2 luyện thi vòng loại Cuộc thi Sáng tạo Robotics 2026. Khai giảng 18/05/2026, học tại 4 cơ sở SataMath.')
+    if (!window.fbq) {
+      const script = document.createElement('script')
+      script.innerHTML = `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2157352735031955');fbq('track','PageView');`
+      document.head.appendChild(script)
+    }
+    if (!window.gtag) {
+      const gtagScript = document.createElement('script')
+      gtagScript.async = true
+      gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-0K2CW1DQK1'
+      document.head.appendChild(gtagScript)
+      const gtagInit = document.createElement('script')
+      gtagInit.innerHTML = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-0K2CW1DQK1');`
+      document.head.appendChild(gtagInit)
+    }
   }, [])
 
-  const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  // Countdown
+  useEffect(() => {
+    const pad = n => String(n).padStart(2, '0')
+    const update = () => {
+      const diff = SALE_END_DATE - new Date()
+      if (diff <= 0) return
+      const d = Math.floor(diff / 864e5), h = Math.floor(diff % 864e5 / 36e5),
+        m = Math.floor(diff % 36e5 / 6e4), s = Math.floor(diff % 6e4 / 1e3)
+      setCountdown({ d: pad(d), h: pad(h), m: pad(m), s: pad(s) })
+    }
+    update()
+    const id = setInterval(update, 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  // Popup (60s + scroll 72%)
+  useEffect(() => {
+    let shown = false
+    const showPopup = () => { if (!shown) { shown = true; setPopupVisible(true) } }
+    const timer = setTimeout(showPopup, 60000)
+    const onScroll = () => {
+      if ((window.scrollY + window.innerHeight) / document.body.scrollHeight > 0.72) showPopup()
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll) }
+  }, [])
+
+  // Float panel
+  useEffect(() => {
+    const onScroll = () => setFloatVisible(window.scrollY > 400)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Thank you countdown
+  useEffect(() => {
+    if (!thankYouVisible) return
+    setTyCount(5)
+    const id = setInterval(() => {
+      setTyCount(c => {
+        if (c <= 1) { clearInterval(id); window.location.href = ZALO_GROUP; return 0 }
+        return c - 1
+      })
+    }, 1000)
+    return () => clearInterval(id)
+  }, [thankYouVisible])
+
+  // Scroll reveal
+  useEffect(() => {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target) }
+      })
+    }, { threshold: 0.07 })
+    document.querySelectorAll('.anim').forEach(el => obs.observe(el))
+    return () => obs.disconnect()
+  }, [])
+
+  // ESC key closes modals/popup
+  useEffect(() => {
+    const onKey = e => {
+      if (e.key === 'Escape') {
+        setModalThi(false); setModalDaihan(false); setPopupVisible(false)
+        document.body.style.overflow = ''
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
+  // Circuit canvas animation
+  useEffect(() => {
+    const canvas = document.getElementById('circuit-canvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
+    resize()
+    let animId, nodes = [], traces = [], leds = []
+    function Node(x, y) { this.x = x; this.y = y; this.r = Math.random() * 1.5 + 0.5; this.alpha = Math.random() * 0.4 + 0.1 }
+    function Trace(x1, y1, x2, y2, col) {
+      this.x1 = x1; this.y1 = y1; this.x2 = x2; this.y2 = y2
+      this.col = col || 'rgba(168,85,247,'; this.alpha = Math.random() * 0.25 + 0.06; this.width = Math.random() > 0.7 ? 1.5 : 0.7
+    }
+    function LED(trace) {
+      this.trace = trace; this.t = Math.random()
+      this.speed = (Math.random() * 0.003 + 0.001) * (Math.random() > 0.5 ? 1 : -1)
+      var cols = ['rgba(168,85,247,', 'rgba(6,182,212,', 'rgba(245,158,11,', 'rgba(16,185,129,']
+      this.col = cols[Math.floor(Math.random() * cols.length)]; this.size = Math.random() * 3 + 1.5
+    }
+    LED.prototype.update = function () { this.t += this.speed; if (this.t > 1) this.t = 0; if (this.t < 0) this.t = 1 }
+    LED.prototype.draw = function () {
+      var tr = this.trace, x = tr.x1 + (tr.x2 - tr.x1) * this.t, y = tr.y1 + (tr.y2 - tr.y1) * this.t
+      ctx.save(); ctx.beginPath(); ctx.arc(x, y, this.size, 0, Math.PI * 2)
+      ctx.fillStyle = this.col + '1)'; ctx.shadowColor = this.col + '1)'; ctx.shadowBlur = 12; ctx.fill(); ctx.restore()
+    }
+    function build() {
+      var W = canvas.width, H = canvas.height; nodes = []; traces = []; leds = []
+      var GRID = 80, cols = Math.ceil(W / GRID) + 1, rows = Math.ceil(H / GRID) + 1, pts = []
+      for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) if (Math.random() < 0.72) pts.push({ x: c * GRID + (Math.random() * 20 - 10), y: r * GRID + (Math.random() * 20 - 10) })
+      var used = new Set()
+      pts.forEach(function (p, i) {
+        pts.forEach(function (q, j) {
+          if (i >= j) return; var key = i + '_' + j; if (used.has(key)) return
+          var dx = Math.abs(p.x - q.x), dy = Math.abs(p.y - q.y)
+          if ((dx < GRID * 1.4 && dy < 12) || (dy < GRID * 1.4 && dx < 12)) { used.add(key); traces.push(new Trace(p.x, p.y, q.x, q.y, Math.random() > 0.6 ? 'rgba(6,182,212,' : 'rgba(168,85,247,')) }
+        })
+        nodes.push(new Node(p.x, p.y))
+      })
+      traces.forEach(function (tr) { if (Math.random() < 0.18) leds.push(new LED(tr)) })
+      while (leds.length > 80) leds.splice(Math.floor(Math.random() * leds.length), 1)
+    }
+    var tick = 0
+    function draw() {
+      tick++; ctx.clearRect(0, 0, canvas.width, canvas.height)
+      traces.forEach(function (tr) {
+        ctx.beginPath(); ctx.moveTo(tr.x1, tr.y1); ctx.lineTo(tr.x2, tr.y2); ctx.strokeStyle = tr.col + tr.alpha + ')'; ctx.lineWidth = tr.width
+        if (tick % 120 === 0 && Math.random() > 0.8) tr.alpha = Math.min(0.5, tr.alpha + 0.15)
+        else tr.alpha = Math.max(0.05, tr.alpha - 0.0005); ctx.stroke()
+      })
+      nodes.forEach(function (n) {
+        var a = n.alpha + Math.sin(tick * 0.02 + n.x * 0.05) * 0.05
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(168,85,247,' + a + ')'; ctx.shadowColor = 'rgba(168,85,247,.5)'; ctx.shadowBlur = 6; ctx.fill(); ctx.shadowBlur = 0
+      })
+      leds.forEach(function (led) { led.update(); led.draw() })
+      animId = requestAnimationFrame(draw)
+    }
+    build(); draw()
+    const onResize = () => { resize(); build() }
+    window.addEventListener('resize', onResize)
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', onResize) }
+  }, [])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const { name, phone, center, course } = formData
+    if (!name || !phone || !center || !course) { alert('Vui long dien day du thong tin bat buoc (co dau *)!'); return }
+    if (!/^[0-9]{9,11}$/.test(phone.replace(/\s/g, ''))) { alert('So dien thoai khong hop le. Vui long nhap lai!'); return }
+    setFormLoading(true)
+    const payload = { ...formData, timestamp: new Date().toLocaleString('vi-VN') }
+    try {
+      await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    } catch (err) { console.error('[Sata Robo] Sheets error:', err) }
+    if (window.fbq) fbq('track', 'Lead', { content_name: formData.course, content_category: formData.center })
+    if (window.gtag) gtag('event', 'generate_lead', { course_name: formData.course, center: formData.center })
+    setTimeout(() => {
+      setFormLoading(false); setFormData({ name: '', phone: '', email: '', center: '', course: '' })
+      setThankYouVisible(true); document.body.style.overflow = 'hidden'
+    }, 1400)
+  }
+
+  const loadVideo = (placeholder, videoId) => {
+    if (videoId.startsWith('VIDEO_ID')) { alert('Admin: Replace VIDEO_ID_X with real YouTube ID!'); return }
+    const wrap = placeholder.parentNode
+    const iframe = document.createElement('iframe')
+    iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0'
+    iframe.allow = 'autoplay; encrypted-media; picture-in-picture'; iframe.allowFullscreen = true
+    Object.assign(iframe.style, { position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', border: 'none' })
+    wrap.innerHTML = ''; wrap.appendChild(iframe)
+  }
+
+  const openModalThi = () => { setModalThi(true); document.body.style.overflow = 'hidden' }
+  const closeModalThi = () => { setModalThi(false); document.body.style.overflow = '' }
+  const openModalDaihan = () => { setModalDaihan(true); document.body.style.overflow = 'hidden' }
+  const closeModalDaihan = () => { setModalDaihan(false); document.body.style.overflow = '' }
+  const toggleFaq = (idx) => setOpenFaq(openFaq === idx ? null : idx)
+  const goToZalo = () => { window.location.href = ZALO_GROUP }
+  const closeTY = () => { setThankYouVisible(false); document.body.style.overflow = ''; window.scrollTo({ top: 0, behavior: 'smooth' }) }
+
+  const faqItems = [
+    { q: 'Con chua bao gio hoc Robotics, co theo kip khong?', a: 'Hoan toan duoc! Do chinh xac la ly do buoi Test Nang Luc mien phi - de phan loai va xep con vao dung cap do. Lo trinh bat dau tu so 0 voi cau truc Dai cuong - Chuyen sau - Du an, dam bao moi hoc sinh deu co the theo kip va phat trien tot.' },
+    { q: 'Lop hoc co dong khong? Con co duoc chu y rieng khong?', a: 'Cam ket cung: Toi da 12 hoc sinh/lop. Voi 12 hoc sinh, moi thay co tuong tac 1-1 voi tung con trong moi buoi hoc, theo doi tien do va dieu chinh phuong phap phu hop tung hoc sinh.' },
+    { q: 'Hoc phi co the dong tung dot khong?', a: 'Hoan toan co the! Phu huynh dang ky tung hoc phan (12 buoi) va nang len bat ky luc nao - phan da dong duoc tru vao gia moi. Uu dai truoc 31/05/2026: 30% so voi gia niem yet. Sata Robo cung ho tro tra gop cho goi Full 48 buoi.' },
+    { q: 'Neu khong hai long sau khi hoc, co hoan tien khong?', a: 'Cam ket hoan tien 100% sau 2 buoi dau tien neu khong hai long - khong can giai thich ly do. Buoi 1 la Test Nang Luc mien phi. Buoi 2 la buoi hoc chinh thuc dau tien. Cam ket bang van ban.' },
+    { q: 'Phu huynh nhan duoc thong tin gi ve qua trinh hoc cua con?', a: 'Moi thang: Bao cao Phat trien qua Zalo gom tien do hoc tap, diem manh, diem can cai thien, anh va video thuc hanh. Sau moi 12 buoi: bai kiem tra nang luc + bao cao chi tiet. Phu huynh duoc moi du Buoi Thuyet trinh Ky Su Nhi cuoi moi hoc phan.' },
+    { q: 'Khoa 16 buoi co du de thi cuoc thi TW Doan khong?', a: 'Khoa Robosim Master 2026 (16 buoi) tap trung chuyen sau ky nang thi RoboSim - du de tu tin buoc vao phong thi. Neu con chua co nen tang Robotics, lien he Zalo 0818.823.720 de duoc tu van lo trinh ket hop phu hop nhat.' },
+    { q: 'Muon tu van them truoc khi quyet dinh, lien he o dau?', a: 'Nhan Zalo 0818.823.720 - phan hoi trong 2 gio. Khong co cau hoi nao la khong quan trong. Hoac den truc tiep 1 trong 4 trung tam de tham quan phong Lab va gap giang vien.' }
+  ]
+
+  const faqItemsVi = [
+    {
+      q: 'Con chưa bao giờ học Robotics, có theo kịp không?',
+      a: 'Hoàn toàn được! Đó chính xác là lý do buổi Test Năng Lực miễn phí — để phân loại và xếp con vào đúng cấp độ. Lộ trình bắt đầu từ số 0 với cấu trúc Đại cương → Chuyên sâu → Dự án, đảm bảo mọi học sinh đều có thể theo kịp và phát triển tốt.'
+    },
+    {
+      q: 'Lớp học có đông không? Con có được chú ý riêng không?',
+      a: 'Cam kết cứng: Tối đa 12 học sinh/lớp. Với 12 học sinh, mỗi thầy cô tương tác 1-1 với từng con trong mỗi buổi học, theo dõi tiến độ và điều chỉnh phương pháp phù hợp từng học sinh.'
+    },
+    {
+      q: 'Học phí có thể đóng từng đợt không?',
+      a: 'Hoàn toàn có thể! Phụ huynh đăng ký từng học phần (12 buổi) và nâng lên bất kỳ lúc nào — phần đã đóng được trừ vào giá mới. Ưu đãi trước 31/05/2026: 30% so với giá niêm yết. Sata Robo cũng hỗ trợ trả góp cho gói Full 48 buổi.'
+    },
+    {
+      q: 'Nếu không hài lòng sau khi học, có hoàn tiền không?',
+      a: 'Cam kết hoàn tiền 100% sau 2 buổi đầu tiên nếu không hài lòng — không cần giải thích lý do. Buổi 1 là Test Năng Lực miễn phí. Buổi 2 là buổi học chính thức đầu tiên. Cam kết bằng văn bản.'
+    },
+    {
+      q: 'Phụ huynh nhận được thông tin gì về quá trình học của con?',
+      a: 'Mỗi tháng: “Báo cáo Phát triển” qua Zalo gồm tiến độ học tập, điểm mạnh, điểm cần cải thiện, ảnh và video thực hành. Sau mỗi 12 buổi: bài kiểm tra năng lực + báo cáo chi tiết. Phụ huynh được mời dự Buổi Thuyết trình Kỹ Sư Nhí cuối mỗi học phần.'
+    },
+    {
+      q: 'Khóa 16 buổi có đủ để thi cuộc thi TW Đoàn không?',
+      a: 'Khóa Robosim Master 2026 (16 buổi) tập trung chuyên sâu kỹ năng thi RoboSim — đủ để tự tin bước vào phòng thi. Nếu con chưa có nền tảng Robotics, liên hệ Zalo 0818.823.720 để được tư vấn lộ trình kết hợp phù hợp nhất.'
+    },
+    {
+      q: 'Muốn tư vấn thêm trước khi quyết định, liên hệ ở đâu?',
+      a: 'Nhắn Zalo 0818.823.720 — phản hồi trong 2 giờ. Không có câu hỏi nào là không quan trọng. Hoặc đến trực tiếp 1 trong 4 trung tâm để tham quan phòng Lab và gặp giảng viên.'
+    }
+  ]
 
   return (
-    <div className="offline-page-wrapper">
-      <Navbar />
+    <>
+      <canvas id="circuit-canvas"></canvas>
 
-      <main>
-        {/* ── 1. HERO ── */}
-        <section className="offline-hero" aria-labelledby="offline-hero-title">
-          <div className="container">
-            <div className="offline-hero-inner">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-                Lớp học Offline · Sata Robo · Đà Nẵng
+      {/* SALE BAR */}
+      <div id="sale-bar">
+        <span style={{ color: '#fff' }}>🔥 ƯU ĐÃI ĐĂNG KÝ SỚM — Kết thúc sau:
+          <span className="sb-cd">
+            <span className="cd-u"><span className="cd-n">{countdown.d}</span><span className="cd-l">ngày</span></span>
+            <span className="cd-sep">:</span>
+            <span className="cd-u"><span className="cd-n">{countdown.h}</span><span className="cd-l">giờ</span></span>
+            <span className="cd-sep">:</span>
+            <span className="cd-u"><span className="cd-n">{countdown.m}</span><span className="cd-l">phút</span></span>
+            <span className="cd-sep">:</span>
+            <span className="cd-u"><span className="cd-n">{countdown.s}</span><span className="cd-l">giây</span></span>
+          </span>
+        </span>
+        <span style={{ color: '#fca5a5', fontSize: '11px' }}>| Sau 31/05/2026 học phí trở về mức niêm yết</span>
+      </div>
+
+      {/* NAVBAR */}
+      <nav>
+        <div className="nav-in">
+          <div className="nav-brand">
+            <img src={LOGO_B64} className="nav-logo-img" alt="Sata Robo" />
+            <div className="nav-brand-text">
+              <div className="nav-sl">🚀 Khơi Nguồn Sáng Tạo — Chắp Cánh Tương Lai</div>
+              <div className="nav-slogan-sub">Robotics Offline · 4 Cơ Sở Đà Nẵng</div>
+            </div>
+          </div>
+          <div className="nav-links">
+            <a href="#products">Khóa học</a>
+            <a href="#locations">Cơ sở</a>
+            <a href="#countdown-urgency">Ưu đãi</a>
+            <a href="#register">Đăng ký</a>
+          </div>
+          <a href="#register" className="nav-cta btn">🚀 Đăng Ký Test Miễn Phí</a>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <section id="hero" className="circuit-bg">
+        <div className="cl-wrap">
+          <div className="cl cl-h cl-p" style={{ top: '18%', left: 0, right: 0, animationDelay: '0s' }}></div>
+          <div className="cl cl-h cl-p" style={{ top: '68%', left: 0, right: 0, animationDelay: '1.5s' }}></div>
+          <div className="cl cl-v cl-p" style={{ left: '12%', top: 0, bottom: 0, animationDelay: '.7s' }}></div>
+          <div className="cl cl-v cl-p" style={{ left: '85%', top: 0, bottom: 0, animationDelay: '2s' }}></div>
+          <div className="cdot" style={{ top: '18%', left: '12%', animationDelay: '0s' }}></div>
+          <div className="cdot" style={{ top: '68%', left: '85%', animationDelay: '1.5s' }}></div>
+        </div>
+        <div className="container z1">
+          <div className="hero-grid">
+            <div className="hero-left">
+              <div className="hero-proof">
+                <span className="hero-proof-badge">✓ 4 Cơ Sở Đà Nẵng</span>
+                <span className="hero-proof-badge">✓ Lớp 1 → Lớp 8</span>
+                <span className="hero-proof-badge">✓ Test Miễn Phí</span>
+                <span className="hero-proof-badge">✓ Hoàn Tiền 100%</span>
               </div>
-
-              <h1 id="offline-hero-title">
-                <span className="gradient-text">Khóa học RoboSim Offline 16 buổi</span> –<br />
-                Luyện thi Robotics 2026 tại Đà Nẵng
-              </h1>
-
-              <p className="offline-hero-sub">
-                Lớp học kèm trực tiếp giúp học sinh Tiểu học R1 và THCS R2 luyện thi RoboSim vòng loại chủ đề
-                Hậu cần thông minh, được giáo viên hướng dẫn từng bước từ phân tích đề, thiết kế robot, lập
-                trình nhiệm vụ đến tối ưu bài thi.
-              </p>
-
-              <div className="badge-row">
-                <span className="badge-discount">Giảm 30% · 30/04 &amp; 01/05</span>
-                <span className="badge-info">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                  </svg>
-                  Khai giảng: Tối Thứ 2, 18/05/2026
-                </span>
-                <span className="badge-info">16 buổi học trực tiếp</span>
-                <span className="badge-info">4 cơ sở tại Đà Nẵng</span>
-                <span className="badge-info">Tiểu học R1 &amp; THCS R2</span>
+              <div className="hook">⚡ Ba mẹ ơi — Có một nơi ở Đà Nẵng, con được tự tay lắp robot, lập trình và thi đấu thật sự mỗi tuần!</div>
+              <h1 className="hero-h1">Trang bị cho con<br /><em>hành&nbsp;trang&nbsp;công&nbsp;nghệ</em><br />từ đam mê đầu đời<br />đến thi đấu quốc tế</h1>
+              <p className="ssub">Hàng trăm học sinh Đà Nẵng đang chọn học lý thuyết khô khan — trong khi con có thể thực hành với robot thật, thầy thật, phòng Lab thật tại 4 trung tâm Sata Robo.</p>
+              <div className="hero-btns">
+                <div className="hero-row">
+                  <a href="#products" className="btn btn-r1">🏆 Xem Khóa Thi Đấu</a>
+                  <a href="#products" className="btn btn-r2">🚀 Xem Lộ Trình Dài Hạn</a>
+                </div>
+                <div className="hero-row">
+                  <a href="#register" className="btn btn-test">🎯 Đăng Ký Test Miễn Phí →</a>
+                  <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer" className="btn btn-zalo">💬 Zalo Tư Vấn</a>
+                </div>
               </div>
-
-              <div className="offline-hero-cta">
-                <button className="btn btn-r1 btn-lg" onClick={scrollToForm}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                  Đăng ký giữ chỗ ngay
-                </button>
-                <a href="https://zalo.me/0818823720" className="btn btn-zalo btn-lg" rel="noopener" target="_blank">
-                  💬 Nhắn Zalo: 0818.823.720
-                </a>
+            </div>
+            <div className="hero-right">
+              <div className="hero-card">
+                <div className="hero-card-title">📍 4 CƠ SỞ TẠI ĐÀ NẴNG</div>
+                <div className="hero-loc">
+                  <div className="loc-row"><div className="loc-dot"></div><div className="loc-name">60 Lê Lợi</div></div>
+                  <div className="loc-row"><div className="loc-dot"></div><div className="loc-name">258 Lê Thanh Nghị</div></div>
+                  <div className="loc-row"><div className="loc-dot"></div><div className="loc-name">232 Nguyễn Phước Lan</div></div>
+                  <div className="loc-row"><div className="loc-dot"></div><div className="loc-name">269 Điện Biên Phủ</div></div>
+                </div>
+                <div className="hero-stats">
+                  <div className="hstat"><div className="hstat-n">5</div><div className="hstat-l">Khóa dài hạn</div></div>
+                  <div className="hstat"><div className="hstat-n">2</div><div className="hstat-l">Khóa thi đấu</div></div>
+                  <div className="hstat"><div className="hstat-n">48</div><div className="hstat-l">Buổi/module</div></div>
+                  <div className="hstat"><div className="hstat-n">36M</div><div className="hstat-l">Giải thưởng/năm</div></div>
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── 2. VÌ SAO CHỌN LỚP OFFLINE ── */}
-        <section className="section section-alt" aria-labelledby="why-offline-title">
-          <div className="container">
-            <div className="text-center reveal">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                  <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-                Lý do nên học offline
-              </div>
-              <h2 className="section-title" id="why-offline-title">
-                Tự học RoboSim có thể khó –<br />
-                <span className="gradient-text">nhưng có giáo viên kèm trực tiếp, con sẽ đi đúng hướng hơn</span>
-              </h2>
-              <p className="section-subtitle">
-                Nhiều học sinh khi luyện RoboSim thường gặp khó khăn ở bước đọc đề, chia nhiệm vụ, thiết kế
-                robot, lập trình đường đi và xử lý lỗi. Với lớp học offline, học sinh được giáo viên quan sát
-                trực tiếp, sửa lỗi kịp thời và hướng dẫn chiến thuật luyện thi phù hợp với bảng R1 hoặc R2.
-              </p>
+      {/* LARGE COUNTDOWN */}
+      <section id="countdown-urgency" className="circuit-bg">
+        <div className="cl-wrap">
+          <div className="cl cl-h cl-p" style={{ top: '30%', left: 0, right: 0, animationDelay: '.3s' }}></div>
+          <div className="cdot" style={{ top: '30%', left: '50%', animationDelay: '.3s' }}></div>
+        </div>
+        <div className="container z1 text-center">
+          <div className="lc-badge"><span className="fire">🔥</span> ƯU ĐÃI ĐẶC BIỆT — CHỈ CÒN</div>
+          <h2 className="st" style={{ fontSize: 'clamp(22px,3vw,36px)' }}>
+            Đăng ký trước <span className="gold">31/05/2026</span> — Tiết kiệm <span className="acc">30%</span> học phí!
+          </h2>
+          <p className="lc-sub">Sau ngày 31/05, học phí trở về mức niêm yết đầy đủ. Đừng để con bỏ lỡ ưu đãi tốt nhất năm!</p>
+          <div className="lc-units">
+            <div className="lc-unit"><div className="lc-num">{countdown.d}</div><div className="lc-lbl">Ngày</div></div>
+            <div className="lc-sep">:</div>
+            <div className="lc-unit"><div className="lc-num">{countdown.h}</div><div className="lc-lbl">Giờ</div></div>
+            <div className="lc-sep">:</div>
+            <div className="lc-unit"><div className="lc-num">{countdown.m}</div><div className="lc-lbl">Phút</div></div>
+            <div className="lc-sep">:</div>
+            <div className="lc-unit"><div className="lc-num">{countdown.s}</div><div className="lc-lbl">Giây</div></div>
+          </div>
+          <div className="urg-bar-wrap"><div className="urg-bar"></div></div>
+          <div className="lc-cta">
+            <div className="lc-cta-row">
+              <a href="#register" className="btn btn-test" style={{ fontSize: '16px', padding: '17px 36px' }}>🎯 Đăng Ký Ngay — Nhận Ưu Đãi 30% →</a>
+              <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer" className="btn btn-zalo" style={{ fontSize: '14px' }}>💬 Zalo Tư Vấn Miễn Phí</a>
             </div>
+            <button className="btn-dismiss" onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}>
+              Tôi cần đọc thêm thông tin trước — Để sau ↓
+            </button>
+          </div>
+        </div>
+      </section>
 
-            <div className="why-offline-grid">
-              {[
-                { icon: '👨‍🏫', title: 'Có giáo viên kèm trực tiếp', desc: 'Học sinh được hướng dẫn, hỏi đáp và sửa lỗi ngay trong buổi học.' },
-                { icon: '🎯', title: 'Luyện đúng bảng thi R1/R2', desc: 'Nội dung được định hướng theo cấp học và bảng thi của học sinh.', delay: 1 },
-                { icon: '🗺️', title: 'Học theo lộ trình 16 buổi', desc: 'Từ nền tảng RoboSim đến luyện nhiệm vụ và hoàn thiện bài thi.', delay: 2 },
-                { icon: '💪', title: 'Tăng sự tự tin trước vòng loại', desc: 'Con hiểu đề, biết cách xử lý nhiệm vụ và chủ động hơn khi luyện thi.', delay: 3 },
-              ].map(({ icon, title, desc, delay }) => (
-                <div key={title} className={`why-offline-card reveal${delay ? ` reveal-delay-${delay}` : ''}`}>
-                  <div className="why-offline-icon">{icon}</div>
-                  <h3 className="why-offline-title">{title}</h3>
-                  <p className="why-offline-desc">{desc}</p>
-                </div>
-              ))}
+      {/* PRODUCTS */}
+      <section id="products">
+        <div className="container text-center">
+          <div className="sbadge">🤖 Sata Robo Offline</div>
+          <h2 className="st">Chọn <span className="acc">Hành Trình</span><br />Phù Hợp Với Con</h2>
+          <p className="ssub" style={{ maxWidth: '640px', margin: '0 auto 40px' }}>Hai nhóm sản phẩm — một cho thi đấu ngay, một xây nền tảng từ lớp 1 đến lớp 8.</p>
+          <div className="pg-grid">
+            <div className="pg-card anim" onClick={openModalThi} style={{ cursor: 'pointer' }}>
+              <span className="pg-icon">🏆</span>
+              <div className="pg-title">Nhóm 1: Khóa Thi Đấu</div>
+              <p className="pg-sub">Luyện thi Robotics chuyên sâu — chuẩn bị cho cuộc thi do TW Đoàn và Thành Đoàn Đà Nẵng phát động. 16 buổi thực chiến, quà tặng và hỗ trợ thi đấu đầy đủ.</p>
+              <div className="pg-tags">
+                <span className="pg-tag nowrap">⏱ 16 buổi / khóa</span>
+                <span className="pg-tag nowrap">🎯 TW Đoàn &amp; Thành Đoàn ĐN</span>
+                <span className="pg-tag nowrap">🏅 Thi đấu thực chiến</span>
+              </div>
+              <div className="pg-courses">
+                <div className="pg-course">Robosim Master 2026 — Offline</div>
+                <div className="pg-course">Chiến Binh Robot 2026 — Offline</div>
+              </div>
+              <div className="pg-cta">📖 Xem chi tiết thông tin khóa học <span style={{ fontSize: '20px' }}>→</span></div>
+            </div>
+            <div className="pg-card oc anim" onClick={openModalDaihan} style={{ cursor: 'pointer' }}>
+              <span className="pg-icon">🚀</span>
+              <div className="pg-title">Nhóm 2: Lộ Trình Dài Hạn</div>
+              <p className="pg-sub">Hành trình từ lớp 1 đến lớp 8 — mỗi module 48 buổi theo 4 học phần bài bản. Thi nội bộ hàng tháng — giải thưởng 36 triệu/năm.</p>
+              <div className="pg-tags">
+                <span className="pg-tag ot nowrap">⏱ 48 buổi / module</span>
+                <span className="pg-tag ot nowrap">📚 Lớp 1 → Lớp 8</span>
+                <span className="pg-tag ot nowrap">🏅 Championship 36tr/năm</span>
+              </div>
+              <div className="pg-courses">
+                <div className="pg-course">🌱 Ươm Mầm Tài Năng — Lớp 1–2</div>
+                <div className="pg-course">🚀 Bức Phá Giới Hạn — Lớp 3–4</div>
+                <div className="pg-course">⚡ Khơi Nguồn Sáng Tạo — Lớp 5</div>
+                <div className="pg-course">🏆 Chinh Phục Đấu Trường — Lớp 6–7</div>
+                <div className="pg-course">🤖 Kiến Tạo Tương Lai — Lớp 8</div>
+              </div>
+              <div className="pg-cta" style={{ color: 'var(--orange)' }}>📖 Xem chi tiết thông tin khóa học <span style={{ fontSize: '20px' }}>→</span></div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── 3. THÔNG TIN KHAI GIẢNG ── */}
-        <section className="section" aria-labelledby="info-title">
-          <div className="container">
-            <div className="text-center reveal">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
-                </svg>
-                Thông tin lớp học
-              </div>
-              <h2 className="section-title" id="info-title">
-                Thông tin lớp học <span className="gradient-text">RoboSim Offline</span>
-              </h2>
-            </div>
+      {/* LOCATIONS */}
+      <section id="locations" className="sec-mid">
+        <div className="container text-center">
+          <div className="sbadge-cyan">📍 Địa điểm học</div>
+          <h2 className="st">4 Trung Tâm <span className="cyan">Sata Robo</span><br />Phủ Khắp Đà Nẵng</h2>
+          <p className="ssub">Trong hệ sinh thái Sata — cùng hệ thống với các cơ sở toán uy tín. Gần nhà, tiện lợi, phòng Lab hiện đại.</p>
+          <div className="loc-grid">
+            <div className="loc-card anim"><div style={{ fontSize: '28px', marginBottom: '10px' }}>🏫</div><div className="loc-num">01</div><div className="loc-addr">60 Lê Lợi</div><div style={{ fontSize: '12px', color: 'var(--gray)' }}>P. Hải Châu</div></div>
+            <div className="loc-card anim"><div style={{ fontSize: '28px', marginBottom: '10px' }}>🏫</div><div className="loc-num">02</div><div className="loc-addr">258 Lê Thanh Nghị</div><div style={{ fontSize: '12px', color: 'var(--gray)' }}>P. Hoà Cường</div></div>
+            <div className="loc-card anim"><div style={{ fontSize: '28px', marginBottom: '10px' }}>🏫</div><div className="loc-num">03</div><div className="loc-addr">232 Nguyễn Phước Lan</div><div style={{ fontSize: '12px', color: 'var(--gray)' }}>P. Cẩm Lệ</div></div>
+            <div className="loc-card anim"><div style={{ fontSize: '28px', marginBottom: '10px' }}>🏫</div><div className="loc-num">04</div><div className="loc-addr">269 Điện Biên Phủ</div><div style={{ fontSize: '12px', color: 'var(--gray)' }}>P. Hoà Khê</div></div>
+          </div>
+        </div>
+      </section>
 
-            <div className="info-card reveal">
-              {[
-                { icon: '🏫', label: 'Hình thức', value: 'Lớp học kèm trực tiếp offline' },
-                { icon: '📅', label: 'Số buổi', value: '16 buổi' },
-                { icon: '🗓️', label: 'Khai giảng', value: 'Tối Thứ 2, ngày 18/05/2026', highlight: true },
-                { icon: '📍', label: 'Địa điểm', value: '4 cơ sở thuộc hệ sinh thái SataMath tại Đà Nẵng' },
-                { icon: '🎓', label: 'Đối tượng', value: 'Tiểu học R1, THCS R2' },
-                { icon: '📞', label: 'Hotline / Zalo', value: '0818.823.720', highlight: true },
-              ].map(({ icon, label, value, highlight }) => (
-                <div className="info-row" key={label}>
-                  <div className="info-icon">{icon}</div>
-                  <div>
-                    <div className="info-label">{label}</div>
-                    <div className={`info-value${highlight ? ' highlight' : ''}`}>{value}</div>
-                  </div>
-                </div>
-              ))}
+      {/* CAM KET */}
+      <section id="cam-ket">
+        <div className="ck-glow1"></div><div className="ck-glow2"></div>
+        <div className="container z1">
+          <div className="ck-header">
+            <div className="ck-supertitle">🛡️ Cam Kết Minh Bạch — Đo Được — Bảo Đảm</div>
+            <h2 className="ck-h1"><span className="ck-white">6 Cam Kết </span><span className="ck-accent">Minh Bạch</span><br /><span className="ck-white">Của </span><span className="ck-gold">Sata Robo</span></h2>
+            <p className="ck-desc">Không hứa hẹn chung chung — mỗi cam kết đều <strong style={{ color: '#fff' }}>đo lường được</strong> và có <strong style={{ color: '#fff' }}>cơ chế bảo đảm cụ thể</strong>.</p>
+            <div className="ck-trustbar">
+              <div className="ck-trust">✅ Cam kết bằng văn bản</div>
+              <div className="ck-trust">✅ Đo được sau mỗi 12 buổi</div>
+              <div className="ck-trust">✅ Hoàn tiền 100% nếu không hài lòng</div>
             </div>
           </div>
-        </section>
-
-        {/* ── 4. ĐỊA ĐIỂM HỌC ── */}
-        <section className="section section-alt" aria-labelledby="location-title">
-          <div className="container">
-            <div className="text-center reveal">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                </svg>
-                Địa điểm học
+          <div className="ck-grid">
+            <div className="ck-card anim"><div className="ck-num ck-num-default">#1</div><span className="ck-icon">🎯</span><div className="ck-title">Kết Quả Đo Được Mỗi Học Phần</div><div className="ck-body">Sau mỗi 12 buổi: bài kiểm tra năng lực + báo cáo Zalo chi tiết. <strong style={{ color: '#fff' }}>Chưa đạt → bù 3 buổi miễn phí.</strong></div><div className="ck-pill">✓ Đo được &amp; bù học</div></div>
+            <div className="ck-card featured anim"><div className="ck-ribbon">⭐ Nổi Bật Nhất</div><div className="ck-num ck-num-gold">#2</div><span className="ck-icon">🔄</span><div className="ck-title gold-title">Trải Nghiệm 2 Buổi — Hoàn Tiền 100%</div><div className="ck-body">Buổi 1: Test Năng Lực <strong style={{ color: 'var(--gold)' }}>miễn phí</strong>. Không hài lòng → <strong style={{ color: 'var(--gold)' }}>hoàn 100% không hỏi thêm.</strong></div><div className="ck-pill gold-pill">💰 Hoàn tiền 100%</div></div>
+            <div className="ck-card anim"><div className="ck-num ck-num-default">#3</div><span className="ck-icon">🏆</span><div className="ck-title">Kỹ Năng Thi Đấu Thực Chiến</div><div className="ck-body">100% học viên hoàn thành <strong style={{ color: '#fff' }}>đủ kỹ năng dự thi vòng đấu bản Robotics quốc gia.</strong></div><div className="ck-pill">✓ Thi đấu thực chiến</div></div>
+          </div>
+          <div className="ck-grid" style={{ marginTop: '20px' }}>
+            <div className="ck-card anim"><div className="ck-num ck-num-default">#4</div><span className="ck-icon">👨‍🏫</span><div className="ck-title">Giảng Viên Đã Qua Đào Tạo Chuẩn</div><div className="ck-body">100% GV có chứng nhận chuẩn. <strong style={{ color: '#fff' }}>Lớp tối đa 12 học sinh</strong> — tương tác 1-1 với từng con.</div><div className="ck-pill">✓ Lớp ≤12 học sinh</div></div>
+            <div className="ck-card anim"><div className="ck-num ck-num-default">#5</div><span className="ck-icon">📊</span><div className="ck-title">Báo Cáo Phát Triển Hàng Tháng</div><div className="ck-body">Phụ huynh nhận <strong style={{ color: '#fff' }}>"Báo cáo Phát triển"</strong> qua Zalo hàng tháng: tiến độ, điểm mạnh, ảnh &amp; video.</div><div className="ck-pill">✓ Báo cáo minh bạch</div></div>
+            <div className="ck-card anim"><div className="ck-num ck-num-default">#6</div><span className="ck-icon">🎙️</span><div className="ck-title">Tự Tin Thuyết Trình &amp; Phản Biện</div><div className="ck-body">Mỗi HP kết thúc: <strong style={{ color: '#fff' }}>Thuyết trình Kỹ Sư Nhí</strong> trước phụ huynh — tự tin đứng nói trước đám đông.</div><div className="ck-pill">✓ Kỹ năng mềm thực tế</div></div>
+          </div>
+          <div className="ck-bottom-cta">
+            <div className="ck-bottom-wrap">
+              <div className="ck-bottom-title">🎯 6 Cam Kết = 6 Lý Do Ba Mẹ Tin Tưởng Sata Robo</div>
+              <div className="ck-bottom-sub">Không cần đặt cọc, không cần ký hợp đồng ngay. Đăng ký buổi Test miễn phí trải nghiệm trực tiếp trước khi quyết định.</div>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a href="#register" className="btn btn-test" style={{ fontSize: '15px', padding: '15px 32px' }}>🚀 Đăng Ký Test Miễn Phí →</a>
+                <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer" className="btn btn-zalo">💬 Hỏi Thêm Qua Zalo</a>
               </div>
-              <h2 className="section-title" id="location-title">
-                4 cơ sở học thuận tiện <span className="gradient-text">tại Đà Nẵng</span>
-              </h2>
-              <p className="section-subtitle">
-                Phụ huynh có thể chọn cơ sở học gần nhà hoặc thuận tiện nhất để được tư vấn và sắp lớp.
-              </p>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="location-grid">
-              {[
-                { num: 1, addr: '60 Lê Lợi' },
-                { num: 2, addr: '258 Lê Thanh Nghị' },
-                { num: 3, addr: '269 Điện Biên Phủ' },
-                { num: 4, addr: '232 Nguyễn Phước Lan' },
-              ].map(({ num, addr }) => (
-                <div key={num} className={`location-card reveal${num > 1 ? ` reveal-delay-${num - 1}` : ''}`}>
-                  <div className="location-num">{num}</div>
-                  <div className="location-label">Cơ sở {num}</div>
-                  <div className="location-addr">{addr}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '6px' }}>
-                    SataMath Đà Nẵng
-                  </div>
+      {/* GIFTS */}
+      <section className="sec-mid">
+        <div className="container text-center">
+          <div className="sbadge-gold">🎁 Quà tặng khi đăng ký</div>
+          <h2 className="st">Bộ Quà Tặng <span className="gold">Giá Trị</span> Kèm Theo</h2>
+          <p className="ssub">Đăng ký càng sớm, quà tặng càng nhiều. Minh bạch và chân thực.</p>
+          <div className="gift-grid">
+            <div className="gift-card g16 anim"><div className="gift-emoji">🎒</div><div className="gift-title">Khóa 16 Buổi</div><div className="gift-val">~300.000đ</div><div className="gift-items"><div className="gift-item">👕 Áo thun siêu nhân Sata Robo</div><div className="gift-item">📚 Bộ tài liệu học tập chính thức</div></div><div className="gift-cond">Đăng ký &amp; đóng học phí đầu tiên</div></div>
+            <div className="gift-card g48 anim"><div className="gift-emoji">⭐</div><div className="gift-title">Khóa Full 48 Buổi</div><div className="gift-val">~500.000đ</div><div className="gift-items"><div className="gift-item">👕 Áo thun siêu nhân Sata Robo</div><div className="gift-item">📚 Bộ tài liệu học tập chính thức</div><div className="gift-item">🎒 Cặp học sinh Sata Robo</div><div className="gift-item">🎁 Quà gia tăng đặc biệt</div></div><div className="gift-cond">Đăng ký Full 48 buổi &amp; đóng học phí</div></div>
+            <div className="gift-card drone anim"><div className="gift-emoji">🛸</div><div className="gift-title">BONUS ĐẶC BIỆT: Drone!</div><div className="gift-val" style={{ color: 'var(--cyan2)' }}>500k–800k</div><div className="gift-items"><div className="gift-item">🛸 Thiết bị Drone mini mang về nhà</div><div className="gift-item">✅ Cộng thêm lên tất cả quà trên</div></div><div className="gift-cond">🔥 Full 48 buổi + đóng tiền NGAY trong ngày Test</div></div>
+          </div>
+        </div>
+      </section>
+
+      {/* CHAMPIONSHIP */}
+      <section className="sec-dark circuit-bg">
+        <div className="cl-wrap"><div className="cl cl-h cl-p" style={{ top: '45%', left: 0, right: 0, animationDelay: '.3s' }}></div></div>
+        <div className="container z1 text-center">
+          <div className="sbadge-gold">🏆 Giải thưởng nội bộ</div>
+          <h2 className="st">Sata Robo Championship<br /><span className="gold">36.000.000đ</span> Giải Thưởng Mỗi Năm</h2>
+          <p className="ssub">12 kỳ thi hàng tháng — dành riêng cho học viên tại các trung tâm Sata Robo.</p>
+          <div className="prize-hdr"><div className="prize-tot">36.000.000 VNĐ</div><div style={{ fontSize: '13px', color: 'rgba(255,255,255,.6)' }}>12 kỳ × 3.000.000đ / kỳ</div></div>
+          <table className="prize-tbl">
+            <thead><tr><th>Hạng mục</th><th>Giải thưởng</th><th>Ghi chú</th></tr></thead>
+            <tbody>
+              <tr><td>🥇 Giải Nhất</td><td><span className="prize-val">1.200.000đ</span> + Trophy + Chứng nhận</td><td>Vinh danh toàn bộ fanpage Sata Robo</td></tr>
+              <tr><td>🥈 Giải Nhì</td><td><span className="prize-val">800.000đ</span> + Chứng nhận</td><td>Ảnh lưu niệm tại Lab + gửi Zalo PH</td></tr>
+              <tr><td>🥉 Giải Ba</td><td><span className="prize-val">500.000đ</span> + Chứng nhận</td><td>Cùng cơ chế vinh danh</td></tr>
+              <tr><td>🎖 Khuyến Khích ×3</td><td><span className="prize-val">200.000đ</span> × 3 (voucher/kit)</td><td>3 học viên xuất sắc tiếp theo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="sec-mid">
+        <div className="container text-center">
+          <div className="sbadge">💬 Cảm nhận thực tế</div>
+          <h2 className="st">Phụ Huynh &amp; Học Sinh<br /><span className="acc">Nói Gì</span> Về Sata Robo?</h2>
+          <p className="ssub" style={{ maxWidth: '640px', margin: '0 auto 40px' }}>Không quảng cáo, không PR — đây là lời chia sẻ thật từ những phụ huynh và học viên đã và đang học tại Sata Robo.</p>
+          <div className="tg">
+            <div className="tc anim"><div className="tc-stars">⭐⭐⭐⭐⭐</div><div className="tc-quote">"Con học 1 học phần, từ chỗ ngại ngùng không biết nói trước đám đông, đến lúc thuyết trình dự án mini trước toàn bộ phụ huynh. Tôi khóc vì xúc động."</div><div className="tc-author">Chị Nguyễn Thị Lan</div><div className="tc-role">Phụ huynh học sinh lớp 6 · Đà Nẵng</div></div>
+            <div className="tc anim"><div className="tc-stars">⭐⭐⭐⭐⭐</div><div className="tc-quote">"Con giành Giải Ba Championship tháng trước. Quan trọng hơn là con học được cách xử lý khi robot lỗi mà không bỏ cuộc. Kỹ năng đó không sách vở nào dạy được!"</div><div className="tc-author">Anh Trần Văn Hùng</div><div className="tc-role">Phụ huynh học sinh lớp 7 · Quận Hải Châu</div></div>
+            <div className="tc anim"><div className="tc-stars">⭐⭐⭐⭐⭐</div><div className="tc-quote">"Em tham gia khóa Chiến Binh Robot, sau đó thi vòng đấu bản TW Đoàn và vào vòng trong. Robot của em lần đầu hoàn thành đủ điểm trên sa bàn!"</div><div className="tc-author">Nguyễn Minh Khoa</div><div className="tc-role">Học sinh lớp 8 · Đội thi Robotics 2026</div></div>
+          </div>
+          <div className="video-grid">
+            <div className="video-wrap anim"><div className="video-inner"><div className="video-placeholder" onClick={e => loadVideo(e.currentTarget, 'VIDEO_ID_1')}><div className="vp-play">▶</div><div className="vp-label">Video chia sẻ của<br /><strong style={{ color: '#fff' }}>Chị Nguyễn Thị Lan</strong></div></div></div><div className="video-caption"><div className="vc-name">Chị Nguyễn Thị Lan</div><div className="vc-role">Phụ huynh học sinh lớp 6 · Đà Nẵng</div><div className="vc-tag">🎓 Khóa Dài Hạn 48 buổi</div></div></div>
+            <div className="video-wrap anim"><div className="video-inner"><div className="video-placeholder" onClick={e => loadVideo(e.currentTarget, 'VIDEO_ID_2')}><div className="vp-play">▶</div><div className="vp-label">Video chia sẻ của<br /><strong style={{ color: '#fff' }}>Anh Trần Văn Hùng</strong></div></div></div><div className="video-caption"><div className="vc-name">Anh Trần Văn Hùng</div><div className="vc-role">Phụ huynh học sinh lớp 7 · Quận Hải Châu</div><div className="vc-tag">🏆 Giải Ba Championship</div></div></div>
+            <div className="video-wrap anim"><div className="video-inner"><div className="video-placeholder" onClick={e => loadVideo(e.currentTarget, 'VIDEO_ID_3')}><div className="vp-play">▶</div><div className="vp-label">Video chia sẻ của<br /><strong style={{ color: '#fff' }}>Nguyễn Minh Khoa</strong></div></div></div><div className="video-caption"><div className="vc-name">Nguyễn Minh Khoa</div><div className="vc-role">Học sinh lớp 8 · Đội thi Robotics 2026</div><div className="vc-tag">🏆 Vào vòng trong TW Đoàn 2026</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      {/* REGISTER FORM */}
+      <section id="register" className="circuit-bg">
+        <div className="cl-wrap">
+          <div className="cl cl-h cl-p" style={{ top: '20%', left: 0, right: 0 }}></div>
+          <div className="cl cl-h cl-p" style={{ top: '80%', left: 0, right: 0, animationDelay: '1s' }}></div>
+        </div>
+        <div className="container z1">
+          <div className="text-center" style={{ marginBottom: '40px' }}>
+            <div className="sbadge-gold">📋 Đăng ký buổi test miễn phí</div>
+            <h2 className="st">Bắt Đầu <span className="gold">Hành Trình</span><br />Của Con Ngay Hôm Nay</h2>
+            <p className="ssub">Điền thông tin — Đội ngũ Sata Robo liên hệ trong <strong>2 giờ</strong> để xếp lịch buổi Test miễn phí!</p>
+          </div>
+          <div className="form-card">
+            <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+              <div style={{ fontSize: '22px', fontWeight: '900', fontFamily: 'var(--fh)', color: '#fff', marginBottom: '6px' }}>📝 Thông Tin Đăng Ký</div>
+              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,.55)' }}>Buổi Test miễn phí · Không ràng buộc · Hoàn tiền 100% sau 2 buổi đầu nếu không hài lòng</div>
+            </div>
+            <form id="reg-form" autoComplete="off" onSubmit={handleSubmit}>
+              <div className="form-grid">
+                <div className="fg full">
+                  <label className="flbl" htmlFor="f-name">Họ và tên phụ huynh <span className="req">*</span></label>
+                  <input type="text" id="f-name" className="finput" placeholder="Ví dụ: Nguyễn Thị Lan" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
                 </div>
-              ))}
-            </div>
-
-            <div style={{ textAlign: 'center', marginTop: '36px' }} className="reveal">
-              <button className="btn btn-r1 btn-lg" onClick={scrollToForm}>
-                Chọn cơ sở học thuận tiện nhất
+                <div className="fg">
+                  <label className="flbl" htmlFor="f-phone">Số điện thoại <span className="req">*</span></label>
+                  <input type="tel" id="f-phone" className="finput" placeholder="0912 345 678" required value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
+                </div>
+                <div className="fg">
+                  <label className="flbl" htmlFor="f-email">Email</label>
+                  <input type="email" id="f-email" className="finput" placeholder="email@gmail.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
+                </div>
+                <div className="fg">
+                  <label className="flbl" htmlFor="f-center">Chọn cơ sở học <span className="req">*</span></label>
+                  <select id="f-center" className="fsel" required value={formData.center} onChange={e => setFormData({ ...formData, center: e.target.value })}>
+                    <option value="">-- Chọn cơ sở gần bạn --</option>
+                    <option value="60 Lê Lợi">60 Lê Lợi</option>
+                    <option value="258 Lê Thanh Nghị">258 Lê Thanh Nghị</option>
+                    <option value="232 Nguyễn Phước Lan">232 Nguyễn Phước Lan</option>
+                    <option value="269 Điện Biên Phủ">269 Điện Biên Phủ</option>
+                  </select>
+                </div>
+                <div className="fg">
+                  <label className="flbl" htmlFor="f-course">Khóa học quan tâm <span className="req">*</span></label>
+                  <select id="f-course" className="fsel" required value={formData.course} onChange={e => setFormData({ ...formData, course: e.target.value })}>
+                    <option value="">-- Chọn khóa học cho con --</option>
+                    <optgroup label="🏆 Nhóm 1 — Khóa Thi Đấu">
+                      <option value="Robosim Master 2026 - Offline">🎮 Robosim Master 2026 — Offline</option>
+                      <option value="Chiến Binh Robot 2026 - Offline">⚔️ Chiến Binh Robot 2026 — Offline</option>
+                    </optgroup>
+                    <optgroup label="🚀 Nhóm 2 — Lộ Trình Dài Hạn">
+                      <option value="Ươm Mầm Tài Năng - Lớp 1-2">🌱 Ươm Mầm Tài Năng — Lớp 1–2</option>
+                      <option value="Bức Phá Giới Hạn - Lớp 3-4">🚀 Bức Phá Giới Hạn — Lớp 3–4</option>
+                      <option value="Khơi Nguồn Sáng Tạo - Lớp 5">⚡ Khơi Nguồn Sáng Tạo — Lớp 5</option>
+                      <option value="Chinh Phục Đấu Trường - Lớp 6-7">🏆 Chinh Phục Đấu Trường — Lớp 6–7</option>
+                      <option value="Kiến Tạo Tương Lai - Lớp 8">🤖 Kiến Tạo Tương Lai — Lớp 8</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" className="fsubmit" id="submit-btn" disabled={formLoading}>
+                {formLoading ? '⏳ Đang gửi...' : '🚀 Đăng Ký Buổi Test Miễn Phí Ngay!'}
               </button>
-            </div>
+              <p className="fnote">🔒 Thông tin của bạn được bảo mật tuyệt đối.<br />Sata Robo cam kết không chia sẻ dữ liệu với bên thứ ba.</p>
+            </form>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── 5. LỘ TRÌNH 16 BUỔI ── */}
-        <section className="section" aria-labelledby="phase-title">
-          <div className="container">
-            <div className="text-center reveal">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                </svg>
-                Lộ trình 16 buổi
+      {/* FAQ */}
+      <section id="faq" className="sec-dark">
+        <div className="container text-center">
+          <div className="sbadge">❓ Câu hỏi thường gặp</div>
+          <h2 className="st">Giải Đáp <span className="acc">Mọi Thắc Mắc</span></h2>
+          <p className="ssub" style={{ maxWidth: '600px', margin: '0 auto 40px' }}>Những câu hỏi phụ huynh thường hỏi nhất trước khi quyết định cho con học.</p>
+          <div className="faq-list">
+            {faqItemsVi.map((item, idx) => (
+              <div key={idx} className={`faq-item${openFaq === idx ? ' open' : ''}`}>
+                <div className="faq-q" onClick={() => toggleFaq(idx)}>{item.q} <span className="faq-icon">+</span></div>
+                <div className="faq-a"><div className="faq-a-in" style={{ paddingTop: '14px' }}>{item.a}</div></div>
               </div>
-              <h2 className="section-title" id="phase-title">
-                Lộ trình 16 buổi giúp học sinh<br />
-                <span className="gradient-text">luyện thi RoboSim bài bản</span>
-              </h2>
-            </div>
-
-            <div className="phase-grid">
-              {[
-                {
-                  num: 1,
-                  title: 'Làm quen và phân tích đề',
-                  desc: 'Học sinh hiểu giao diện RoboSim, cấu trúc đề thi, chủ đề Hậu cần thông minh và cách chia nhiệm vụ.',
-                },
-                {
-                  num: 2,
-                  title: 'Thiết kế robot và lập trình nền tảng',
-                  desc: 'Học sinh học cách thiết kế robot phù hợp, điều khiển di chuyển, xử lý cảm biến và xây dựng logic cơ bản.',
-                  delay: 1,
-                },
-                {
-                  num: 3,
-                  title: 'Luyện nhiệm vụ theo bảng R1/R2',
-                  desc: 'Học sinh thực hành các nhóm nhiệm vụ theo bảng thi, rèn kỹ năng xử lý tình huống và tối ưu thao tác.',
-                  delay: 2,
-                },
-                {
-                  num: 4,
-                  title: 'Ghép bài, sửa lỗi và tối ưu trước thi',
-                  desc: 'Học sinh ghép các nhiệm vụ thành bài chạy hoàn chỉnh, kiểm tra lỗi, tối ưu đường đi, thời gian và độ ổn định.',
-                  delay: 3,
-                },
-              ].map(({ num, title, desc, delay }) => (
-                <div key={num} className={`phase-card reveal${delay ? ` reveal-delay-${delay}` : ''}`}>
-                  <div className="phase-num">{num}</div>
-                  <h3 className="phase-title">{title}</h3>
-                  <p className="phase-desc">{desc}</p>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── 6. HỌC SINH NHẬN ĐƯỢC GÌ ── */}
-        <section className="section section-alt" aria-labelledby="benefits-title">
-          <div className="container">
-            <div className="text-center reveal">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-                Kết quả đầu ra
-              </div>
-              <h2 className="section-title" id="benefits-title">
-                Sau khóa học, con không chỉ biết làm bài –<br />
-                <span className="gradient-text">mà còn biết tư duy như một đội thi Robotics</span>
-              </h2>
-            </div>
-
-            <div className="benefits-list reveal">
-              {[
-                'Biết cách đọc và phân tích đề RoboSim.',
-                'Hiểu cách chia bài thi thành từng nhiệm vụ nhỏ.',
-                'Biết thiết kế robot phù hợp với sa bàn.',
-                'Lập trình robot thực hiện nhiệm vụ trên RoboSim.',
-                'Biết kiểm tra lỗi và tối ưu bài chạy.',
-                'Tự tin hơn khi tham gia vòng loại.',
-                'Rèn luyện tư duy logic, tư duy hệ thống và kỹ năng giải quyết vấn đề.',
-                'Có thêm động lực học công nghệ, Robotics và lập trình.',
-              ].map(t => (
-                <div className="benefit-item" key={t}>
-                  <span className="benefit-check">✓</span>
-                  <span className="benefit-text">{t}</span>
-                </div>
-              ))}
-            </div>
+      {/* BRAND */}
+      <section id="brand" className="circuit-bg">
+        <div className="cl-wrap"><div className="cl cl-h cl-p" style={{ top: '50%', left: 0, right: 0 }}></div></div>
+        <div className="container z1">
+          <div style={{ maxWidth: '740px', margin: '0 auto', textAlign: 'center' }}>
+            <div className="sbadge">💜 Câu chuyện thương hiệu</div>
+            <h2 className="st"><span className="acc">Khơi Nguồn Sáng Tạo</span><br />Chắp Cánh Tương Lai</h2>
           </div>
-        </section>
+          <div className="bquote">"Khi gieo những hạt mầm trải nghiệm hôm nay, ngày mai sẽ nảy nở một thế hệ trẻ Việt Nam sáng tạo hơn, nhân văn hơn và bản lĩnh hơn."</div>
+          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,.72)', lineHeight: '1.9', marginBottom: '20px' }}>Sata Robo ra đời từ niềm tin rằng mọi đứa trẻ đều xứng đáng được trải nghiệm, được thử sức và phát triển trong một môi trường thực sự truyền cảm hứng.</p>
+          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,.72)', lineHeight: '1.9', marginBottom: '36px' }}>Chúng tôi mang đến các chương trình Robotics gắn liền với thực tiễn — để các em không chỉ học lập trình, mà học cách tư duy, hợp tác và tự tin hội nhập với thế giới.</p>
+          <div className="val-grid">
+            <div className="val-card"><div className="val-icon">🔮</div><div className="val-title">Sáng Tạo</div><div className="val-desc">Không ngừng đổi mới phương pháp giáo dục và công nghệ học tập</div></div>
+            <div className="val-card"><div className="val-icon">🤝</div><div className="val-title">Gắn Kết</div><div className="val-desc">Xây dựng mối quan hệ bền chặt giữa học sinh, phụ huynh và giáo viên</div></div>
+            <div className="val-card"><div className="val-icon">✨</div><div className="val-title">Chính Trực</div><div className="val-desc">Cam kết minh bạch và trung thực trong mọi hoạt động</div></div>
+            <div className="val-card"><div className="val-icon">💪</div><div className="val-title">Kỷ Luật</div><div className="val-desc">Rèn luyện tính tự giác và kiên trì trong học tập và làm việc</div></div>
+          </div>
+        </div>
+      </section>
 
-        {/* ── 7. BẢNG GIÁ ── */}
-        <section className="section" aria-labelledby="pricing-title">
-          <div className="container">
-            <div className="text-center reveal">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                </svg>
-                Học phí ưu đãi
-              </div>
-              <h2 className="section-title" id="pricing-title">
-                Học phí ưu đãi giảm 30%<br />
-                <span className="gradient-text">nhân dịp 30/04 và 01/05</span>
-              </h2>
+      {/* CTA FINAL */}
+      <section style={{ background: 'linear-gradient(135deg,var(--pdark),var(--p),var(--p2))', padding: '72px 20px', textAlign: 'center' }}>
+        <div className="container">
+          <div className="sbadge" style={{ margin: '0 auto 20px' }}>🚀 Hành động ngay</div>
+          <h2 style={{ fontFamily: 'var(--fh)', fontSize: 'clamp(24px,4vw,42px)', fontWeight: '900', color: '#fff', marginBottom: '16px', lineHeight: '1.2' }}>Trao cho con một dự án thật,<br />một robot thật và một sân khấu thật!</h2>
+          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,.8)', marginBottom: '36px', maxWidth: '560px', marginLeft: 'auto', marginRight: 'auto' }}>Đăng ký buổi Test Năng Lực miễn phí — Không ràng buộc. Hoàn tiền 100% nếu không hài lòng sau 2 buổi đầu.</p>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="#register" className="btn btn-test" style={{ fontSize: '16px', padding: '17px 36px' }}>🎯 Đăng Ký Test Miễn Phí Ngay →</a>
+            <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer" className="btn btn-zalo" style={{ fontSize: '14px' }}>💬 Zalo 0818.823.720</a>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer>
+        <div className="container">
+          <div className="footer-grid">
+            <div>
+              <div style={{ marginBottom: '10px' }}><img src={LOGO_B64} className="nav-logo-img" alt="Sata Robo" style={{ height: '40px' }} /></div>
+              <div className="fsl">🚀 Khơi Nguồn Sáng Tạo — Chắp Cánh Tương Lai</div>
+              <p className="fdesc">Công ty Cổ phần Công nghệ Giáo dục Sata Robo. Tiên phong Robotics giáo dục tại Đà Nẵng.</p>
             </div>
-
-            <div className="pricing-wrap reveal">
-              <div className="pricing-card">
-                <div className="pricing-discount-badge">
-                  🎉 Ưu đãi lễ 30/04 &amp; 01/05 – Giảm 30%
-                </div>
-
-                <p className="pricing-original">
-                  Giá gốc: <s>149.000đ/buổi</s>
-                </p>
-                <p className="pricing-total">
-                  Tổng khóa 16 buổi: 149.000 × 16 = <strong>2.384.000đ</strong>
-                </p>
-                <p className="pricing-savings">Tiết kiệm hơn 700.000đ cho một khóa học chất lượng</p>
-
-                <div className="pricing-final">
-                  <div className="pricing-label">Giá ưu đãi chỉ còn</div>
-                  <div className="pricing-price">1.668.000đ</div>
-                </div>
-
-                <p className="pricing-note">
-                  Đây là thời điểm phù hợp để học sinh bắt đầu luyện thi sau khi hoàn thành học kỳ 2, vừa củng
-                  cố tư duy công nghệ, vừa chuẩn bị cho vòng loại Cuộc thi Sáng tạo Robotics 2026.
-                </p>
-
-                <button className="btn btn-r1 btn-lg" style={{ width: '100%' }} onClick={scrollToForm}>
-                  Đăng ký giữ chỗ ngay
-                </button>
+            <div>
+              <div className="ftitle">4 Cơ Sở</div>
+              <div className="flinks">
+                <a>📍 60 Lê Lợi</a><a>📍 258 Lê Thanh Nghị</a>
+                <a>📍 232 Nguyễn Phước Lan</a><a>📍 269 Điện Biên Phủ</a>
+              </div>
+            </div>
+            <div>
+              <div className="ftitle">Liên Hệ</div>
+              <div className="flinks">
+                <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer">💬 Zalo: 0818.823.720</a>
+                <a href="mailto:satarobo@gmail.com">📧 satarobo@gmail.com</a>
+                <a href="https://facebook.com/Satarobo" target="_blank" rel="noreferrer">📘 facebook.com/Satarobo</a>
+                <a href="https://sataworld.vn" target="_blank" rel="noreferrer">🌐 sataworld.vn</a>
               </div>
             </div>
           </div>
-        </section>
-
-        {/* ── 8. FORM ĐĂNG KÝ ── */}
-        <section className="section section-alt" id="dang-ky" ref={formRef} aria-labelledby="form-title">
-          <div className="container">
-            <div className="text-center reveal">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-                Đăng ký tư vấn
-              </div>
-              <h2 className="section-title" id="form-title">
-                Đăng ký tư vấn và giữ chỗ<br />
-                <span className="gradient-text">lớp RoboSim Offline</span>
-              </h2>
-              <p className="section-subtitle">
-                Quý phụ huynh vui lòng điền thông tin bên dưới. Tư vấn viên Sata Robo sẽ liên hệ để tư vấn
-                lớp phù hợp và hỗ trợ sắp lớp tại cơ sở thuận tiện nhất.
-              </p>
-            </div>
-
-            <div className="form-section">
-              <div className="form-container reveal">
-                <RegistrationForm />
-              </div>
-            </div>
+          <div className="fbottom">
+            <span>© 2026 Công ty Cổ phần Công nghệ Giáo dục Sata Robo</span>
+            <span>SP2 — Sata Robo Offline · Đà Nẵng</span>
           </div>
-        </section>
+        </div>
+      </footer>
 
-        {/* ── 9. FAQ ── */}
-        <section className="section" aria-labelledby="faq-offline-title">
-          <div className="container">
-            <div className="text-center reveal">
-              <div className="badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                  <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-                FAQ
-              </div>
-              <h2 className="section-title" id="faq-offline-title">
-                <span className="gradient-text">Câu hỏi thường gặp</span>
-              </h2>
-            </div>
+      {/* FLOATING PANEL */}
+      <div id="float-panel" style={{ opacity: floatVisible ? 1 : 0, pointerEvents: floatVisible ? 'auto' : 'none' }}>
+        <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--gray)', textAlign: 'right', paddingRight: '4px', marginBottom: '2px', whiteSpace: 'nowrap' }}>Đăng ký ngay</div>
+        <a href="#register" className="fp-btn fp-r1">🎯 Test Miễn Phí</a>
+        <a href="#products" className="fp-btn fp-or">🏆 Xem Khóa Học</a>
+        <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer" className="fp-btn fp-zalo" title="Zalo tư vấn">💬</a>
+      </div>
 
-            <div className="faq-list reveal" role="list">
-              <FAQItem question="Lớp học này dành cho học sinh lớp mấy?">
-                Khóa học phù hợp với học sinh Tiểu học thi bảng R1 và học sinh THCS thi bảng R2 trong nội dung
-                RoboSim.
-              </FAQItem>
-              <FAQItem question="Con chưa học RoboSim nhiều có theo được không?">
-                Có. Lớp học được thiết kế theo lộ trình từ nền tảng đến luyện nhiệm vụ, giúp học sinh từng bước
-                làm quen, thực hành và tối ưu bài thi.
-              </FAQItem>
-              <FAQItem question="Phụ huynh chọn cơ sở học như thế nào?">
-                Phụ huynh có thể chọn một trong 4 cơ sở tại Đà Nẵng. Sau khi đăng ký, tư vấn viên sẽ liên hệ
-                để hỗ trợ sắp lớp phù hợp.
-              </FAQItem>
-              <FAQItem question="Học phí khóa học là bao nhiêu?">
-                Giá gốc là 149.000đ/buổi. Tổng khóa 16 buổi là 2.384.000đ. Nhân dịp 30/04 và 01/05, khóa học
-                được ưu đãi giảm 30%, chỉ còn <strong>1.668.000đ</strong>.
-              </FAQItem>
-              <FAQItem question="Sau khi đăng ký, khi nào được liên hệ?">
-                Sata Robo sẽ liên hệ theo số điện thoại phụ huynh cung cấp để tư vấn chi tiết và hỗ trợ giữ chỗ.
-              </FAQItem>
-            </div>
+      {/* POPUP */}
+      <div id="popup-overlay" className={popupVisible ? 'show' : ''} onClick={e => { if (e.target.id === 'popup-overlay') setPopupVisible(false) }}>
+        <div className="popup-box">
+          <button className="popup-close" onClick={() => setPopupVisible(false)}>✕</button>
+          <div className="sbadge-red" style={{ margin: '0 auto 14px' }}>🔥 ƯU ĐÃI CÒN HẠN</div>
+          <div className="popup-h1">Đăng ký Test miễn phí<span>trước khi hết suất tháng này!</span></div>
+          <div className="popup-sub">Mỗi cơ sở chỉ nhận tối đa 12 học sinh/lớp. Buổi Test miễn phí — không ràng buộc — chúng tôi liên hệ trong 2 giờ!</div>
+          <div className="popup-btns">
+            <a href="#register" className="btn btn-r1" onClick={() => setPopupVisible(false)} style={{ width: '100%', justifyContent: 'center' }}>🚀 Đăng Ký Test Ngay →</a>
+            <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer" className="btn btn-zalo" onClick={() => setPopupVisible(false)} style={{ width: '100%', justifyContent: 'center' }}>💬 Zalo Tư Vấn Miễn Phí</a>
           </div>
-        </section>
-
-        {/* ── 10. CTA CUỐI TRANG ── */}
-        <section className="cta-section" aria-labelledby="final-cta-title">
-          <div className="container">
-            <div className="badge" style={{ margin: '0 auto 20px' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
-              Bắt đầu ngay hôm nay
-            </div>
-            <h2 id="final-cta-title">
-              Sẵn sàng cho con bắt đầu<br />
-              <span className="gradient-text">hành trình chinh phục RoboSim 2026?</span>
-            </h2>
-            <p>
-              Đăng ký ngay hôm nay để được tư vấn lớp học phù hợp, chọn cơ sở thuận tiện và
-              nhận ưu đãi học phí giảm 30% nhân dịp 30/04 - 01/05.
-            </p>
-            <div className="cta-btns">
-              <button className="btn btn-r1 btn-lg" onClick={scrollToForm}>
-                Đăng ký giữ chỗ ngay
-              </button>
-              <a href="https://zalo.me/0818823720" className="btn btn-zalo btn-lg" rel="noopener" target="_blank">
-                💬 Nhắn Zalo 0818.823.720
-              </a>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-
-      {/* ── STICKY CTA MOBILE ── */}
-      <div className="sticky-cta" role="complementary" aria-label="Đăng ký nhanh">
-        <div className="sticky-cta-inner">
-          <button className="btn btn-r1" onClick={scrollToForm}>
-            Đăng ký giữ chỗ
-          </button>
-          <a href="https://zalo.me/0818823720" className="btn btn-zalo" rel="noopener" target="_blank">
-            💬 Nhắn Zalo
-          </a>
+          <button className="popup-dismiss" onClick={() => setPopupVisible(false)}>Tôi cần thêm thời gian để suy nghĩ — Để sau</button>
         </div>
       </div>
-    </div>
+
+      {/* MODAL THI DAU */}
+      <div id="modal-thi" className={`modal-ov${modalThi ? ' open' : ''}`} onClick={e => { if (e.target.id === 'modal-thi') closeModalThi() }}>
+        <div className="mbox">
+          <button className="mclose" onClick={closeModalThi}>✕</button>
+          <div className="sbadge">🏆 Nhóm 1</div>
+          <div className="mh1">Khóa Thi Đấu Robotics 2026</div>
+          <div style={{ marginBottom: '24px', padding: '16px 20px', background: 'linear-gradient(135deg,rgba(245,158,11,.1),rgba(107,33,168,.08))', border: '1.5px solid rgba(245,158,11,.4)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+            <div><div style={{ fontWeight: '800', fontSize: '14px', color: 'var(--gold)', marginBottom: '4px' }}>📋 Thể Lệ Thi Sáng Tạo Robotics 2026</div><div style={{ fontSize: '12px', color: 'rgba(255,255,255,.6)' }}>Tài liệu chính thức từ Ban Tổ Chức — TW Đoàn TNCS Hồ Chí Minh</div></div>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <a href="https://drive.google.com/drive/folders/12DTFji_NWDg_i3d1SGgjKKp8vxjF1seL" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'linear-gradient(135deg,var(--gold),#D97706)', color: '#000', padding: '9px 16px', borderRadius: '8px', fontWeight: '800', fontSize: '12px', textDecoration: 'none' }}>👁 Xem Thể Lệ Thi</a>
+              <a href="https://drive.google.com/drive/folders/12DTFji_NWDg_i3d1SGgjKKp8vxjF1seL" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(245,158,11,.15)', color: 'var(--gold)', border: '1.5px solid rgba(245,158,11,.4)', padding: '9px 16px', borderRadius: '8px', fontWeight: '800', fontSize: '12px', textDecoration: 'none' }}>⬇ Tải Về</a>
+            </div>
+          </div>
+          <div className="msub">Luyện thi chuyên sâu cho cuộc thi Sáng tạo Robotics do TW Đoàn TNCS và Thành Đoàn Đà Nẵng phát động.</div>
+          <div className="crs-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px', marginBottom: '8px' }}>
+              <div><div className="crs-title">🎮 Robosim Master 2026 — Offline</div><div className="crs-meta">16 buổi · Tiểu học &amp; THCS · Luyện thi vòng 7 TW Đoàn</div></div>
+              <span className="sbadge-gold" style={{ whiteSpace: 'nowrap' }}>16 buổi</span>
+            </div>
+            <div className="crs-story">"Học đúng cách thi — không phải học nhớ bài. Mỗi buổi học trên RoboSim thật, có giáo viên chỉ chiến lược từng nhiệm vụ. Sau 16 buổi, con bước vào phòng thi với sự tự tin."</div>
+            <div className="crs-phases">
+              <div className="phase"><strong>Tuần 1–4: Nền Tảng RoboSim</strong>Hiểu sa bàn, nhiệm vụ, quy tắc tính điểm, luyện phản xạ cơ bản</div>
+              <div className="phase"><strong>Tuần 5–8: Chiến Lược Điểm Số</strong>Thứ tự tối ưu nhiệm vụ, quản lý thời gian, tránh mất điểm oan</div>
+              <div className="phase"><strong>Tuần 9–12: Thi Thử Thực Chiến</strong>Mô phỏng 100% điều kiện thi, phân tích lỗi, điều chỉnh chiến lược</div>
+              <div className="phase"><strong>Tuần 13–16: Hoàn Thiện &amp; Chinh Phục</strong>Sa bàn áp lực cao, tập xử lý sự cố trong giờ thi</div>
+            </div>
+            <div className="price-block">
+              <div className="price-deadline">🔥 Ưu đãi đến 31/05/2026</div>
+              <div className="price-options" style={{ gridTemplateColumns: '1fr' }}>
+                <div className="price-opt best" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                  <div><div className="po-label">16 buổi trọn khóa</div><div className="po-neo">Niêm yết: 3.184.000đ</div></div>
+                  <div style={{ textAlign: 'right' }}><div className="po-price" style={{ fontSize: '28px' }}>2.228.800đ</div><div className="po-per">≈ 139.300đ / buổi</div></div>
+                </div>
+              </div>
+            </div>
+            <div style={{ marginTop: '14px', background: 'rgba(168,85,247,.07)', borderRadius: '8px', padding: '12px', fontSize: '13px', color: 'rgba(255,255,255,.75)', lineHeight: '1.75' }}>🎁 <strong>Quà tặng:</strong> Áo thun siêu nhân + Bộ tài liệu chính thức (~300.000đ)</div>
+          </div>
+          <div className="crs-card oc">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px', marginBottom: '8px' }}>
+              <div><div className="crs-title" style={{ color: 'var(--orange)' }}>⚔️ Chiến Binh Robot 2026 — Offline</div><div className="crs-meta">16 buổi · Tiểu học &amp; THCS · Robot Beta thực chiến</div></div>
+              <span className="sbadge-orange" style={{ whiteSpace: 'nowrap' }}>16 buổi</span>
+            </div>
+            <div className="crs-story" style={{ borderLeftColor: 'var(--orange)' }}>"Bước tiến lên robot Beta thực chiến. Học sinh điều khiển robot vật lý thật, tranh đấu trên sa bàn thật. Kèm bonus Video Robosim để tự luyện thêm tại nhà."</div>
+            <div className="crs-phases">
+              <div className="phase" style={{ borderColor: 'rgba(249,115,22,.2)' }}><strong style={{ color: 'var(--orange)' }}>Tuần 1–4: Beta Nhập Môn</strong>Lắp robot Beta, lập trình C-block, tập điều khiển</div>
+              <div className="phase" style={{ borderColor: 'rgba(249,115,22,.2)' }}><strong style={{ color: 'var(--orange)' }}>Tuần 5–8: Chiến Thuật Sa Bàn</strong>Phân tích sa bàn thi, lập chiến lược, luyện phản xạ</div>
+              <div className="phase" style={{ borderColor: 'rgba(249,115,22,.2)' }}><strong style={{ color: 'var(--orange)' }}>Tuần 9–12: Đấu Thực Chiến</strong>Thi đấu nội bộ, phân tích điểm mạnh yếu</div>
+              <div className="phase" style={{ borderColor: 'rgba(249,115,22,.2)' }}><strong style={{ color: 'var(--orange)' }}>Tuần 13–16: Chuẩn Bị Ngày Thi</strong>Hoàn thiện robot, bảo vệ dự án Kỹ Sư Nhí</div>
+            </div>
+            <div className="price-block" style={{ borderColor: 'rgba(249,115,22,.3)' }}>
+              <div className="price-deadline">🔥 Ưu đãi đến 31/05/2026</div>
+              <div className="price-options" style={{ gridTemplateColumns: '1fr' }}>
+                <div className="price-opt best" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', borderColor: 'rgba(249,115,22,.35)' }}>
+                  <div><div className="po-label">16 buổi trọn khóa</div><div className="po-neo">Niêm yết: 3.984.000đ</div></div>
+                  <div style={{ textAlign: 'right' }}><div className="po-price" style={{ fontSize: '28px', color: 'var(--orange)' }}>2.788.800đ</div><div className="po-per">≈ 174.300đ / buổi</div></div>
+                </div>
+              </div>
+            </div>
+            <div style={{ marginTop: '14px', background: 'rgba(249,115,22,.06)', borderRadius: '8px', padding: '12px', fontSize: '13px', color: 'rgba(255,255,255,.75)', lineHeight: '1.75' }}>🎁 <strong>Bonus:</strong> Video Robosim Online (490.000đ) + Áo thun siêu nhân + Bộ tài liệu chính thức</div>
+          </div>
+          <div className="modal-cta">
+            <a href="#register" className="btn btn-test" onClick={closeModalThi} style={{ width: '100%', fontSize: '15px' }}>🚀 Đăng Ký Buổi Test Miễn Phí Ngay →</a>
+            <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer" className="btn btn-zalo" style={{ width: '100%', justifyContent: 'center' }}>💬 Zalo Tư Vấn 0818.823.720</a>
+          </div>
+        </div>
+      </div>
+
+      {/* MODAL DAI HAN */}
+      <div id="modal-daihan" className={`modal-ov${modalDaihan ? ' open' : ''}`} onClick={e => { if (e.target.id === 'modal-daihan') closeModalDaihan() }}>
+        <div className="mbox">
+          <button className="mclose" onClick={closeModalDaihan}>✕</button>
+          <div className="sbadge-orange">🚀 Nhóm 2</div>
+          <div className="mh1">Lộ Trình Dài Hạn — 5 Module</div>
+          <div className="msub">Hành trình từ lớp 1 đến lớp 8. Mỗi module 48 buổi = 4 học phần × 12 buổi. Tất cả giá áp dụng đến 31/05/2026.</div>
+          <div className="mtabs">
+            {['🌱 Lớp 1–2', '🚀 Lớp 3–4', '⚡ Lớp 5', '🏆 Lớp 6–7', '🤖 Lớp 8'].map((label, idx) => (
+              <button key={idx} className={`mtab${activeTab === idx ? ' active' : ''}`} onClick={() => setActiveTab(idx)}>{label}</button>
+            ))}
+          </div>
+          {activeTab === 0 && <div className="mpanel active"><div className="crs-card"><div className="crs-title">🌱 Ươm Mầm Tài Năng</div><div className="crs-meta">Lớp 1–2 · 48 buổi = 4 học phần × 12 buổi</div><div className="crs-story">"Con bạn 6–7 tuổi. Chúng tôi không dạy con lập trình — chúng tôi giúp con YÊU robot. Mỗi buổi là cuộc phiêu lưu."</div><div className="crs-phases"><div className="phase"><strong>HP1: Alpha Cơ Bản</strong>Khám phá robot, cảm biến, trò chơi logic</div><div className="phase"><strong>HP2: Alpha Sáng Tạo</strong>Lập trình kéo thả, xây mô hình tự động</div><div className="phase"><strong>HP3: Alpha Dự Án</strong>Tự thiết kế trò chơi, thử nghiệm &amp; sửa lỗi</div><div className="phase"><strong>HP4: Thuyết Trình KSN</strong>Bảo vệ dự án mini trước phụ huynh</div></div><div className="price-block"><div className="price-deadline">🔥 Ưu đãi đến 31/05/2026</div><div className="price-options"><div className="price-opt"><div className="po-label">1 HP (12 buổi)</div><div className="po-neo">2.400.000đ</div><div className="po-price">2.160.000đ</div><div className="po-per">180.000đ/buổi</div></div><div className="price-opt"><div className="po-label">2 HP (24 buổi)</div><div className="po-neo">4.800.000đ</div><div className="po-price">3.840.000đ</div><div className="po-per">160.000đ/buổi</div></div><div className="price-opt best"><div className="po-label">Full 48 buổi</div><div className="po-neo">9.600.000đ</div><div className="po-price">6.720.000đ</div><div className="po-per">140.000đ/buổi</div><div className="po-best">⭐ Khuyến nghị</div></div></div></div></div></div>}
+          {activeTab === 1 && <div className="mpanel active"><div className="crs-card"><div className="crs-title">🚀 Bức Phá Giới Hạn</div><div className="crs-meta">Lớp 3–4 · 48 buổi = 4 học phần × 12 buổi</div><div className="crs-story">"Khóa này dạy con cách KHÔNG BỎ CUỘC khi robot sai, cách NGHĨ KHÁC khi chiến thuật thất bại, cách TỰ TIN thuyết trình trước đám đông."</div><div className="crs-phases"><div className="phase"><strong>HP1: Master Robosim Cơ Bản</strong>Nền tảng lập trình, tư duy thuật toán</div><div className="phase"><strong>HP2: Master Robosim Nâng Cao</strong>Chiến thuật thi đấu, luyện phản xạ</div><div className="phase"><strong>HP3: Beta Nhập Môn</strong>Robot Beta, lập trình C-block</div><div className="phase"><strong>HP4: Beta Chiến Thuật</strong>Sa bàn thi đấu, bảo vệ dự án KSN</div></div><div className="price-block"><div className="price-deadline">🔥 Ưu đãi đến 31/05/2026</div><div className="price-options"><div className="price-opt"><div className="po-label">1 HP (12 buổi)</div><div className="po-neo">2.988.000đ</div><div className="po-price">2.689.200đ</div><div className="po-per">224.000đ/buổi</div></div><div className="price-opt"><div className="po-label">2 HP (24 buổi)</div><div className="po-neo">5.976.000đ</div><div className="po-price">4.780.800đ</div><div className="po-per">199.000đ/buổi</div></div><div className="price-opt best"><div className="po-label">Full 48 buổi</div><div className="po-neo">11.952.000đ</div><div className="po-price">8.366.400đ</div><div className="po-per">174.000đ/buổi</div><div className="po-best">⭐ Khuyến nghị</div></div></div></div></div></div>}
+          {activeTab === 2 && <div className="mpanel active"><div className="crs-card"><div className="crs-title">⚡ Khơi Nguồn Sáng Tạo</div><div className="crs-meta">Lớp 5 · 48 buổi = 4 học phần × 12 buổi</div><div className="crs-story">"Dạy con cách ĐẶT CÂU HỎI đúng, cách THIẾT KẾ giải pháp, cách THUYẾT PHỤC người khác tin vào ý tưởng của mình."</div><div className="crs-phases"><div className="phase"><strong>HP1: Storm Cơ Bản</strong>Hệ thống cơ điện tử, lập trình đa module</div><div className="phase"><strong>HP2: Storm Nâng Cao</strong>Thiết kế kiến trúc robot, tối ưu năng lượng</div><div className="phase"><strong>HP3: Sáng Tạo Ứng Dụng</strong>Robot giải bài toán thực tế</div><div className="phase"><strong>HP4: Dự Án Cá Nhân</strong>Thiết kế, lập trình, thuyết trình như Kỹ sư thật</div></div><div className="price-block"><div className="price-deadline">🔥 Ưu đãi đến 31/05/2026</div><div className="price-options"><div className="price-opt"><div className="po-label">1 HP (12 buổi)</div><div className="po-neo">3.360.000đ</div><div className="po-price">3.024.000đ</div><div className="po-per">252.000đ/buổi</div></div><div className="price-opt"><div className="po-label">2 HP (24 buổi)</div><div className="po-neo">6.720.000đ</div><div className="po-price">5.376.000đ</div><div className="po-per">224.000đ/buổi</div></div><div className="price-opt best"><div className="po-label">Full 48 buổi</div><div className="po-neo">13.440.000đ</div><div className="po-price">9.408.000đ</div><div className="po-per">196.000đ/buổi</div><div className="po-best">⭐ Khuyến nghị</div></div></div></div></div></div>}
+          {activeTab === 3 && <div className="mpanel active"><div className="crs-card"><div className="crs-title">🏆 Chinh Phục Đấu Trường</div><div className="crs-meta">Lớp 6–7 · 48 buổi = 4 học phần × 12 buổi</div><div className="crs-story">"Đào tạo chuyên biệt hướng đến giải thưởng — lộ trình từ TW Đoàn đến WRC. 100% học viên hoàn thành đủ kỹ năng dự thi vòng đấu bản."</div><div className="crs-phases"><div className="phase"><strong>HP1: Robosim Elite</strong>Thuật toán nâng cao, chiến lược thi đấu quốc tế</div><div className="phase"><strong>HP2: Robosim Championship</strong>Mô phỏng giải đấu, phân tích đối thủ</div><div className="phase"><strong>HP3: Beta Master</strong>Robot phức tạp, lập trình AI cơ bản</div><div className="phase"><strong>HP4: Beta Quốc Tế</strong>Kỹ năng thi WRC, bảo vệ luận án KSN</div></div><div className="price-block"><div className="price-deadline">🔥 Ưu đãi đến 31/05/2026</div><div className="price-options"><div className="price-opt"><div className="po-label">1 HP (12 buổi)</div><div className="po-neo">3.600.000đ</div><div className="po-price">3.240.000đ</div><div className="po-per">270.000đ/buổi</div></div><div className="price-opt"><div className="po-label">2 HP (24 buổi)</div><div className="po-neo">7.200.000đ</div><div className="po-price">5.760.000đ</div><div className="po-per">240.000đ/buổi</div></div><div className="price-opt best"><div className="po-label">Full 48 buổi</div><div className="po-neo">14.400.000đ</div><div className="po-price">10.080.000đ</div><div className="po-per">210.000đ/buổi</div><div className="po-best">⭐ Khuyến nghị</div></div></div></div></div></div>}
+          {activeTab === 4 && <div className="mpanel active"><div className="crs-card"><div className="crs-title">🤖 Kiến Tạo Tương Lai</div><div className="crs-meta">Lớp 8 · 48 buổi = 4 học phần × 12 buổi</div><div className="crs-story">"AI, robotics, cảm biến thông minh là ngôn ngữ của nền kinh tế 2030. Con ra trường với portfolio robot AI thực sự."</div><div className="crs-phases"><div className="phase"><strong>HP1: Storm AI Cơ Bản</strong>Xử lý tín hiệu cảm biến, phản ứng thông minh</div><div className="phase"><strong>HP2: Computer Vision</strong>Robot nhận diện màu sắc, hình dạng</div><div className="phase"><strong>HP3: AI Ứng Dụng</strong>Robot tự điều chỉnh theo môi trường thực</div><div className="phase"><strong>HP4: Dự Án Tốt Nghiệp</strong>Robot giải quyết bài toán xã hội thực tế</div></div><div className="price-block"><div className="price-deadline">🔥 Ưu đãi đến 31/05/2026</div><div className="price-options"><div className="price-opt"><div className="po-label">1 HP (12 buổi)</div><div className="po-neo">3.960.000đ</div><div className="po-price">3.564.000đ</div><div className="po-per">297.000đ/buổi</div></div><div className="price-opt"><div className="po-label">2 HP (24 buổi)</div><div className="po-neo">7.920.000đ</div><div className="po-price">6.336.000đ</div><div className="po-per">264.000đ/buổi</div></div><div className="price-opt best"><div className="po-label">Full 48 buổi</div><div className="po-neo">15.840.000đ</div><div className="po-price">11.088.000đ</div><div className="po-per">231.000đ/buổi</div><div className="po-best">⭐ Khuyến nghị</div></div></div></div></div></div>}
+          <div className="modal-cta">
+            <a href="#register" className="btn btn-r2" onClick={closeModalDaihan} style={{ width: '100%', justifyContent: 'center', fontSize: '15px', padding: '16px' }}>🚀 Đăng Ký Test Miễn Phí Cho Con Ngay →</a>
+            <a href="https://zalo.me/0818823720" target="_blank" rel="noreferrer" className="btn btn-zalo" style={{ width: '100%', justifyContent: 'center' }}>💬 Zalo Tư Vấn 0818.823.720</a>
+          </div>
+        </div>
+      </div>
+
+      {/* THANK YOU OVERLAY */}
+      <div id="ty-overlay" className={thankYouVisible ? 'show' : ''}>
+        <div className="ty-box">
+          <span className="ty-emoji">🎉</span>
+          <h1 className="ty-h1">Đăng Ký <span>Thành Công!</span></h1>
+          <div className="ty-expect">
+            <div className="ty-expect-title">📋 Những gì sẽ xảy ra tiếp theo</div>
+            <div className="ty-expect-item">Đội ngũ Sata Robo sẽ liên hệ bạn trong vòng <strong>2 giờ</strong> để xếp lịch buổi Test miễn phí</div>
+            <div className="ty-expect-item">Nhóm Zalo phụ huynh sẽ gửi cho bạn <strong>tài liệu giới thiệu khóa học</strong> và thông tin chi tiết</div>
+            <div className="ty-expect-item">Bạn có thể <strong>hỏi đáp trực tiếp</strong> với đội ngũ và gặp gỡ các phụ huynh khác trong nhóm</div>
+          </div>
+          <div className="ty-zalo-box">
+            <div className="ty-zalo-title">💬 Bước tiếp theo: Tham gia nhóm Zalo</div>
+            <p style={{ fontSize: '13px', color: 'rgba(255,255,255,.65)', marginBottom: '4px', lineHeight: '1.65' }}>Trong khi chờ đội ngũ liên hệ, hãy vào nhóm Zalo để nhận hướng dẫn ngay!</p>
+            <div className="ty-cd-wrap">
+              <div className="ty-cd">{tyCount}</div>
+              <div className="ty-cd-sub">giây nữa sẽ mở nhóm Zalo tự động</div>
+            </div>
+            <button className="ty-zalo-btn" onClick={goToZalo}>💬 Vào Nhóm Zalo Hỗ Trợ Ngay →</button>
+            <button className="ty-later" onClick={closeTY}>Tôi sẽ vào nhóm sau — Quay lại trang</button>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
