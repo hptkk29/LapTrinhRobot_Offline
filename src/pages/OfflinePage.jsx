@@ -312,7 +312,7 @@ export default function OfflinePage() {
           <div className="nav-brand">
             <img src={LOGO_SRC} className="nav-logo-img" alt="Sata Robo" />
             <div className="nav-brand-text">
-              <div className="nav-sl">🚀 Khơi Nguồn Sáng Tạo</div>
+              <div className="nav-sl">Khơi Nguồn Sáng Tạo</div>
               <div className="nav-sl">Chắp Cánh Tương Lai</div>
             </div>
           </div>
@@ -1634,7 +1634,7 @@ footer{background:var(--pvery);border-top:1px solid rgba(168,85,247,.2);padding:
 }
 @media(max-width:380px){
   .hero-h1{font-size:21px}
-  .loc-grid{grid-template-columns:1fr}
+  .loc-grid{grid-template-columns:repeat(2,1fr)}
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2080,14 +2080,16 @@ img, video, iframe, canvas { max-width: 100%; }
   #sale-bar { font-size: 11px; line-height: 1.45; padding: 8px 8px; }
   .sb-cd { width: 100%; justify-content: center; margin: 4px 0 0; }
   .hero-proof, .pg-tags, .ck-trustbar { justify-content: center; }
-  .hero-stats, .loc-grid, .val-grid { grid-template-columns: 1fr; }
+  .val-grid { grid-template-columns: 1fr; }
+  .loc-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-stats { grid-template-columns: repeat(4, 1fr); }
   .price-opt.best { align-items: flex-start !important; text-align: left !important; }
   .price-opt.best > div:last-child { text-align: left !important; width: 100%; }
   .mtabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
   .mtab { flex: 0 0 auto; }
-  #float-panel { left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); flex-direction: row; justify-content: center; }
-  .fp-btn { flex: 1; justify-content: center; }
-  .fp-zalo { flex: 0 0 42px; }
+  #float-panel { left: auto; right: 12px; bottom: calc(16px + env(safe-area-inset-bottom)); flex-direction: column; align-items: flex-end; max-width: none; }
+  .fp-btn { flex: none; padding: 9px 13px; font-size: 12px; }
+  .fp-zalo { flex: none; width: 44px; height: 44px; }
 }
 
 /* Mobile polish requested for header, section titles, and floating CTAs */
@@ -2136,37 +2138,38 @@ h2.st {
 
 @media (max-width: 600px) {
   nav {
-    min-height: 96px;
+    height: 56px;
+    min-height: 56px;
   }
   .nav-in {
-    grid-template-columns: 1fr;
-    justify-items: start;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
     gap: 8px;
-    padding-top: 10px;
-    padding-bottom: 12px;
   }
   .nav-brand {
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    display: flex;
     align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+  .nav-brand-text {
+    display: none;
   }
   .nav-logo-img {
-    height: 42px;
-  }
-  .nav-sl {
-    width: fit-content;
-    max-width: 100%;
-    padding: 2px 4px;
-    background: rgba(168,85,247,.2);
-    font-size: 9px;
+    height: 36px;
   }
   .nav-cta {
-    justify-self: start;
-    min-height: 40px;
-    padding: 10px 18px;
+    flex-shrink: 0;
+    padding: 7px 12px;
+    font-size: 12px;
     border-radius: 8px;
-    font-size: 13px;
+    white-space: nowrap;
+    min-height: unset;
+    justify-self: unset;
   }
   .sbadge, .sbadge-gold, .sbadge-cyan, .sbadge-red, .sbadge-orange {
     margin-bottom: 16px;
@@ -2175,33 +2178,30 @@ h2.st {
     line-height: 1.78;
   }
   #float-panel {
-    left: 8px !important;
-    right: 8px !important;
-    bottom: calc(8px + env(safe-area-inset-bottom)) !important;
-    flex-direction: row !important;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    max-width: calc(100vw - 16px);
+    left: auto !important;
+    right: 12px !important;
+    bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+    flex-direction: column !important;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 8px;
+    max-width: none;
   }
   #float-panel .fp-btn {
-    flex: 1 1 0;
-    min-width: 0;
-    height: 40px;
-    justify-content: center;
-    padding: 0 8px;
+    flex: none;
+    height: auto;
+    padding: 9px 13px;
+    font-size: 12px;
     border-radius: 9px;
-    font-size: 11px;
-    line-height: 1;
     white-space: nowrap;
   }
   #float-panel .fp-zalo {
-    flex: 0 0 40px;
-    width: 40px;
-    height: 40px;
+    flex: none;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border-radius: 999px;
-    font-size: 16px;
+    font-size: 20px;
   }
 }
 
@@ -2218,14 +2218,12 @@ h2.st {
     font-size: 12px;
   }
   #float-panel .fp-btn {
-    height: 38px;
-    padding: 0 5px;
-    font-size: 10px;
+    padding: 8px 11px;
+    font-size: 11px;
   }
   #float-panel .fp-zalo {
-    flex-basis: 38px;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
   }
 }
 
