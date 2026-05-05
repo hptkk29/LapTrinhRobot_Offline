@@ -79,21 +79,23 @@ export function trackGA4Event(eventName, params = {}) {
 // ============================================
 export async function submitLeadToSheet(formData) {
   try {
-    // Dùng FormData thay vì JSON để tránh lỗi CORS với Google Apps Script
-    const formBody = new URLSearchParams();
-    formBody.append('name', formData.name || '');
-    formBody.append('phone', formData.phone || '');
-    formBody.append('email', formData.email || '');
-    formBody.append('center', formData.center || '');
-    formBody.append('course', formData.course || '');
+    // Apps Script parses raw JSON; text/plain keeps this request CORS-simple in browsers.
+    const sheetPayload = JSON.stringify({
+      name: formData.name || '',
+      phone: formData.phone || '',
+      email: formData.email || '',
+      center: formData.center || '',
+      course: formData.course || '',
+      sataMath: formData.sataMath || ''
+    });
 
     const response = await fetch(GOOGLE_SHEET_URL, {
       method: 'POST',
       mode: 'no-cors', // Apps Script trả no-cors → không đọc được response, nhưng data vẫn được gửi
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'text/plain;charset=utf-8'
       },
-      body: formBody.toString()
+      body: sheetPayload
     });
 
     console.log('[Sheet] Lead submitted', formData);
