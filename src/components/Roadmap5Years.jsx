@@ -2,9 +2,6 @@ import { useState } from 'react';
 import { roadmap5Years } from '../data/roadmap-5-years';
 import { Target, BookOpen, Clock, Trophy, ChevronLeft, ChevronRight, CheckCircle2, FlaskConical, ListOrdered, Award, Sparkles } from 'lucide-react';
 
-/**
- * Section 3 — Lộ trình 5 năm với tab chuyển năm + tab chuyển học phần
- */
 export default function Roadmap5Years() {
   const [yearIdx, setYearIdx] = useState(0);
   const [moduleIdx, setModuleIdx] = useState(0);
@@ -12,13 +9,11 @@ export default function Roadmap5Years() {
   const currentYear = roadmap5Years[yearIdx];
   const currentModule = currentYear.modules[moduleIdx];
 
-  // Đổi năm — reset học phần về 0
   const handleYearChange = (idx) => {
     setYearIdx(idx);
     setModuleIdx(0);
   };
 
-  // Điều hướng học phần
   const goPrevModule = () => {
     if (moduleIdx > 0) setModuleIdx(moduleIdx - 1);
     else if (yearIdx > 0) {
@@ -34,7 +29,6 @@ export default function Roadmap5Years() {
     }
   };
 
-  // Map type buổi → icon + màu
   const typeStyle = {
     'Lý thuyết': 'bg-blue-50 text-blue-700 border-blue-200',
     'Thực hành': 'bg-orange-50 text-primary-orange border-orange-200',
@@ -77,8 +71,32 @@ export default function Roadmap5Years() {
         </div>
 
         {/* TAB NĂM */}
-        <div className="mb-8 -mx-4 sm:mx-0">
-          <div className="flex gap-3 overflow-x-auto py-4 px-4 sm:px-2 sm:justify-center scrollbar-hide">
+        <div className="mb-8">
+          {/* Mobile: compact 5-pill grid */}
+          <div className="sm:hidden grid grid-cols-5 gap-1.5 mb-2 px-1">
+            {roadmap5Years.map((y, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleYearChange(idx)}
+                className={`py-2.5 px-1 rounded-xl border-2 text-center transition-all
+                  ${idx === yearIdx
+                    ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
+                    : 'border-gray-200 bg-white'}`}
+              >
+                <div className={`text-[10px] font-black leading-tight
+                  ${idx === yearIdx ? 'text-primary-orange' : 'text-text-muted'}`}>
+                  NĂM {y.year}
+                </div>
+                <div className={`text-[9px] font-bold leading-tight mt-0.5
+                  ${idx === yearIdx ? 'text-text-dark' : 'text-text-dark/50'}`}>
+                  {y.name.split(' ').slice(0, 2).join(' ')}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Tablet / Desktop: scrollable cards */}
+          <div className="hidden sm:flex gap-3 overflow-x-auto py-4 px-4 sm:px-2 sm:justify-center scrollbar-hide">
             {roadmap5Years.map((y, idx) => (
               <button
                 key={idx}
@@ -97,7 +115,7 @@ export default function Roadmap5Years() {
                   {y.name}
                 </div>
                 <div className="text-[11px] sm:text-xs text-text-muted">
-                  {y.grade} · {y.ageRange}
+                  {y.ageRange}
                 </div>
               </button>
             ))}
@@ -289,35 +307,39 @@ export default function Roadmap5Years() {
                 </div>
               </div>
 
-              {/* NAV — Prev/Next */}
-              <div className="flex items-center justify-between mt-6 pt-5 border-t border-gray-200">
+              {/* NAV — Prev/Next nổi bật hơn */}
+              <div className="flex items-center justify-between mt-6 pt-5 border-t border-gray-200 gap-2">
                 <button
                   onClick={goPrevModule}
                   disabled={yearIdx === 0 && moduleIdx === 0}
-                  className="inline-flex items-center gap-1 px-3 py-2 text-sm font-bold text-text-dark
-                    disabled:opacity-30 hover:text-primary-orange transition"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-bold
+                    bg-soft-cream border-2 border-gray-200 rounded-xl text-text-dark
+                    disabled:opacity-30 hover:border-primary-orange hover:text-primary-orange transition active:scale-95"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  Học phần trước
+                  <span className="hidden sm:inline">Học phần trước</span>
+                  <span className="sm:hidden">Trước</span>
                 </button>
-                <span className="text-xs text-text-muted">
-                  {currentModule.id} / 4
+                <span className="text-xs text-text-muted font-semibold px-2">
+                  HP {currentModule.id} / 4
                 </span>
                 <button
                   onClick={goNextModule}
                   disabled={yearIdx === 4 && moduleIdx === 3}
-                  className="inline-flex items-center gap-1 px-3 py-2 text-sm font-bold text-primary-orange
-                    disabled:opacity-30 hover:text-primary-orange-dark transition"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-bold
+                    bg-primary-orange text-white rounded-xl shadow-orange-glow
+                    disabled:opacity-30 hover:bg-primary-orange-dark transition active:scale-95"
                 >
-                  Học phần tiếp theo
+                  <span className="hidden sm:inline">Học phần tiếp theo</span>
+                  <span className="sm:hidden">Tiếp theo</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
           </div>
 
-          {/* MOBILE — danh sách HP dạng tabs */}
-          <div className="lg:hidden">
+          {/* TABLET — danh sách HP dạng tabs (ẩn trên mobile, ẩn trên desktop) */}
+          <div className="hidden sm:block lg:hidden">
             <div className="grid grid-cols-2 gap-2">
               {currentYear.modules.map((mod, idx) => (
                 <button

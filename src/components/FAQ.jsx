@@ -2,12 +2,8 @@ import { useState } from 'react';
 import { faqs } from '../data/faqs';
 import { HelpCircle, Plus, Minus, MessageCircle } from 'lucide-react';
 
-/**
- * Section 11 — FAQ accordion
- * Tone: BẠN THÂN ấm áp — trả lời chân thực, không né tránh
- */
 export default function FAQ() {
-  const [openId, setOpenId] = useState(1); // Mở câu đầu tiên mặc định
+  const [openId, setOpenId] = useState(1);
 
   const toggle = (id) => setOpenId(openId === id ? null : id);
 
@@ -29,16 +25,16 @@ export default function FAQ() {
           </p>
         </div>
 
-        {/* Accordion */}
+        {/* Accordion — mobile: 6 câu, desktop: tất cả */}
         <div className="max-w-3xl mx-auto space-y-3">
-          {faqs.map((faq) => {
+          {faqs.map((faq, index) => {
             const isOpen = openId === faq.id;
             return (
               <div
                 key={faq.id}
                 className={`card-base overflow-hidden transition-all ${
                   isOpen ? 'shadow-lg ring-2 ring-primary-orange/30' : ''
-                }`}
+                } ${index >= 6 ? 'hidden sm:block' : ''}`}
               >
                 <button
                   onClick={() => toggle(faq.id)}
@@ -60,7 +56,6 @@ export default function FAQ() {
                   </span>
                 </button>
 
-                {/* Answer panel */}
                 <div
                   className={`grid transition-all duration-300 ease-in-out ${
                     isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'

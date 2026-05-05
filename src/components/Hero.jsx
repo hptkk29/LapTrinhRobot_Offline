@@ -56,33 +56,33 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* 3 Trust Badges */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 max-w-4xl mx-auto lg:mx-0">
-            <div className="flex items-center gap-3 p-4 bg-white rounded-xl shadow-card">
-              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-orange/10 flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-primary-orange" />
+          {/* 3 Trust Badges — 1 hàng ngang trên mobile */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-8 max-w-4xl mx-auto lg:mx-0">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 p-2.5 sm:p-4 bg-white rounded-xl shadow-card text-center sm:text-left">
+              <div className="flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-primary-orange/10 flex items-center justify-center">
+                <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6 text-primary-orange" />
               </div>
-              <div className="text-left">
-                <div className="font-bold text-sm text-text-dark">5 năm — 20 học phần</div>
-                <div className="text-xs text-text-muted">Chuẩn quốc tế</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-4 bg-white rounded-xl shadow-card">
-              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-purple/10 flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-primary-purple" />
-              </div>
-              <div className="text-left">
-                <div className="font-bold text-sm text-text-dark">4 trung tâm Đà Nẵng</div>
-                <div className="text-xs text-text-muted">Gần khu nhà bố mẹ</div>
+              <div>
+                <div className="font-bold text-[11px] sm:text-sm text-text-dark leading-tight">5 năm — 20 HP</div>
+                <div className="text-[10px] sm:text-xs text-text-muted">Chuẩn quốc tế</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-white rounded-xl shadow-card">
-              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-success" />
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 p-2.5 sm:p-4 bg-white rounded-xl shadow-card text-center sm:text-left">
+              <div className="flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-primary-purple/10 flex items-center justify-center">
+                <MapPin className="w-4 h-4 sm:w-6 sm:h-6 text-primary-purple" />
               </div>
-              <div className="text-left">
-                <div className="font-bold text-sm text-text-dark">Giảng viên kỳ cựu</div>
-                <div className="text-xs text-text-muted">Đào tạo HS đoạt giải QG/QT</div>
+              <div>
+                <div className="font-bold text-[11px] sm:text-sm text-text-dark leading-tight">4 trung tâm</div>
+                <div className="text-[10px] sm:text-xs text-text-muted">Gần nhà bố mẹ</div>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 p-2.5 sm:p-4 bg-white rounded-xl shadow-card text-center sm:text-left">
+              <div className="flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-success/10 flex items-center justify-center">
+                <Users className="w-4 h-4 sm:w-6 sm:h-6 text-success" />
+              </div>
+              <div>
+                <div className="font-bold text-[11px] sm:text-sm text-text-dark leading-tight">GV kỳ cựu</div>
+                <div className="text-[10px] sm:text-xs text-text-muted">Giải QG/QT</div>
               </div>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function Hero() {
           <div className="relative">
             <div className="rounded-[2rem] bg-gradient-orange-purple shadow-2xl overflow-hidden px-6 pt-8 sm:px-10 sm:pt-10">
               <div className="relative min-h-[260px] sm:min-h-[340px] lg:min-h-[420px] flex items-end justify-center">
-                <div className="absolute top-6 left-4 sm:left-8 rounded-2xl bg-white/15 px-4 py-3 text-white backdrop-blur">
+                <div className="absolute top-6 left-4 sm:left-8 rounded-2xl bg-white/15 px-4 py-3 text-white backdrop-blur z-20">
                   <div className="text-xs font-bold uppercase text-white/75">Sata Robo</div>
                   <div className="text-lg sm:text-xl font-black">Robotics AI</div>
                 </div>

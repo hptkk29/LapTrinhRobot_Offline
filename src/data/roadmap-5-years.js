@@ -9,7 +9,6 @@ export const roadmap5Years = [
     year: 1,
     name: 'Ươm Mầm Tài Năng',
     ageRange: '6 – 7 tuổi',
-    grade: 'Lớp 1 – 2',
     description:
       'Bước đầu khám phá thế giới công nghệ. Con làm quen với tư duy lập trình qua trò chơi và câu chuyện sinh động — gieo hạt mầm yêu thích từ những giờ học đầu tiên.',
     totalSessions: 48,
@@ -147,7 +146,6 @@ export const roadmap5Years = [
     year: 2,
     name: 'Bứt Phá Giới Hạn',
     ageRange: '8 – 9 tuổi',
-    grade: 'Lớp 3 – 4',
     description:
       'Con bước vào thế giới robot thực tế — lắp ráp, lập trình và điều khiển robot vật lý. Bắt đầu được tham gia thi đấu Bảng R1.',
     totalSessions: 48,
@@ -257,7 +255,6 @@ export const roadmap5Years = [
     year: 3,
     name: 'Khơi Nguồn Sáng Tạo',
     ageRange: '10 tuổi',
-    grade: 'Lớp 5',
     description:
       'Năm chuyển giao — con củng cố nền tảng vững vàng trước khi bước vào THCS. Hoàn thiện kỹ năng Bảng R1, chuẩn bị nâng lên R2.',
     totalSessions: 48,
@@ -366,7 +363,6 @@ export const roadmap5Years = [
     year: 4,
     name: 'Chinh Phục Đấu Trường',
     ageRange: '11 – 12 tuổi',
-    grade: 'Lớp 6 – 7',
     description:
       'Con bước vào THCS — chính thức thi đấu Bảng R2 cấp quốc gia. Đào tạo cường độ cao, hướng đến huy chương.',
     totalSessions: 48,
@@ -475,7 +471,6 @@ export const roadmap5Years = [
     year: 5,
     name: 'Kiến Tạo Tương Lai',
     ageRange: '13 tuổi',
-    grade: 'Lớp 8',
     description:
       'Đỉnh cao của hành trình — con xây portfolio, chuẩn bị du học STEM, định hướng nghề nghiệp công nghệ tương lai.',
     totalSessions: 48,

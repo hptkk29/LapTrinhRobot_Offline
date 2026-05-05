@@ -19,16 +19,14 @@ export function getNextDeadline() {
 
   // Tìm mốc gần nhất chưa qua
   for (const milestone of milestones) {
-    if (day < milestone) {
-      // Set deadline vào 23:59:59 của ngày đó
-      const deadline = new Date(year, month, milestone, 23, 59, 59);
-      return deadline;
+    if (day <= milestone) {
+      return new Date(year, month, milestone, 23, 59, 59);
     }
   }
 
-  // Nếu đã qua ngày 25 → nhảy sang ngày 1 tháng sau
-  const nextMonth = new Date(year, month + 1, 1, 23, 59, 59);
-  return nextMonth;
+  // Nếu đã qua ngày 25 → deadline = cuối ngày cuối tháng này
+  const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+  return new Date(year, month, lastDayOfMonth, 23, 59, 59);
 }
 
 /**

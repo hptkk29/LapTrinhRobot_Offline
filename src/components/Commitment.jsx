@@ -1,11 +1,39 @@
+import { useState, useEffect, useRef } from 'react';
 import { commitments } from '../data/commitments';
 import { ShieldCheck, FileCheck2, RotateCcw, FileText } from 'lucide-react';
 
-/**
- * Section 6 — 6 Cam kết minh bạch
- * Tone: HỌC VIỆN trang trọng — đo được, có cơ chế đảm bảo
- */
 export default function Commitment() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const intervalRef = useRef(null);
+  const touchStartX = useRef(null);
+
+  const startAuto = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setActiveIdx((i) => (i + 1) % commitments.length);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    startAuto();
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) setActiveIdx((i) => (i + 1) % commitments.length);
+      else setActiveIdx((i) => (i - 1 + commitments.length) % commitments.length);
+      startAuto();
+    }
+    touchStartX.current = null;
+  };
+
   return (
     <section id="commitment" className="section-padding bg-soft-cream">
       <div className="container-site">
@@ -26,30 +54,70 @@ export default function Commitment() {
           </p>
         </div>
 
-        {/* Grid 6 cam kết — 2 cols mobile, 3 cols desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-10">
+        {/* Mobile: auto-slide carousel */}
+        <div
+          className="md:hidden mb-8 relative overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${activeIdx * 100}%)` }}
+          >
+            {commitments.map((c) => (
+              <div key={c.id} className="min-w-full px-1">
+                <div className="card-base p-6 hover:shadow-xl transition group">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-orange-purple flex items-center justify-center text-3xl mb-4">
+                    {c.icon}
+                  </div>
+                  <h3 className="font-bold text-lg text-text-dark mb-2 leading-snug">
+                    <span className="text-primary-orange mr-1">✓</span>
+                    {c.title}
+                  </h3>
+                  <p className="text-sm text-text-muted leading-relaxed mb-3">
+                    {c.description}
+                  </p>
+                  <div className="pt-3 border-t border-gray-100">
+                    <p className="text-xs text-success font-semibold flex items-start gap-1.5">
+                      <FileCheck2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                      <span>{c.measurable}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Dots */}
+          <div className="flex justify-center gap-2 mt-4">
+            {commitments.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => { setActiveIdx(idx); startAuto(); }}
+                className={`h-2 rounded-full transition-all duration-300
+                  ${idx === activeIdx ? 'w-6 bg-primary-orange' : 'w-2 bg-gray-300'}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop/Tablet: grid */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-10">
           {commitments.map((c) => (
             <div
               key={c.id}
               className="card-base p-6 hover:shadow-xl hover:-translate-y-1 transition group"
             >
-              {/* Icon */}
               <div className="w-14 h-14 rounded-xl bg-gradient-orange-purple flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
                 {c.icon}
               </div>
-
-              {/* Title */}
               <h3 className="font-bold text-lg sm:text-xl text-text-dark mb-2 leading-snug">
                 <span className="text-primary-orange mr-1">✓</span>
                 {c.title}
               </h3>
-
-              {/* Description */}
               <p className="text-sm sm:text-base text-text-muted leading-relaxed mb-3">
                 {c.description}
               </p>
-
-              {/* Measurable badge */}
               <div className="pt-3 border-t border-gray-100">
                 <p className="text-xs text-success font-semibold flex items-start gap-1.5">
                   <FileCheck2 className="w-4 h-4 flex-shrink-0 mt-0.5" />

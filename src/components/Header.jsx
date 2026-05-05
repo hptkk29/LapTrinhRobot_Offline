@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Menu, X, MessageCircle } from 'lucide-react';
-import useScrollPosition from '../hooks/useScrollPosition';
 
 /**
  * Header — logo + navigation
@@ -8,8 +7,6 @@ import useScrollPosition from '../hooks/useScrollPosition';
  */
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const scrollY = useScrollPosition();
-  const isAfterTopBar = scrollY > 150;
 
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -17,10 +14,7 @@ export default function Header() {
   };
 
   return (
-    <header
-      className={`sticky z-40 bg-white shadow-sm border-b border-gray-100
-        transition-all duration-300 ${isAfterTopBar ? 'top-0' : 'top-10 sm:top-11'}`}
-    >
+    <header className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-100 transition-all duration-300">
       <div className="container-site">
         <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo */}

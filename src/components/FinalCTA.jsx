@@ -1,10 +1,9 @@
+import { useState } from 'react';
 import { Rocket, Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
 
-/**
- * Section 12 — Kêu gọi cuối
- * Tone: BẠN THÂN cảm xúc + chốt cuối — "câu hỏi không phải có nên hay không"
- */
 export default function FinalCTA() {
+  const [hasSataMath, setHasSataMath] = useState(null);
+
   return (
     <section id="final-cta" className="section-padding bg-gradient-to-br from-soft-cream via-white to-soft-yellow relative overflow-hidden">
       {/* Decorative shapes */}
@@ -32,6 +31,44 @@ export default function FinalCTA() {
           <p className="text-sm sm:text-base text-text-muted">
             Hôm nay? Tháng sau? Hay năm sau?
           </p>
+        </div>
+
+        {/* SataMath question — all platforms */}
+        <div className="max-w-2xl mx-auto bg-white rounded-2xl p-5 sm:p-6 shadow-md mb-8 border border-gray-100">
+          <p className="text-sm sm:text-base text-text-dark font-semibold text-center mb-4">
+            Con của Bố/Mẹ đang học ở hệ thống{' '}
+            <span className="text-primary-orange font-black">SataMath</span>?
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={() => setHasSataMath('yes')}
+              className={`flex-1 max-w-[140px] py-3 rounded-xl font-bold text-sm border-2 transition active:scale-95
+                ${hasSataMath === 'yes'
+                  ? 'bg-primary-orange text-white border-primary-orange shadow-orange-glow'
+                  : 'bg-white text-text-dark border-gray-200 hover:border-primary-orange hover:text-primary-orange'}`}
+            >
+              ✅ Có
+            </button>
+            <button
+              onClick={() => setHasSataMath('no')}
+              className={`flex-1 max-w-[140px] py-3 rounded-xl font-bold text-sm border-2 transition active:scale-95
+                ${hasSataMath === 'no'
+                  ? 'bg-primary-purple text-white border-primary-purple'
+                  : 'bg-white text-text-dark border-gray-200 hover:border-primary-purple hover:text-primary-purple'}`}
+            >
+              ❌ Không
+            </button>
+          </div>
+          {hasSataMath === 'yes' && (
+            <p className="mt-3 text-center text-sm text-success font-semibold animate-fade-in">
+              🎉 Ưu đãi đặc biệt dành cho gia đình SataMath — báo với tư vấn viên để nhận thêm ưu đãi!
+            </p>
+          )}
+          {hasSataMath === 'no' && (
+            <p className="mt-3 text-center text-sm text-text-muted animate-fade-in">
+              💡 Tìm hiểu thêm về SataMath — chương trình Toán trực tuyến chuẩn quốc tế dành cho con.
+            </p>
+          )}
         </div>
 
         {/* Closing emotional message */}
@@ -73,18 +110,15 @@ export default function FinalCTA() {
         {/* Direct contact info */}
         <div className="max-w-5xl mx-auto bg-text-dark text-white rounded-3xl p-6 sm:p-8 shadow-xl">
           <div className="mb-6">
-            <div>
-              <h3 className="font-black text-xl sm:text-2xl leading-tight">
-                Liên hệ trực tiếp Học viện Sata Robo
-              </h3>
-              <p className="text-sm text-white/70 mt-1">
-                Tư vấn lịch học, chọn cơ sở gần nhà và đặt buổi test miễn phí cho con.
-              </p>
-            </div>
+            <h3 className="font-black text-xl sm:text-2xl leading-tight">
+              Liên hệ trực tiếp Học viện Sata Robo
+            </h3>
+            <p className="text-sm text-white/70 mt-1">
+              Tư vấn lịch học, chọn cơ sở gần nhà và đặt buổi test miễn phí cho con.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            {/* Hotline */}
             <a
               href="tel:0818823720"
               className="flex items-start gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition group"
@@ -100,7 +134,6 @@ export default function FinalCTA() {
               </div>
             </a>
 
-            {/* Email */}
             <a
               href="mailto:satarobo@gmail.com"
               className="flex items-start gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition group"
@@ -116,7 +149,6 @@ export default function FinalCTA() {
               </div>
             </a>
 
-            {/* Trụ sở */}
             <div className="flex items-start gap-3 p-4 rounded-xl bg-white/10">
               <div className="w-10 h-10 rounded-lg bg-primary-orange text-white flex items-center justify-center flex-shrink-0">
                 <MapPin className="w-5 h-5" />
@@ -129,7 +161,6 @@ export default function FinalCTA() {
               </div>
             </div>
 
-            {/* Giờ làm việc */}
             <div className="flex items-start gap-3 p-4 rounded-xl bg-white/10">
               <div className="w-10 h-10 rounded-lg bg-primary-purple text-white flex items-center justify-center flex-shrink-0">
                 <Clock className="w-5 h-5" />
@@ -137,9 +168,7 @@ export default function FinalCTA() {
               <div className="min-w-0">
                 <div className="text-xs font-bold text-white/60 uppercase">Giờ làm việc</div>
                 <div className="text-xs sm:text-sm font-bold text-white leading-snug">
-                  T2 – T7
-                  <br />
-                  8:00 – 20:00
+                  T2 – T7<br />8:00 – 20:00
                 </div>
               </div>
             </div>

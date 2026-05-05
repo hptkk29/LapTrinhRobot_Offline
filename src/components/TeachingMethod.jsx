@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { Lightbulb, FolderOpen, Award } from 'lucide-react';
 
 const methods = [
@@ -25,6 +26,37 @@ const methods = [
 ];
 
 export default function TeachingMethod() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const intervalRef = useRef(null);
+  const touchStartX = useRef(null);
+
+  const startAuto = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setActiveIdx((i) => (i + 1) % methods.length);
+    }, 3200);
+  };
+
+  useEffect(() => {
+    startAuto();
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) setActiveIdx((i) => (i + 1) % methods.length);
+      else setActiveIdx((i) => (i - 1 + methods.length) % methods.length);
+      startAuto();
+    }
+    touchStartX.current = null;
+  };
+
   return (
     <section className="section-padding bg-soft-cream">
       <div className="container-site">
@@ -39,7 +71,8 @@ export default function TeachingMethod() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto mb-10">
+        {/* Desktop/Tablet: 3-column grid */}
+        <div className="hidden md:grid grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto mb-10">
           {methods.map((method, idx) => {
             const Icon = method.icon;
             return (
@@ -56,6 +89,49 @@ export default function TeachingMethod() {
               </div>
             );
           })}
+        </div>
+
+        {/* Mobile: auto-slide carousel with swipe */}
+        <div
+          className="md:hidden mb-8 relative overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${activeIdx * 100}%)` }}
+          >
+            {methods.map((method, idx) => {
+              const Icon = method.icon;
+              return (
+                <div key={idx} className="min-w-full px-1">
+                  <div className="card-base p-6 text-center">
+                    <div className={`inline-flex w-16 h-16 rounded-2xl items-center justify-center mb-4 ${method.iconBg}`}>
+                      <Icon className="w-8 h-8" strokeWidth={2.5} />
+                    </div>
+                    <h3 className="font-extrabold text-base text-text-dark mb-3">
+                      {method.title}
+                    </h3>
+                    <p className="text-sm text-text-muted leading-relaxed">
+                      {method.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Dots indicator */}
+          <div className="flex justify-center gap-2 mt-4">
+            {methods.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => { setActiveIdx(idx); startAuto(); }}
+                className={`h-2 rounded-full transition-all duration-300
+                  ${idx === activeIdx ? 'w-6 bg-primary-orange' : 'w-2 bg-gray-300'}`}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="max-w-3xl mx-auto bg-white rounded-2xl border-2 border-primary-purple/30 p-5 sm:p-6 text-center shadow-card">
