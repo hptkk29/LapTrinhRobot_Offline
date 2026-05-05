@@ -80,13 +80,17 @@ export function trackGA4Event(eventName, params = {}) {
 export async function submitLeadToSheet(formData) {
   try {
     // Apps Script parses raw JSON; text/plain keeps this request CORS-simple in browsers.
+    const sataMathAnswer = formData.sataMath || '';
     const sheetPayload = JSON.stringify({
       name: formData.name || '',
       phone: formData.phone || '',
       email: formData.email || '',
       center: formData.center || '',
       course: formData.course || '',
-      sataMath: formData.sataMath || ''
+      sataMath: sataMathAnswer,
+      satamath: sataMathAnswer,
+      sata_math: sataMathAnswer,
+      sataMathAnswer
     });
 
     const response = await fetch(GOOGLE_SHEET_URL, {
