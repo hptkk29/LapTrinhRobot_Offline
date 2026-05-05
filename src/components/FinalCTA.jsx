@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { Rocket, Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
 
 export default function FinalCTA() {
-  const [hasSataMath, setHasSataMath] = useState(null);
 
   return (
     <section id="final-cta" className="section-padding bg-gradient-to-br from-soft-cream via-white to-soft-yellow relative overflow-hidden">
@@ -31,44 +29,6 @@ export default function FinalCTA() {
           <p className="text-sm sm:text-base text-text-muted">
             Hôm nay? Tháng sau? Hay năm sau?
           </p>
-        </div>
-
-        {/* SataMath question — all platforms */}
-        <div className="max-w-2xl mx-auto bg-white rounded-2xl p-5 sm:p-6 shadow-md mb-8 border border-gray-100">
-          <p className="text-sm sm:text-base text-text-dark font-semibold text-center mb-4">
-            Con của Bố/Mẹ đang học ở hệ thống{' '}
-            <span className="text-primary-orange font-black">SataMath</span>?
-          </p>
-          <div className="flex gap-3 justify-center">
-            <button
-              onClick={() => setHasSataMath('yes')}
-              className={`flex-1 max-w-[140px] py-3 rounded-xl font-bold text-sm border-2 transition active:scale-95
-                ${hasSataMath === 'yes'
-                  ? 'bg-primary-orange text-white border-primary-orange shadow-orange-glow'
-                  : 'bg-white text-text-dark border-gray-200 hover:border-primary-orange hover:text-primary-orange'}`}
-            >
-              ✅ Có
-            </button>
-            <button
-              onClick={() => setHasSataMath('no')}
-              className={`flex-1 max-w-[140px] py-3 rounded-xl font-bold text-sm border-2 transition active:scale-95
-                ${hasSataMath === 'no'
-                  ? 'bg-primary-purple text-white border-primary-purple'
-                  : 'bg-white text-text-dark border-gray-200 hover:border-primary-purple hover:text-primary-purple'}`}
-            >
-              ❌ Không
-            </button>
-          </div>
-          {hasSataMath === 'yes' && (
-            <p className="mt-3 text-center text-sm text-success font-semibold animate-fade-in">
-              🎉 Ưu đãi đặc biệt dành cho gia đình SataMath — báo với tư vấn viên để nhận thêm ưu đãi!
-            </p>
-          )}
-          {hasSataMath === 'no' && (
-            <p className="mt-3 text-center text-sm text-text-muted animate-fade-in">
-              💡 Tìm hiểu thêm về SataMath — chương trình Toán trực tuyến chuẩn quốc tế dành cho con.
-            </p>
-          )}
         </div>
 
         {/* Closing emotional message */}

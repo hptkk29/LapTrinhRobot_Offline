@@ -44,6 +44,7 @@ export default function RegistrationForm() {
     email: '',
     course: '',
     center: '',
+    sataMath: null,
     consent: false
   });
   const [errors, setErrors] = useState({});
@@ -121,7 +122,8 @@ export default function RegistrationForm() {
         phone: formData.phone.trim(),
         email: formData.email.trim(),
         course: formData.course,
-        center: formData.center
+        center: formData.center,
+        sataMath: formData.sataMath === 'yes' ? 'Có' : formData.sataMath === 'no' ? 'Không' : 'Không trả lời'
       });
       // Hiển thị popup thành công rồi tự chuyển sang nhóm Zalo
       setIsSuccess(true);
@@ -385,6 +387,41 @@ export default function RegistrationForm() {
                   </p>
                 )}
               </div>
+            </div>
+
+            {/* SATAMATH QUESTION */}
+            <div className="rounded-xl border-2 border-gray-100 bg-soft-cream p-4">
+              <p className="text-sm font-bold text-text-dark mb-3">
+                Con của Bố/Mẹ đang học ở hệ thống{' '}
+                <span className="text-primary-orange">SataMath</span>?
+              </p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, sataMath: 'yes' }))}
+                  className={`flex-1 py-2.5 rounded-xl font-bold text-sm border-2 transition active:scale-95
+                    ${formData.sataMath === 'yes'
+                      ? 'bg-primary-orange text-white border-primary-orange shadow-orange-glow'
+                      : 'bg-white text-text-dark border-gray-200 hover:border-primary-orange hover:text-primary-orange'}`}
+                >
+                  ✅ Có
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, sataMath: 'no' }))}
+                  className={`flex-1 py-2.5 rounded-xl font-bold text-sm border-2 transition active:scale-95
+                    ${formData.sataMath === 'no'
+                      ? 'bg-primary-purple text-white border-primary-purple'
+                      : 'bg-white text-text-dark border-gray-200 hover:border-primary-purple hover:text-primary-purple'}`}
+                >
+                  ❌ Không
+                </button>
+              </div>
+              {formData.sataMath === 'yes' && (
+                <p className="mt-2 text-xs text-success font-semibold">
+                  🎉 Báo với tư vấn viên để nhận ưu đãi đặc biệt dành cho gia đình SataMath!
+                </p>
+              )}
             </div>
 
             {/* CONSENT CHECKBOX */}
