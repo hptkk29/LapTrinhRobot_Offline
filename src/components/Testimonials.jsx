@@ -1,5 +1,20 @@
 import { testimonials } from '../data/testimonials';
-import { MessageCircle, Star, Quote } from 'lucide-react';
+import { MessageCircle, PlayCircle, Quote, Star } from 'lucide-react';
+
+const videos = [
+  {
+    id: 'bqB2c7AlSfE',
+    title: 'Cảm nhận học viên Sata Robo 1'
+  },
+  {
+    id: '9MJFC4v8cbU',
+    title: 'Cảm nhận học viên Sata Robo 2'
+  },
+  {
+    id: 'anInoYFGrF0',
+    title: 'Cảm nhận học viên Sata Robo 3'
+  }
+];
 
 /**
  * Section 9 — Phụ huynh & học sinh nói gì
@@ -21,14 +36,12 @@ export default function Testimonials() {
             <span className="text-gradient-orange-purple">và hào hứng làm được bài tập thực tế</span>
           </h2>
           <p className="text-base sm:text-lg text-text-muted max-w-2xl mx-auto">
-            Cảm nhận thực tế từ phụ huynh và học sinh đã trải qua hành trình
-            cùng Học viện Sata Robo.
+            Một vài phản hồi ngắn gọn từ phụ huynh, kèm video cảm nhận của học viên có thể xem trực tiếp trên website.
           </p>
         </div>
 
-        {/* Grid 3 cols on desktop, 1 col mobile, 2 cols tablet */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {testimonials.map((t) => (
+          {testimonials.slice(0, 3).map((t) => (
             <div
               key={t.id}
               className="card-base p-6 sm:p-7 relative hover:shadow-xl hover:-translate-y-1 transition group"
@@ -70,6 +83,34 @@ export default function Testimonials() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-10">
+          <div className="flex items-center justify-center gap-2 mb-5">
+            <PlayCircle className="w-5 h-5 text-primary-orange" />
+            <h3 className="text-lg sm:text-2xl font-black text-text-dark">
+              Video cảm nhận học viên
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
+            {videos.map((video) => (
+              <div key={video.id} className="rounded-2xl overflow-hidden shadow-card border border-gray-100 bg-white">
+                <div className="aspect-video bg-gray-100">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${video.id}`}
+                    title={video.title}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-4">
+                  <p className="text-sm font-bold text-text-dark leading-snug">{video.title}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Footer note */}

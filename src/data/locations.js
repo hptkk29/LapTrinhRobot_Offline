@@ -5,7 +5,7 @@
 export const locations = [
   {
     id: 1,
-    name: 'Trung tâm Hải Châu',
+    name: '60 Lê Lợi, Phường Hải Châu, Đà Nẵng',
     address: '60 Lê Lợi, Phường Hải Châu, Đà Nẵng',
     hotline: '0818.823.720',
     workingHours: 'T2 – T7: 8:00 – 20:00',
@@ -18,7 +18,7 @@ export const locations = [
   },
   {
     id: 2,
-    name: 'Trung tâm Hoà Cường (Trụ sở chính)',
+    name: '258 Lê Thanh Nghị, Phường Hoà Cường, Đà Nẵng',
     address: '258 Lê Thanh Nghị, Phường Hoà Cường, Đà Nẵng',
     hotline: '0818.823.720',
     workingHours: 'T2 – T7: 8:00 – 20:00',
@@ -31,7 +31,7 @@ export const locations = [
   },
   {
     id: 3,
-    name: 'Trung tâm Cẩm Lệ',
+    name: '232 Nguyễn Phước Lan, Phường Cẩm Lệ, Đà Nẵng',
     address: '232 Nguyễn Phước Lan, Phường Cẩm Lệ, Đà Nẵng',
     hotline: '0818.823.720',
     workingHours: 'T2 – T7: 8:00 – 20:00',
@@ -44,7 +44,7 @@ export const locations = [
   },
   {
     id: 4,
-    name: 'Trung tâm Hoà Khê',
+    name: '269 Điện Biên Phủ, Phường Hoà Khê, Đà Nẵng',
     address: '269 Điện Biên Phủ, Phường Hoà Khê, Đà Nẵng',
     hotline: '0818.823.720',
     workingHours: 'T2 – T7: 8:00 – 20:00',

@@ -6,7 +6,7 @@
 // ============================================
 
 // URL Google Apps Script — endpoint nhận lead từ form
-export const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzL_pQgB0NivwwVl9Dz8EJv5CTkRFhI7v_F9zKg5lZiBFSO0jqgo4ylqWXpNgotzSdX/exec';
+export const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxwLaLGWBWm_oW10xCF0eLKQ5rr2D9Oku0kLyQft18JGidxAxhFNuFrRpP6hQNmupSI/exec';
 
 // ============================================
 // FACEBOOK PIXEL — Track event Lead

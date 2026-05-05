@@ -1,12 +1,4 @@
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  Facebook,
-  Youtube,
-  MessageCircle
-} from 'lucide-react';
+import { Clock, Facebook, Mail, MapPin, MessageCircle, Phone, Youtube } from 'lucide-react';
 import { locations } from '../data/locations';
 
 /**
@@ -23,14 +15,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           {/* Cột 1: LOGO + Slogan */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-orange-purple flex items-center justify-center text-xl font-black shadow-md">
-                SR
-              </div>
-              <div>
-                <div className="font-black text-lg leading-tight">SATA ROBO</div>
-                <div className="text-xs text-gray-400">Học viện Robotics Đà Nẵng</div>
-              </div>
+            <div className="flex items-center mb-4">
+              <img
+                src="/image/LogoSataROBO.png"
+                alt="Sata Robo"
+                className="h-14 w-auto object-contain bg-white rounded-xl p-2"
+              />
             </div>
             <p className="text-sm text-gray-300 italic mb-4 leading-relaxed">
               "Khơi Nguồn Sáng Tạo
@@ -175,23 +165,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-        </div>
-
-        {/* ============ MAP TRỤ SỞ ============ */}
-        <div className="bg-white/5 rounded-2xl p-4 mb-8">
-          <div className="text-xs uppercase tracking-wider font-bold text-primary-orange mb-2 px-2">
-            📍 Trụ sở chính
-          </div>
-          <iframe
-            src={hqLocation.mapEmbed}
-            width="100%"
-            height="220"
-            style={{ border: 0, borderRadius: '0.75rem' }}
-            allowFullScreen=""
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Sata Robo HQ"
-          ></iframe>
         </div>
 
         {/* ============ COPYRIGHT ============ */}

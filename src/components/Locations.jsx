@@ -1,5 +1,5 @@
 import { locations } from '../data/locations';
-import { MapPin, Phone, Clock, Star, MessageCircle } from 'lucide-react';
+import { ArrowRight, MapPin, MessageCircle, Star } from 'lucide-react';
 
 export default function Locations() {
   return (
@@ -11,7 +11,7 @@ export default function Locations() {
             ĐỊA ĐIỂM HỌC
           </div>
           <h2 className="heading-2 mb-4">
-            <span className="text-gradient-orange-purple">4 TRUNG TÂM TẠI ĐÀ NẴNG</span><br />
+            <span className="text-gradient-orange-purple">4 ĐỊA CHỈ HỌC TẠI ĐÀ NẴNG</span><br />
             <span className="text-text-dark text-2xl sm:text-3xl">— CHỌN GẦN NHÀ NHẤT</span>
           </h2>
           <p className="text-base sm:text-lg text-text-muted">
@@ -20,81 +20,50 @@ export default function Locations() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {locations.map((loc) => (
             <div
               key={loc.id}
-              className={`card-base overflow-hidden border-2 transition
+              className={`card-base p-4 border-2 transition flex flex-col
                 ${loc.isHQ ? 'border-primary-orange' : 'border-gray-200'}`}
             >
-              {/* Header */}
-              <div className={`p-4 sm:p-5 border-b border-gray-100
-                ${loc.isHQ ? 'bg-soft-cream' : 'bg-gray-50'}`}>
-                <div className="flex items-start justify-between gap-3 mb-2">
-                  <div className="flex items-center gap-2">
-                    <MapPin className={`w-5 h-5 flex-shrink-0 ${loc.isHQ ? 'text-primary-orange' : 'text-primary-purple'}`} />
-                    <h3 className="font-extrabold text-base sm:text-lg text-text-dark leading-tight">
-                      {loc.name}
-                    </h3>
-                  </div>
-                  {loc.isHQ && (
-                    <span className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 bg-primary-orange text-white text-[10px] sm:text-xs font-bold rounded-full">
-                      <Star className="w-3 h-3 fill-current" />
-                      HQ
-                    </span>
-                  )}
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
+                  ${loc.isHQ ? 'bg-primary-orange text-white' : 'bg-soft-purple text-primary-purple'}`}>
+                  <MapPin className="w-5 h-5" />
                 </div>
-                <p className="text-sm text-text-muted leading-relaxed">
-                  📍 {loc.address}
-                </p>
-                {loc.note && (
-                  <p className="text-xs text-primary-purple mt-2 italic">
-                    💡 {loc.note}
-                  </p>
+                {loc.isHQ && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-orange text-white text-[10px] sm:text-xs font-bold rounded-full">
+                    <Star className="w-3 h-3 fill-current" />
+                    Trụ sở
+                  </span>
                 )}
               </div>
 
-              {/* Body */}
-              <div className="p-4 sm:p-5">
-                <div className="flex flex-col gap-2 mb-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-primary-orange flex-shrink-0" />
-                    <a href={`tel:${loc.hotline.replace(/\./g, '')}`} className="text-primary-orange font-bold hover:underline">
-                      {loc.hotline}
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-text-muted flex-shrink-0" />
-                    <span className="text-text-muted">{loc.workingHours}</span>
-                  </div>
-                </div>
+              <h3 className="font-extrabold text-base sm:text-lg text-text-dark leading-snug mb-2">
+                {loc.address}
+              </h3>
+              {loc.note && (
+                <p className="text-xs sm:text-sm text-primary-purple mb-4 flex-1">
+                  {loc.note}
+                </p>
+              )}
 
-                {/* Map */}
-                <div className="rounded-xl overflow-hidden border border-gray-200 mb-4 aspect-video bg-gray-100">
-                  <iframe
-                    src={loc.mapEmbed}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title={`Bản đồ ${loc.name}`}
-                  />
-                </div>
-
-                <button
-                  onClick={() => {
-                    const select = document.querySelector('select[name="center"]');
-                    if (select) select.value = loc.name;
-                    document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="w-full py-2.5 bg-primary-orange/10 text-primary-orange font-bold text-sm rounded-lg
-                    hover:bg-primary-orange hover:text-white transition"
-                >
-                  🎯 Chọn trung tâm này
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  const select = document.querySelector('select[name="center"]');
+                  if (select) {
+                    select.value = loc.address;
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                  }
+                  document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full py-2.5 bg-primary-orange/10 text-primary-orange font-bold text-sm rounded-lg
+                  hover:bg-primary-orange hover:text-white transition inline-flex items-center justify-center gap-2"
+              >
+                Chọn địa chỉ này
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           ))}
         </div>

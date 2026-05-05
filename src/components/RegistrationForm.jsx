@@ -28,13 +28,11 @@ import {
  * - Submit → POST Google Sheet (Apps Script)
  * - Meta Pixel: fbq('track', 'Lead')
  * - GA4: gtag('event', 'generate_lead')
- * - Thank You overlay → countdown 5s → redirect Zalo group
- *
- * ⚠️ THAY: [ZALO_GROUP_LINK] = link nhóm Zalo phụ huynh thật
+ * - Success popup → countdown → redirect Zalo group
  */
 
 // Link nhóm Zalo redirect sau khi submit thành công
-const ZALO_GROUP_LINK = 'https://zalo.me/g/[ZALO_GROUP_LINK]';
+const ZALO_GROUP_LINK = 'https://zalo.me/g/ovma9qgjuedypjy8mnxc';
 // Link Zalo cá nhân fallback (nếu nhóm chưa có link)
 const ZALO_FALLBACK = 'https://zalo.me/0818823720';
 
@@ -57,8 +55,7 @@ export default function RegistrationForm() {
   useEffect(() => {
     if (!isSuccess) return;
     if (redirectCountdown <= 0) {
-      // Mở Zalo group trong tab mới
-      window.open(ZALO_GROUP_LINK, '_blank', 'noopener,noreferrer');
+      window.location.href = ZALO_GROUP_LINK;
       return;
     }
     const timer = setTimeout(() => {
@@ -126,9 +123,8 @@ export default function RegistrationForm() {
         course: formData.course,
         center: formData.center
       });
-      // Hiển thị Thank You
+      // Hiển thị popup thành công rồi tự chuyển sang nhóm Zalo
       setIsSuccess(true);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       console.error('Submit error:', err);
       alert('Có lỗi xảy ra, bố mẹ thử lại hoặc liên hệ Zalo 0818.823.720 nhé!');
@@ -137,19 +133,18 @@ export default function RegistrationForm() {
     }
   };
 
-  // ============ RENDER THANK YOU SCREEN ============
+  // ============ RENDER SUCCESS POPUP ============
   if (isSuccess) {
     return (
-      <section id="registration-form" className="section-padding bg-gradient-orange-purple">
-        <div className="container-site">
-          <div className="max-w-2xl mx-auto bg-white rounded-3xl p-8 sm:p-12 text-center shadow-2xl animate-fade-in">
-            {/* Success icon */}
+      <section id="registration-form" className="section-padding bg-gradient-orange-purple relative overflow-hidden">
+        <div className="container-site min-h-[34rem] flex items-center justify-center">
+          <div className="max-w-xl mx-auto bg-white rounded-3xl p-7 sm:p-10 text-center shadow-2xl animate-fade-in border-4 border-white/40">
             <div className="inline-flex w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-success/10 items-center justify-center mb-6">
               <CheckCircle2 className="w-12 h-12 sm:w-14 sm:h-14 text-success" strokeWidth={2.5} />
             </div>
 
             <h2 className="text-2xl sm:text-4xl font-black text-text-dark mb-4">
-              🎉 Cảm ơn bố mẹ đã đăng ký!
+              Đăng ký thành công!
             </h2>
 
             <p className="text-base sm:text-lg text-text-muted leading-relaxed mb-6">
@@ -158,10 +153,9 @@ export default function RegistrationForm() {
               Tư vấn viên sẽ gọi cho bố mẹ trong vòng <strong className="text-primary-orange">24h</strong> để xếp lịch buổi Test miễn phí.
             </p>
 
-            {/* Next step */}
             <div className="bg-soft-cream rounded-2xl p-5 sm:p-6 mb-6 text-left">
               <h3 className="font-bold text-base sm:text-lg text-text-dark mb-2 flex items-center gap-2">
-                📩 Bước tiếp theo
+                Bước tiếp theo
               </h3>
               <p className="text-sm sm:text-base text-text-muted">
                 Vui lòng tham gia <strong>Nhóm Zalo phụ huynh Sata Robo</strong> để cập nhật
@@ -169,24 +163,20 @@ export default function RegistrationForm() {
               </p>
             </div>
 
-            {/* Countdown auto-redirect */}
             <div className="bg-soft-yellow rounded-xl p-4 mb-6 inline-flex items-center gap-2">
               <Loader2 className="w-5 h-5 text-primary-orange animate-spin" />
               <span className="text-sm sm:text-base text-text-dark">
-                Tự động chuyển sang Zalo trong{' '}
+                Tự động chuyển sang nhóm Zalo trong{' '}
                 <strong className="text-primary-orange text-lg">{redirectCountdown}s</strong>
               </span>
             </div>
 
-            {/* Manual buttons */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
                 href={ZALO_GROUP_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="btn-primary"
               >
-                💬 Tham gia Nhóm Zalo Ngay
+                Tham gia nhóm Zalo ngay
               </a>
               <a
                 href={ZALO_FALLBACK}
@@ -194,7 +184,7 @@ export default function RegistrationForm() {
                 rel="noopener noreferrer"
                 className="btn-outline"
               >
-                📞 Zalo Cá Nhân: 0818.823.720
+                Zalo cá nhân: 0818.823.720
               </a>
             </div>
           </div>
@@ -268,129 +258,133 @@ export default function RegistrationForm() {
               )}
             </div>
 
-            {/* SDT */}
-            <div>
-              <label htmlFor="phone" className="block text-sm font-bold text-text-dark mb-1.5">
-                <Phone className="inline w-4 h-4 mr-1 text-primary-orange" />
-                Số điện thoại <span className="text-urgent">*</span>
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="0912 345 678"
-                inputMode="tel"
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base ${
-                  errors.phone
-                    ? 'input-error border-urgent animate-shake'
-                    : 'border-gray-200 focus:border-primary-orange'
-                }`}
-              />
-              {errors.phone && (
-                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.phone}
-                </p>
-              )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* SDT */}
+              <div>
+                <label htmlFor="phone" className="block text-sm font-bold text-text-dark mb-1.5">
+                  <Phone className="inline w-4 h-4 mr-1 text-primary-orange" />
+                  Số điện thoại <span className="text-urgent">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="0912 345 678"
+                  inputMode="tel"
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base ${
+                    errors.phone
+                      ? 'input-error border-urgent animate-shake'
+                      : 'border-gray-200 focus:border-primary-orange'
+                  }`}
+                />
+                {errors.phone && (
+                  <p className="mt-1 text-xs text-urgent flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {errors.phone}
+                  </p>
+                )}
+              </div>
+
+              {/* EMAIL — không bắt buộc */}
+              <div>
+                <label htmlFor="email" className="block text-sm font-bold text-text-dark mb-1.5">
+                  <Mail className="inline w-4 h-4 mr-1 text-primary-orange" />
+                  Email <span className="text-text-muted text-xs font-normal">(không bắt buộc)</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="email@gmail.com"
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base ${
+                    errors.email
+                      ? 'input-error border-urgent animate-shake'
+                      : 'border-gray-200 focus:border-primary-orange'
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-xs text-urgent flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {errors.email}
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* EMAIL — không bắt buộc */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-bold text-text-dark mb-1.5">
-                <Mail className="inline w-4 h-4 mr-1 text-primary-orange" />
-                Email <span className="text-text-muted text-xs font-normal">(không bắt buộc)</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="email@gmail.com"
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base ${
-                  errors.email
-                    ? 'input-error border-urgent animate-shake'
-                    : 'border-gray-200 focus:border-primary-orange'
-                }`}
-              />
-              {errors.email && (
-                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.email}
-                </p>
-              )}
-            </div>
-
-            {/* KHOÁ HỌC */}
-            <div>
-              <label htmlFor="course" className="block text-sm font-bold text-text-dark mb-1.5">
-                <GraduationCap className="inline w-4 h-4 mr-1 text-primary-orange" />
-                Khoá học quan tâm <span className="text-urgent">*</span>
-              </label>
-              <select
-                id="course"
-                name="course"
-                value={formData.course}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
-                  errors.course
-                    ? 'input-error border-urgent animate-shake'
-                    : 'border-gray-200 focus:border-primary-orange'
-                }`}
-              >
-                <option value="">-- Chọn khoá học cho con --</option>
-                {roadmap5Years.map((y) => (
-                  <option key={y.year} value={`Năm ${y.year} — ${y.name} (${y.grade})`}>
-                    Năm {y.year} — {y.name} ({y.grade})
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* KHOÁ HỌC */}
+              <div>
+                <label htmlFor="course" className="block text-sm font-bold text-text-dark mb-1.5">
+                  <GraduationCap className="inline w-4 h-4 mr-1 text-primary-orange" />
+                  Khoá học quan tâm <span className="text-urgent">*</span>
+                </label>
+                <select
+                  id="course"
+                  name="course"
+                  value={formData.course}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
+                    errors.course
+                      ? 'input-error border-urgent animate-shake'
+                      : 'border-gray-200 focus:border-primary-orange'
+                  }`}
+                >
+                  <option value="">-- Chọn khoá học --</option>
+                  {roadmap5Years.map((y) => (
+                    <option key={y.year} value={`Năm ${y.year} — ${y.name} (${y.grade})`}>
+                      Năm {y.year} — {y.name} ({y.grade})
+                    </option>
+                  ))}
+                  <option value="Chưa biết — Cần tư vấn">
+                    Chưa biết — Cần tư vấn
                   </option>
-                ))}
-                <option value="Chưa biết — Cần tư vấn">
-                  Chưa biết — Cần tư vấn
-                </option>
-              </select>
-              {errors.course && (
-                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.course}
-                </p>
-              )}
-            </div>
+                </select>
+                {errors.course && (
+                  <p className="mt-1 text-xs text-urgent flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {errors.course}
+                  </p>
+                )}
+              </div>
 
-            {/* TRUNG TÂM */}
-            <div>
-              <label htmlFor="center" className="block text-sm font-bold text-text-dark mb-1.5">
-                <MapPin className="inline w-4 h-4 mr-1 text-primary-orange" />
-                Chọn cơ sở học <span className="text-urgent">*</span>
-              </label>
-              <select
-                id="center"
-                name="center"
-                value={formData.center}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
-                  errors.center
-                    ? 'input-error border-urgent animate-shake'
-                    : 'border-gray-200 focus:border-primary-orange'
-                }`}
-              >
-                <option value="">-- Chọn cơ sở gần bạn --</option>
-                {locations.map((loc) => (
-                  <option key={loc.id} value={loc.name}>
-                    {loc.name}
+              {/* CƠ SỞ */}
+              <div>
+                <label htmlFor="center" className="block text-sm font-bold text-text-dark mb-1.5">
+                  <MapPin className="inline w-4 h-4 mr-1 text-primary-orange" />
+                  Chọn cơ sở học <span className="text-urgent">*</span>
+                </label>
+                <select
+                  id="center"
+                  name="center"
+                  value={formData.center}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
+                    errors.center
+                      ? 'input-error border-urgent animate-shake'
+                      : 'border-gray-200 focus:border-primary-orange'
+                  }`}
+                >
+                  <option value="">-- Chọn địa chỉ cơ sở --</option>
+                  {locations.map((loc) => (
+                    <option key={loc.id} value={loc.address}>
+                      {loc.address}
+                    </option>
+                  ))}
+                  <option value="Tư vấn cơ sở gần nhà nhất">
+                    Tư vấn cơ sở gần nhà nhất
                   </option>
-                ))}
-                <option value="Tư vấn trung tâm gần nhà nhất">
-                  Tư vấn trung tâm gần nhà nhất
-                </option>
-              </select>
-              {errors.center && (
-                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.center}
-                </p>
-              )}
+                </select>
+                {errors.center && (
+                  <p className="mt-1 text-xs text-urgent flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {errors.center}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* CONSENT CHECKBOX */}

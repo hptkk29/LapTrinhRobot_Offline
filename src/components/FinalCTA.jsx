@@ -70,23 +70,31 @@ export default function FinalCTA() {
           </a>
         </div>
 
-        {/* Direct contact info — 4 stat cards */}
-        <div className="max-w-4xl mx-auto bg-white rounded-3xl p-6 sm:p-8 shadow-lg">
-          <h3 className="text-center font-black text-base sm:text-lg text-text-dark mb-5">
-            📞 LIÊN HỆ TRỰC TIẾP HỌC VIỆN SATA ROBO
-          </h3>
+        {/* Direct contact info */}
+        <div className="max-w-5xl mx-auto bg-text-dark text-white rounded-3xl p-6 sm:p-8 shadow-xl">
+          <div className="mb-6">
+            <div>
+              <h3 className="font-black text-xl sm:text-2xl leading-tight">
+                Liên hệ trực tiếp Học viện Sata Robo
+              </h3>
+              <p className="text-sm text-white/70 mt-1">
+                Tư vấn lịch học, chọn cơ sở gần nhà và đặt buổi test miễn phí cho con.
+              </p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {/* Hotline */}
             <a
               href="tel:0818823720"
-              className="flex items-start gap-3 p-4 rounded-xl bg-soft-cream hover:bg-soft-yellow transition group"
+              className="flex items-start gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition group"
             >
               <div className="w-10 h-10 rounded-lg bg-primary-orange text-white flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
                 <Phone className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-bold text-text-muted uppercase">Hotline</div>
-                <div className="text-sm sm:text-base font-bold text-text-dark truncate">
+                <div className="text-xs font-bold text-white/60 uppercase">Hotline</div>
+                <div className="text-sm sm:text-base font-bold text-white whitespace-nowrap">
                   0818.823.720
                 </div>
               </div>
@@ -95,42 +103,40 @@ export default function FinalCTA() {
             {/* Email */}
             <a
               href="mailto:satarobo@gmail.com"
-              className="flex items-start gap-3 p-4 rounded-xl bg-soft-cream hover:bg-soft-yellow transition group"
+              className="flex items-start gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition group"
             >
               <div className="w-10 h-10 rounded-lg bg-primary-purple text-white flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
                 <Mail className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-bold text-text-muted uppercase">Email</div>
-                <div className="text-sm font-bold text-text-dark truncate">
+                <div className="text-xs font-bold text-white/60 uppercase">Email</div>
+                <div className="text-sm font-bold text-white whitespace-nowrap">
                   satarobo@gmail.com
                 </div>
               </div>
             </a>
 
             {/* Trụ sở */}
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-soft-cream">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-white/10">
               <div className="w-10 h-10 rounded-lg bg-primary-orange text-white flex items-center justify-center flex-shrink-0">
                 <MapPin className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-bold text-text-muted uppercase">Trụ sở</div>
-                <div className="text-xs sm:text-sm font-bold text-text-dark leading-snug">
-                  258 Lê Thanh Nghị,
-                  <br />
-                  Đà Nẵng
+                <div className="text-xs font-bold text-white/60 uppercase">Trụ sở</div>
+                <div className="text-xs sm:text-sm font-bold text-white leading-snug break-words">
+                  258 Lê Thanh Nghị, Phường Hoà Cường, Đà Nẵng
                 </div>
               </div>
             </div>
 
             {/* Giờ làm việc */}
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-soft-cream">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-white/10">
               <div className="w-10 h-10 rounded-lg bg-primary-purple text-white flex items-center justify-center flex-shrink-0">
                 <Clock className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-bold text-text-muted uppercase">Giờ làm việc</div>
-                <div className="text-xs sm:text-sm font-bold text-text-dark leading-snug">
+                <div className="text-xs font-bold text-white/60 uppercase">Giờ làm việc</div>
+                <div className="text-xs sm:text-sm font-bold text-white leading-snug">
                   T2 – T7
                   <br />
                   8:00 – 20:00

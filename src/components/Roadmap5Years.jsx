@@ -78,14 +78,14 @@ export default function Roadmap5Years() {
 
         {/* TAB NĂM */}
         <div className="mb-8 -mx-4 sm:mx-0">
-          <div className="flex gap-2 overflow-x-auto pb-3 px-4 sm:px-0 sm:justify-center scrollbar-hide">
+          <div className="flex gap-3 overflow-x-auto py-4 px-4 sm:px-2 sm:justify-center scrollbar-hide">
             {roadmap5Years.map((y, idx) => (
               <button
                 key={idx}
                 onClick={() => handleYearChange(idx)}
                 className={`flex-shrink-0 min-w-[140px] sm:min-w-[160px] px-3 py-3 rounded-xl border-2 transition-all
                   ${idx === yearIdx
-                    ? 'border-primary-orange bg-soft-cream shadow-orange-glow scale-105'
+                    ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
                     : 'border-gray-200 bg-white hover:border-primary-orange/50 hover:bg-soft-cream/50'}`}
               >
                 <div className={`text-xs font-bold uppercase tracking-wider mb-1

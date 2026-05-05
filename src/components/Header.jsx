@@ -24,16 +24,12 @@ export default function Header() {
       <div className="container-site">
         <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2 no-tap-highlight">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-orange-purple flex items-center justify-center font-black text-white text-lg sm:text-xl">
-              SR
-            </div>
-            <div className="hidden sm:block">
-              <div className="font-extrabold text-base sm:text-lg leading-tight text-text-dark">
-                SATA ROBO
-              </div>
-              <div className="text-xs text-text-muted">Robotics Đà Nẵng</div>
-            </div>
+          <a href="/" className="flex items-center no-tap-highlight" aria-label="Sata Robo">
+            <img
+              src="/image/LogoSataROBO.png"
+              alt="Sata Robo"
+              className="h-11 sm:h-14 w-auto object-contain"
+            />
           </a>
 
           {/* Desktop nav */}
