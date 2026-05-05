@@ -1,19 +1,100 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/image/LogoSataROBO.png" />
-  <link rel="apple-touch-icon" href="/image/LogoSataROBO.png" />
-  <meta name="theme-color" content="#0F0A1E" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Học Robotics Offline Đà Nẵng | Sata Robo</title>
-  <meta name="description" content="Khóa học Robotics offline tại Đà Nẵng cho học sinh lớp 1 đến lớp 8, luyện thi RoboSim và lộ trình dài hạn tại Sata Robo." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Lexend+Deca:wght@700;900&display=swap" rel="stylesheet" />
-</head>
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#F97316" />
+
+    <!-- ============ SEO META ============ -->
+    <title>Học viện Robotics Đà Nẵng | Sata Robo — Lộ trình 5 năm cho con từ 6-13 tuổi</title>
+    <meta name="description" content="Học viện Sata Robo — 4 trung tâm Robotics tại Đà Nẵng. Lộ trình 5 năm bài bản cho con từ lớp 1 đến lớp 8. Tư vấn miễn phí 24h, học bổng đến 50%, cam kết hoàn phí." />
+    <meta name="keywords" content="học robotics đà nẵng, sata robo, robotics cho trẻ em, lập trình robot, stem đà nẵng, lớp robotics offline, học viện robotics" />
+    <meta name="author" content="Công ty Cổ phần Công nghệ Giáo dục Sata Robo" />
+    <link rel="canonical" href="https://laptrinhrobot.vn" />
+
+    <!-- ============ Open Graph / Facebook ============ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://laptrinhrobot.vn" />
+    <meta property="og:title" content="Học viện Robotics Đà Nẵng | Sata Robo" />
+    <meta property="og:description" content="4 trung tâm tại Đà Nẵng — Lộ trình 5 năm Robotics cho con lớp 1-8. Tư vấn miễn phí, học bổng đến 50%." />
+    <meta property="og:image" content="https://laptrinhrobot.vn/og-image.jpg" />
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:site_name" content="Sata Robo" />
+
+    <!-- ============ Twitter Card ============ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Học viện Robotics Đà Nẵng | Sata Robo" />
+    <meta name="twitter:description" content="4 trung tâm tại Đà Nẵng — Lộ trình 5 năm Robotics cho con lớp 1-8." />
+    <meta name="twitter:image" content="https://laptrinhrobot.vn/og-image.jpg" />
+
+    <!-- ============ Schema.org JSON-LD ============ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Học viện Sata Robo",
+      "alternateName": "Sata Robo",
+      "url": "https://laptrinhrobot.vn",
+      "logo": "https://laptrinhrobot.vn/logo.png",
+      "description": "Học viện đào tạo Robotics AI cho trẻ em 6-13 tuổi tại Đà Nẵng. 4 trung tâm chuẩn quốc tế, lộ trình 5 năm bài bản.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "258 Lê Thanh Nghị",
+        "addressLocality": "Đà Nẵng",
+        "addressRegion": "Đà Nẵng",
+        "postalCode": "550000",
+        "addressCountry": "VN"
+      },
+      "telephone": "+84818823720",
+      "email": "satarobo@gmail.com",
+      "sameAs": [
+        "https://www.facebook.com/Satarobo"
+      ]
+    }
+    </script>
+
+    <!-- ============ Google Fonts: Be Vietnam Pro ============ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- ============ [GOOGLE ANALYTICS GA4 - BẮT ĐẦU] ============ -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0K2CW1DQK1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-0K2CW1DQK1', {
+        page_title: 'Sata Robo Landing - Robotics Offline Đà Nẵng',
+        send_page_view: true
+      });
+    </script>
+    <!-- ============ [GOOGLE ANALYTICS GA4 - KẾT THÚC] ============ -->
+
+    <!-- ============ [META PIXEL - BẮT ĐẦU] ============ -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '2157352735031955');
+      fbq('track', 'PageView');
+    </script>
+    <!-- ============ [META PIXEL - KẾT THÚC] ============ -->
+  </head>
+  <body class="font-sans antialiased text-text-dark bg-white">
+    <!-- Meta Pixel noscript fallback (placed in body to comply with HTML5 spec) -->
+    <noscript>
+      <img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=2157352735031955&ev=PageView&noscript=1"
+        alt="" />
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

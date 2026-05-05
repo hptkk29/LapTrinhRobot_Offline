@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============ GLOBAL STYLES ============ */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============ CUSTOM SCROLLBAR ============ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #F97316, #7C3AED);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #EA580C, #6B21A8);
+}
+
+/* ============ COMPONENT CLASSES ============ */
+@layer components {
+  /* Container chuẩn của site */
+  .container-site {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Heading */
+  .heading-1 {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight;
+  }
+  .heading-2 {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight;
+  }
+
+  /* CTA Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 
+           bg-primary-orange text-white font-bold rounded-xl 
+           shadow-orange-glow hover:bg-primary-orange-dark hover:scale-105 
+           transition-all duration-300 active:scale-95;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 
+           bg-primary-purple text-white font-bold rounded-xl 
+           shadow-purple-glow hover:bg-primary-purple-dark hover:scale-105 
+           transition-all duration-300 active:scale-95;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 
+           bg-white text-primary-purple font-bold rounded-xl border-2 border-primary-purple
+           hover:bg-primary-purple hover:text-white hover:scale-105 
+           transition-all duration-300 active:scale-95;
+  }
+
+  /* Card */
+  .card-base {
+    @apply bg-white rounded-2xl shadow-card hover:shadow-card-hover 
+           transition-all duration-300;
+  }
+
+  /* Badge */
+  .badge-orange {
+    @apply inline-flex items-center gap-1 px-3 py-1 bg-soft-cream text-primary-orange 
+           font-bold text-xs sm:text-sm rounded-full border border-primary-orange/30;
+  }
+  .badge-purple {
+    @apply inline-flex items-center gap-1 px-3 py-1 bg-soft-purple text-primary-purple 
+           font-bold text-xs sm:text-sm rounded-full border border-primary-purple/30;
+  }
+  .badge-green {
+    @apply inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-success
+           font-bold text-xs sm:text-sm rounded-full border border-success/30;
+  }
+  .badge-red {
+    @apply inline-flex items-center gap-1 px-3 py-1 bg-red-50 text-urgent
+           font-bold text-xs sm:text-sm rounded-full border border-urgent/30;
+  }
+
+  /* Section padding */
+  .section-padding {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+}
+
+/* ============ UTILITY CLASSES ============ */
+@layer utilities {
+  /* Gradient text */
+  .text-gradient-orange-purple {
+    background: linear-gradient(90deg, #F97316 0%, #7C3AED 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Gradient background */
+  .bg-gradient-orange-purple {
+    background: linear-gradient(135deg, #F97316 0%, #7C3AED 100%);
+  }
+  .bg-gradient-cream {
+    background: linear-gradient(135deg, #FFF7ED 0%, #FEF3C7 100%);
+  }
+  .bg-gradient-purple-dark {
+    background: linear-gradient(135deg, #6B21A8 0%, #4C1D95 100%);
+  }
+
+  /* Tap highlight */
+  .no-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* ============ ANIMATIONS ============ */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(249,115,22,0.4); }
+  50% { box-shadow: 0 0 40px rgba(249,115,22,0.7); }
+}
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* ============ FORM ============ */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(249,115,22,0.2);
+}
+
+/* ============ RESPONSIVE TYPO ============ */
+@media (max-width: 480px) {
+  .heading-1 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+}
