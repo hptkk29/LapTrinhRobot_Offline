@@ -51,10 +51,11 @@ export default function RegistrationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [redirectCountdown, setRedirectCountdown] = useState(5);
+  const [shouldRedirectToZalo, setShouldRedirectToZalo] = useState(true);
 
   // ============ COUNTDOWN AUTO-REDIRECT SAU SUBMIT ============
   useEffect(() => {
-    if (!isSuccess) return;
+    if (!isSuccess || !shouldRedirectToZalo) return;
     if (redirectCountdown <= 0) {
       window.location.href = ZALO_GROUP_LINK;
       return;
@@ -63,7 +64,7 @@ export default function RegistrationForm() {
       setRedirectCountdown((c) => c - 1);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [isSuccess, redirectCountdown]);
+  }, [isSuccess, shouldRedirectToZalo, redirectCountdown]);
 
   // ============ HANDLERS ============
   const handleChange = (e) => {
@@ -124,7 +125,7 @@ export default function RegistrationForm() {
         email: formData.email.trim(),
         course: formData.course,
         center: formData.center,
-        sataMath: formData.sataMath === 'yes' ? 'Có' : formData.sataMath === 'no' ? 'Không' : 'Không trả lời'
+        satamath: formData.sataMath === 'yes' ? 'Có' : formData.sataMath === 'no' ? 'Không' : 'Không trả lời'
       });
       // Hiển thị popup thành công rồi tự chuyển sang nhóm Zalo
       setIsSuccess(true);
@@ -166,13 +167,22 @@ export default function RegistrationForm() {
               </p>
             </div>
 
-            <div className="bg-soft-yellow rounded-xl p-4 mb-6 inline-flex items-center gap-2">
-              <Loader2 className="w-5 h-5 text-primary-orange animate-spin" />
-              <span className="text-sm sm:text-base text-text-dark">
-                Tự động chuyển sang nhóm Zalo trong{' '}
-                <strong className="text-primary-orange text-lg">{redirectCountdown}s</strong>
-              </span>
-            </div>
+            {shouldRedirectToZalo ? (
+              <div className="bg-soft-yellow rounded-xl p-4 mb-6 inline-flex items-center gap-2">
+                <Loader2 className="w-5 h-5 text-primary-orange animate-spin" />
+                <span className="text-sm sm:text-base text-text-dark">
+                  Tự động chuyển sang nhóm Zalo trong{' '}
+                  <strong className="text-primary-orange text-lg">{redirectCountdown}s</strong>
+                </span>
+              </div>
+            ) : (
+              <div className="bg-soft-cream rounded-xl p-4 mb-6 inline-flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-success" />
+                <span className="text-sm sm:text-base text-text-dark">
+                  Bố mẹ đang ở lại trang này. Thông tin đã được gửi thành công.
+                </span>
+              </div>
+            )}
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
@@ -189,6 +199,15 @@ export default function RegistrationForm() {
               >
                 Zalo cá nhân: 0818.823.720
               </a>
+              {shouldRedirectToZalo && (
+                <button
+                  type="button"
+                  onClick={() => setShouldRedirectToZalo(false)}
+                  className="btn-outline"
+                >
+                  Ở lại trang
+                </button>
+              )}
             </div>
           </div>
         </div>

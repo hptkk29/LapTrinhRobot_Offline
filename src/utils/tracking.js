@@ -6,7 +6,7 @@
 // ============================================
 
 // URL Google Apps Script — endpoint nhận lead từ form
-export const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzL_pQgB0NivwwVl9Dz8EJv5CTkRFhI7v_F9zKg5lZiBFSO0jqgo4ylqWXpNgotzSdX/exec';
+export const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4Zlz8HyWqVp_no4m0DSsej61WPbmLoSwYrv9DCU6qzy-OOimZe8LtFFVl5z8k_ruK/exec';
 
 // ============================================
 // FACEBOOK PIXEL — Track event Lead
@@ -80,17 +80,15 @@ export function trackGA4Event(eventName, params = {}) {
 export async function submitLeadToSheet(formData) {
   try {
     // Apps Script parses raw JSON; text/plain keeps this request CORS-simple in browsers.
-    const sataMathAnswer = formData.sataMath || '';
+    const sataMathAnswer = formData.satamath || formData.sataMath || '';
     const sheetPayload = JSON.stringify({
       name: formData.name || '',
       phone: formData.phone || '',
       email: formData.email || '',
       center: formData.center || '',
       course: formData.course || '',
-      sataMath: sataMathAnswer,
       satamath: sataMathAnswer,
-      sata_math: sataMathAnswer,
-      sataMathAnswer
+      sataMath: sataMathAnswer
     });
 
     const response = await fetch(GOOGLE_SHEET_URL, {
