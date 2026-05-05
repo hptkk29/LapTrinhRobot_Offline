@@ -93,6 +93,7 @@ export default function RegistrationForm() {
 
     if (!formData.course) e.course = 'Bố mẹ vui lòng chọn khoá học';
     if (!formData.center) e.center = 'Bố mẹ vui lòng chọn trung tâm';
+    if (!formData.sataMath) e.sataMath = 'Bố mẹ vui lòng trả lời câu hỏi này';
     if (!formData.consent) e.consent = 'Bố mẹ vui lòng đồng ý điều khoản';
 
     setErrors(e);
@@ -390,15 +391,19 @@ export default function RegistrationForm() {
             </div>
 
             {/* SATAMATH QUESTION */}
-            <div className="rounded-xl border-2 border-gray-100 bg-soft-cream p-4">
+            <div className={`rounded-xl border-2 bg-soft-cream p-4 transition ${errors.sataMath ? 'border-urgent' : 'border-gray-100'}`}>
               <p className="text-sm font-bold text-text-dark mb-3">
                 Con của Bố/Mẹ đang học ở hệ thống{' '}
-                <span className="text-primary-orange">SataMath</span>?
+                <span className="text-primary-orange">SataMath</span>?{' '}
+                <span className="text-urgent">*</span>
               </p>
               <div className="flex gap-3">
                 <button
                   type="button"
-                  onClick={() => setFormData((prev) => ({ ...prev, sataMath: 'yes' }))}
+                  onClick={() => {
+                    setFormData((prev) => ({ ...prev, sataMath: 'yes' }));
+                    setErrors((prev) => ({ ...prev, sataMath: '' }));
+                  }}
                   className={`flex-1 py-2.5 rounded-xl font-bold text-sm border-2 transition active:scale-95
                     ${formData.sataMath === 'yes'
                       ? 'bg-primary-orange text-white border-primary-orange shadow-orange-glow'
@@ -408,7 +413,10 @@ export default function RegistrationForm() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFormData((prev) => ({ ...prev, sataMath: 'no' }))}
+                  onClick={() => {
+                    setFormData((prev) => ({ ...prev, sataMath: 'no' }));
+                    setErrors((prev) => ({ ...prev, sataMath: '' }));
+                  }}
                   className={`flex-1 py-2.5 rounded-xl font-bold text-sm border-2 transition active:scale-95
                     ${formData.sataMath === 'no'
                       ? 'bg-primary-purple text-white border-primary-purple'
@@ -417,6 +425,12 @@ export default function RegistrationForm() {
                   ❌ Không
                 </button>
               </div>
+              {errors.sataMath && (
+                <p className="mt-2 text-xs text-urgent flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {errors.sataMath}
+                </p>
+              )}
               {formData.sataMath === 'yes' && (
                 <p className="mt-2 text-xs text-success font-semibold">
                   🎉 Báo với tư vấn viên để nhận ưu đãi đặc biệt dành cho gia đình SataMath!
