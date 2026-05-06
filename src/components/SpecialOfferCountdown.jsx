@@ -1,6 +1,6 @@
 import useCountdown from '../hooks/useCountdown';
 import { formatDeadline } from '../utils/deadlines';
-import { ArrowRight, CheckCircle2, Clock3, Flame, Gift, ShieldCheck, Sparkles, Users } from 'lucide-react';
+import { ArrowRight, Clock3, Flame, Gift, Sparkles, Users } from 'lucide-react';
 
 export default function SpecialOfferCountdown() {
   const { deadline, timeLeft } = useCountdown();
@@ -14,6 +14,27 @@ export default function SpecialOfferCountdown() {
     { label: 'Giờ', value: timeLeft.hours },
     { label: 'Phút', value: timeLeft.minutes },
     { label: 'Giây', value: timeLeft.seconds }
+  ];
+
+  const offerCards = [
+    {
+      icon: Flame,
+      title: 'HV SataMath',
+      value: 'Giảm 25%',
+      text: 'Từ 7.920.000đ cho khóa Ươm Mầm Tài Năng'
+    },
+    {
+      icon: Sparkles,
+      title: 'HV ngoài hệ thống',
+      value: 'Giảm 15%',
+      text: 'Từ 8.976.000đ cho khóa Ươm Mầm Tài Năng'
+    },
+    {
+      icon: Clock3,
+      title: 'Trả góp 0%',
+      value: 'Lộ trình 48 buổi',
+      text: 'Ví dụ: Ươm Mầm Tài Năng từ 660.000đ/tháng'
+    }
   ];
 
   const perks = [
@@ -30,12 +51,7 @@ export default function SpecialOfferCountdown() {
     {
       icon: Sparkles,
       title: 'Gói đội thi 2 HV',
-      text: 'Cả 2 giảm thêm 10%, không cộng dồn với Referral.'
-    },
-    {
-      icon: Clock3,
-      title: 'Trả góp 0%',
-      text: 'Áp dụng cho Sata3–Sata7, các khóa chuyên sâu 48 buổi.'
+      text: 'Cả 2 giảm thêm 10%.'
     }
   ];
 
@@ -53,14 +69,14 @@ export default function SpecialOfferCountdown() {
           </div>
 
           <h2 className="heading-2 text-text-dark mb-4">
-            Chọn đúng khóa học Robotics cho con
+            Giữ học phí tốt nhất cho lộ trình
             <br className="hidden sm:block" />
-            <span className="text-gradient-orange-purple"> và giữ mức học phí tốt nhất tháng này</span>
+            <span className="text-gradient-orange-purple"> Robotics 48 buổi của con</span>
           </h2>
 
           <p className="text-sm sm:text-base lg:text-lg text-text-muted leading-relaxed max-w-3xl mx-auto">
-            Early Bird áp dụng cho Sata1–Sata7. Riêng Sata8 là gói cam kết độc lập,
-            giá cố định <strong className="text-text-dark">2.500.000đ</strong> và hoàn 100% nếu học viên đủ điều kiện nhưng không vượt vòng loại.
+            Ưu đãi Early Bird áp dụng cho các khóa chuyên sâu Robotics offline từ Lớp 1 đến Lớp 8.
+            Phụ huynh đang học tại hệ thống SataMath nhận mức ưu đãi tốt hơn.
           </p>
         </div>
 
@@ -77,57 +93,20 @@ export default function SpecialOfferCountdown() {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-6">
-          <article className="bg-white rounded-3xl p-5 sm:p-6 border border-primary-orange/20 shadow-card hover:shadow-card-hover transition-all">
-            <div className="w-11 h-11 rounded-2xl bg-soft-cream flex items-center justify-center mb-4">
-              <Flame className="w-6 h-6 text-primary-orange" />
-            </div>
-            <h3 className="text-xl font-black text-text-dark mb-3">Early Bird Sata1–Sata7</h3>
-            <ul className="space-y-2.5 text-sm text-text-muted mb-5">
-              <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />HV SataMath: giảm 25%</li>
-              <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />HV ngoài: giảm 15%</li>
-              <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />Áp dụng đến hết 31/05/2026</li>
-              <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />Không gia hạn sau thời gian ưu đãi</li>
-            </ul>
-            <div className="rounded-2xl bg-gradient-cream border border-primary-orange/20 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-primary-orange mb-1">Điểm nổi bật</div>
-              <p className="font-black text-text-dark">Từ 7.920.000đ cho khóa chuyên sâu 48 buổi Sata3</p>
-            </div>
-          </article>
-
-          <article className="bg-white rounded-3xl p-5 sm:p-6 border-2 border-primary-orange shadow-card-hover relative overflow-hidden">
-            <div className="absolute right-4 top-4 text-[10px] font-black text-white bg-primary-orange px-3 py-1 rounded-full">
-              GÓI ĐỀ XUẤT
-            </div>
-            <div className="w-11 h-11 rounded-2xl bg-soft-purple flex items-center justify-center mb-4">
-              <Sparkles className="w-6 h-6 text-primary-purple" />
-            </div>
-            <h3 className="text-xl font-black text-text-dark mb-3">Combo Sata1 + Sata2</h3>
-            <div className="space-y-2.5 text-sm text-text-muted">
-              <div className="flex justify-between gap-3"><span>32 buổi luyện thi</span><strong className="text-text-dark">Robosim + Beta</strong></div>
-              <div className="flex justify-between gap-3"><span>Giá niêm yết</span><span className="line-through">5.440.000đ</span></div>
-              <div className="flex justify-between gap-3 items-baseline"><span>Giá combo</span><strong className="text-2xl text-primary-orange">3.808.000đ</strong></div>
-              <div className="flex justify-between gap-3"><span>Tiết kiệm</span><strong className="text-success">1.632.000đ</strong></div>
-              <div className="flex justify-between gap-3"><span>Giá/buổi Insider</span><strong className="text-primary-purple">119.000đ/buổi</strong></div>
-            </div>
-          </article>
-
-          <article className="bg-white rounded-3xl p-5 sm:p-6 border border-primary-purple/20 shadow-card hover:shadow-card-hover transition-all md:col-span-2 lg:col-span-1">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-black text-primary-purple bg-soft-purple px-3 py-1 rounded-full mb-4">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              CAM KẾT HOÀN TIỀN 100%
-            </div>
-            <h3 className="text-xl font-black text-text-dark mb-3">Sata8 — Vé Vàng Chung Kết</h3>
-            <ul className="space-y-2.5 text-sm text-text-muted">
-              <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-primary-purple mt-0.5 flex-shrink-0" />5 buổi chuyên binh</li>
-              <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-primary-purple mt-0.5 flex-shrink-0" />Giá cố định: 2.500.000đ</li>
-              <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-primary-purple mt-0.5 flex-shrink-0" />Không áp dụng giảm giá</li>
-              <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-primary-purple mt-0.5 flex-shrink-0" />Hoàn 100% nếu đủ điều kiện nhưng không vượt vòng loại</li>
-            </ul>
-          </article>
+        <div className="grid md:grid-cols-3 gap-4 sm:gap-5 mb-6">
+          {offerCards.map(({ icon: Icon, title, value, text }) => (
+            <article key={title} className="bg-white rounded-3xl p-5 sm:p-6 border border-primary-orange/20 shadow-card hover:shadow-card-hover transition-all">
+              <div className="w-11 h-11 rounded-2xl bg-soft-cream flex items-center justify-center mb-4">
+                <Icon className="w-6 h-6 text-primary-orange" />
+              </div>
+              <h3 className="text-lg font-black text-text-dark mb-2">{title}</h3>
+              <div className="text-3xl font-black text-primary-orange mb-3">{value}</div>
+              <p className="text-sm text-text-muted leading-relaxed">{text}</p>
+            </article>
+          ))}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <div className="grid sm:grid-cols-3 gap-3 mb-8">
           {perks.map(({ icon: Icon, title, text }) => (
             <div key={title} className="bg-white/85 rounded-2xl p-4 border border-gray-100 shadow-card">
               <div className="flex items-center gap-2 mb-2">
@@ -138,10 +117,6 @@ export default function SpecialOfferCountdown() {
             </div>
           ))}
         </div>
-
-        <p className="text-center text-xs text-text-muted mb-7">
-          Ưu đãi phụ không áp dụng cho Sata8. Gói đội thi không cộng dồn với Referral.
-        </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-3">
           <button onClick={() => scrollTo('registration-form')} className="btn-primary">

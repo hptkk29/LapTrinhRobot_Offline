@@ -36,4 +36,4 @@ export const gifts = [
   }
 ];
 
-export const totalGiftValue = '2.500.000đ';
+export const totalGiftValue = '2,5 triệu đồng';

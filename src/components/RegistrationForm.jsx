@@ -388,8 +388,6 @@ export default function RegistrationForm() {
                         {c.grade ? ` | ${c.grade}` : ''}
                         {` | ${c.sessions} buổi`}
                         {c.earlyBirdSataMath ? ` | từ ${c.earlyBirdSataMath.toLocaleString('vi-VN')}đ` : ''}
-                        {c.comboPrice ? ` | ${c.comboPrice.toLocaleString('vi-VN')}đ` : ''}
-                        {c.fixedPrice && !c.earlyBirdSataMath && !c.comboPrice ? ` | ${c.fixedPrice.toLocaleString('vi-VN')}đ` : ''}
                       </option>
                     ))}
                   </optgroup>
@@ -397,7 +395,7 @@ export default function RegistrationForm() {
                 <option value={CONSULT_OPTION.value}>Chưa biết — Cần tư vấn lộ trình phù hợp</option>
               </select>
               <p className="text-[11px] text-text-muted mt-1.5">
-                Giá ưu đãi Early Bird áp dụng đến hết 31/05/2026 cho Sata1–Sata7. Sata8 là gói cam kết độc lập.
+                Giá ưu đãi Early Bird áp dụng đến hết 31/05/2026 cho các khóa chuyên sâu 48 buổi.
               </p>
               {errors.course && (
                 <p className="mt-1 text-xs text-urgent flex items-center gap-1">
@@ -423,7 +421,7 @@ export default function RegistrationForm() {
                     {selectedCourseObj.device && <span>🔧 {selectedCourseObj.device}</span>}
                   </div>
 
-                  {/* Early Bird pricing (Sata1–Sata7) */}
+                  {/* Early Bird pricing */}
                   {selectedCourseObj.earlyBirdSataMath && (
                     <div className="space-y-1.5 pt-2 border-t border-orange-200">
                       <div className="text-xs text-text-muted line-through">
@@ -449,23 +447,6 @@ export default function RegistrationForm() {
                       </div>
                     </div>
                   )}
-
-                  {/* Combo pricing */}
-                  {selectedCourseObj.comboPrice && (
-                    <div className="pt-2 border-t border-orange-200 space-y-0.5">
-                      <div className="text-xs text-text-muted line-through">Niêm yết: {fmt(selectedCourseObj.listPrice)}</div>
-                      <div className="text-lg font-extrabold text-primary-orange">{fmt(selectedCourseObj.comboPrice)}</div>
-                      <div className="text-xs text-success font-semibold">✂️ Tiết kiệm {fmt(selectedCourseObj.savedAmount)}</div>
-                    </div>
-                  )}
-
-                  {/* Fixed pricing (Sata8) */}
-                  {selectedCourseObj.fixedPrice && !selectedCourseObj.earlyBirdSataMath && !selectedCourseObj.comboPrice && (
-                    <div className="pt-2 border-t border-orange-200">
-                      <div className="text-lg font-extrabold text-text-dark">{fmt(selectedCourseObj.fixedPrice)}</div>
-                    </div>
-                  )}
-
                   <div className="text-[11px] text-text-muted italic border-t border-orange-200 pt-2">
                     {selectedCourseObj.note}
                   </div>

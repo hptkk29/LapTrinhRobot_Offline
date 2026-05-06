@@ -175,12 +175,11 @@ export default function Roadmap5Years() {
             <div className="lg:col-span-8">
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <span className="text-3xl leading-none">{currentYear.productEmoji}</span>
-                <span className="badge-orange">{currentYear.productCode}</span>
                 <span className="text-sm text-text-muted font-semibold">{currentYear.grade} · {currentYear.ageRange}</span>
               </div>
 
               <h3 className="text-2xl sm:text-3xl font-black text-text-dark mb-3">
-                {currentYear.productCode} — {currentYear.productName}
+                {currentYear.productEmoji} {currentYear.productName}
               </h3>
 
               <p className="text-sm sm:text-base text-text-dark/80 leading-relaxed mb-5">

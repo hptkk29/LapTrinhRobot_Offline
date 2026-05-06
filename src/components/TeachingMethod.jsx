@@ -5,9 +5,9 @@ const methods = [
   {
     icon: Lightbulb,
     iconBg: 'bg-yellow-100 text-yellow-600',
-    title: 'PROBLEM-BASED LEARNING',
+    title: 'ODAMPCA',
     description:
-      'Học viên được giới thiệu với vấn đề thực tế, tiến hành nghiên cứu và vận dụng kiến thức để phân tích và giải quyết.'
+      'Quy trình học Robotics theo chu trình quan sát, xác định vấn đề, phân tích, thiết kế giải pháp, thực hành, kiểm thử và cải tiến sản phẩm.'
   },
   {
     icon: FolderOpen,

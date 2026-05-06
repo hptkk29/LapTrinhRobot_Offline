@@ -14,19 +14,34 @@ export default function AgeCoursePopup() {
   useEffect(() => {
     if (sessionStorage.getItem(POPUP_SHOWN_KEY)) return;
 
-    const timer = setTimeout(() => {
-      sessionStorage.setItem(POPUP_SHOWN_KEY, 'true');
-      setIsOpen(true);
-    }, 15000);
+    const roadmapEl = document.getElementById('roadmap');
+    if (!roadmapEl) return;
 
-    return () => clearTimeout(timer);
+    let timer = null;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        sessionStorage.setItem(POPUP_SHOWN_KEY, '1');
+        timer = setTimeout(() => setIsOpen(true), 600);
+        observer.disconnect();
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(roadmapEl);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
     if (!isOpen) return;
 
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') closePopup();
     };
 
     document.addEventListener('keydown', onKeyDown);
@@ -34,6 +49,11 @@ export default function AgeCoursePopup() {
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const closePopup = () => {
+    sessionStorage.setItem(POPUP_SHOWN_KEY, '1');
+    setIsOpen(false);
+  };
 
   const handleConfirm = () => {
     const selected = ageCourseOptions[selectedIdx];
@@ -56,7 +76,7 @@ export default function AgeCoursePopup() {
   return (
     <div
       className="fixed inset-0 z-[9999] bg-black/65 backdrop-blur-sm flex items-center justify-center p-4"
-      onClick={() => setIsOpen(false)}
+      onClick={closePopup}
     >
       <div
         className="w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-white rounded-3xl shadow-2xl border border-white/50 p-5 sm:p-7 animate-slide-up"
@@ -92,7 +112,7 @@ export default function AgeCoursePopup() {
 
           <button
             type="button"
-            onClick={() => setIsOpen(false)}
+            onClick={closePopup}
             className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition flex-shrink-0"
             aria-label="Đóng popup"
           >
@@ -105,7 +125,7 @@ export default function AgeCoursePopup() {
             const active = selectedIdx === idx;
             return (
               <button
-                key={option.productCode}
+                key={option.courseName}
                 type="button"
                 onClick={() => {
                   setSelectedIdx(idx);
@@ -116,8 +136,7 @@ export default function AgeCoursePopup() {
                     ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
                     : 'border-gray-200 bg-white hover:border-primary-orange/50 hover:bg-soft-cream/40'}`}
               >
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-xs font-black text-primary-orange">{option.productCode}</span>
+                <div className="flex items-center justify-end mb-3 min-h-4">
                   {active && <CheckCircle2 className="w-4 h-4 text-success" />}
                 </div>
                 <div className="font-black text-text-dark text-base mb-1">{option.label}</div>
@@ -135,7 +154,7 @@ export default function AgeCoursePopup() {
         <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:justify-end">
           <button
             type="button"
-            onClick={() => setIsOpen(false)}
+            onClick={closePopup}
             className="btn-outline sm:py-3"
           >
             Để sau
