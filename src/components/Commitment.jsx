@@ -138,10 +138,6 @@ export default function Commitment() {
             <FileCheck2 className="w-4 h-4" />
             Đo được sau mỗi 12 buổi
           </div>
-          <div className="badge-green text-sm">
-            <RotateCcw className="w-4 h-4" />
-            Hoàn tiền 100% nếu không hài lòng
-          </div>
         </div>
 
         {/* Soft CTA */}

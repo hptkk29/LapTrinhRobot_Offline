@@ -4,15 +4,12 @@ import { MessageCircle, PlayCircle, Quote, Star } from 'lucide-react';
 const videos = [
   {
     id: 'bqB2c7AlSfE',
-    title: 'Cảm nhận học viên Sata Robo 1'
   },
   {
     id: '9MJFC4v8cbU',
-    title: 'Cảm nhận học viên Sata Robo 2'
   },
   {
     id: 'anInoYFGrF0',
-    title: 'Cảm nhận học viên Sata Robo 3'
   }
 ];
 
@@ -89,7 +86,7 @@ export default function Testimonials() {
           <div className="flex items-center justify-center gap-2 mb-5">
             <PlayCircle className="w-5 h-5 text-primary-orange" />
             <h3 className="text-lg sm:text-2xl font-black text-text-dark">
-              Video cảm nhận học viên
+              Bài thuyết trình dự án của học viên sau mỗi buổi học
             </h3>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
@@ -104,9 +101,6 @@ export default function Testimonials() {
                     allowFullScreen
                     loading="lazy"
                   />
-                </div>
-                <div className="p-4">
-                  <p className="text-sm font-bold text-text-dark leading-snug">{video.title}</p>
                 </div>
               </div>
             ))}

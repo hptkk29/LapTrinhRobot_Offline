@@ -502,13 +502,6 @@ export default function RegistrationForm() {
               )}
             </button>
 
-            {/* Trust footer */}
-            <div className="pt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
-              <div className="text-xs text-text-muted">✓ Gọi trong 24h</div>
-              <div className="text-xs text-text-muted">✓ 100% miễn phí</div>
-              <div className="text-xs text-text-muted">✓ Không spam</div>
-            </div>
-
             <p className="text-xs text-text-muted text-center pt-2 border-t border-gray-100">
               🔒 Thông tin của bạn được bảo mật tuyệt đối. Sata Robo cam kết không chia sẻ
               dữ liệu với bên thứ ba.
