@@ -11,7 +11,7 @@ import {
   MapPin,
   Sparkles
 } from 'lucide-react';
-import { roadmap5Years } from '../data/roadmap-5-years';
+import { courseGroups, CONSULT_OPTION } from '../data/courses-pricing';
 import { locations } from '../data/locations';
 import {
   handleLeadSubmission,
@@ -136,6 +136,12 @@ export default function RegistrationForm() {
       setIsSubmitting(false);
     }
   };
+
+  // ============ DERIVED — COURSE SELECTION ============
+  const allCoursesList = courseGroups.flatMap(g => g.courses);
+  const selectedCourseObj = allCoursesList.find(c => c.value === formData.course) ?? null;
+  const isConsult = formData.course === CONSULT_OPTION.value;
+  const fmt = (n) => n ? n.toLocaleString('vi-VN') + 'đ' : '—';
 
   // ============ RENDER SUCCESS POPUP ============
   if (isSuccess) {
@@ -337,76 +343,159 @@ export default function RegistrationForm() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* KHOÁ HỌC */}
-              <div>
-                <label htmlFor="course" className="block text-sm font-bold text-text-dark mb-1.5">
-                  <GraduationCap className="inline w-4 h-4 mr-1 text-primary-orange" />
-                  Khoá học quan tâm <span className="text-urgent">*</span>
-                </label>
-                <select
-                  id="course"
-                  name="course"
-                  value={formData.course}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
-                    errors.course
-                      ? 'input-error border-urgent animate-shake'
-                      : 'border-gray-200 focus:border-primary-orange'
-                  }`}
-                >
-                  <option value="">-- Chọn khoá học --</option>
-                  {roadmap5Years.map((y) => (
-                    <option key={y.year} value={`Năm ${y.year} — ${y.name} (${y.grade})`}>
-                      Năm {y.year} — {y.name} ({y.grade})
-                    </option>
-                  ))}
-                  <option value="Chưa biết — Cần tư vấn">
-                    Chưa biết — Cần tư vấn
-                  </option>
-                </select>
-                {errors.course && (
-                  <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    {errors.course}
-                  </p>
-                )}
-              </div>
+            {/* KHOÁ HỌC */}
+            <div>
+              <label htmlFor="course" className="block text-sm font-bold text-text-dark mb-1.5">
+                <GraduationCap className="inline w-4 h-4 mr-1 text-primary-orange" />
+                Khoá học quan tâm <span className="text-urgent">*</span>
+              </label>
+              <select
+                id="course"
+                name="course"
+                value={formData.course}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
+                  errors.course
+                    ? 'input-error border-urgent animate-shake'
+                    : 'border-gray-200 focus:border-primary-orange'
+                }`}
+              >
+                <option value="">-- Chọn khoá học --</option>
+                {courseGroups.map((group) => (
+                  <optgroup key={group.group} label={group.group}>
+                    {group.courses.map((c) => (
+                      <option key={c.id} value={c.value}>
+                        {c.shortName}
+                        {c.grade ? ` | ${c.grade}` : ''}
+                        {` | ${c.sessions} buổi`}
+                        {c.earlyBirdSataMath ? ` | từ ${c.earlyBirdSataMath.toLocaleString('vi-VN')}đ` : ''}
+                        {c.comboPrice ? ` | ${c.comboPrice.toLocaleString('vi-VN')}đ` : ''}
+                        {c.fixedPrice && !c.earlyBirdSataMath && !c.comboPrice ? ` | ${c.fixedPrice.toLocaleString('vi-VN')}đ` : ''}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+                <option value={CONSULT_OPTION.value}>Chưa biết — Cần tư vấn lộ trình phù hợp</option>
+              </select>
+              <p className="text-[11px] text-text-muted mt-1.5">
+                Giá ưu đãi Early Bird áp dụng đến hết 31/05/2026 cho Sata1–Sata7. Sata8 là gói cam kết độc lập.
+              </p>
+              {errors.course && (
+                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {errors.course}
+                </p>
+              )}
 
-              {/* CƠ SỞ */}
-              <div>
-                <label htmlFor="center" className="block text-sm font-bold text-text-dark mb-1.5">
-                  <MapPin className="inline w-4 h-4 mr-1 text-primary-orange" />
-                  Chọn cơ sở học <span className="text-urgent">*</span>
-                </label>
-                <select
-                  id="center"
-                  name="center"
-                  value={formData.center}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
-                    errors.center
-                      ? 'input-error border-urgent animate-shake'
-                      : 'border-gray-200 focus:border-primary-orange'
-                  }`}
-                >
-                  <option value="">-- Chọn địa chỉ cơ sở --</option>
-                  {locations.map((loc) => (
-                    <option key={loc.id} value={loc.address}>
-                      {loc.address}
-                    </option>
-                  ))}
-                  <option value="Tư vấn cơ sở gần nhà nhất">
-                    Tư vấn cơ sở gần nhà nhất
-                  </option>
-                </select>
-                {errors.center && (
-                  <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    {errors.center}
+              {/* Course detail box */}
+              {selectedCourseObj && (
+                <div className="mt-3 rounded-xl border border-orange-200 bg-orange-50 p-4 text-sm space-y-2 animate-fade-in">
+                  <div className="flex items-start justify-between gap-2 flex-wrap">
+                    <span className="font-extrabold text-text-dark leading-tight">{selectedCourseObj.name}</span>
+                    {selectedCourseObj.badge && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 bg-primary-orange text-white rounded-full whitespace-nowrap flex-shrink-0">
+                        {selectedCourseObj.badge}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-muted">
+                    {selectedCourseObj.grade && <span>🏫 {selectedCourseObj.grade}</span>}
+                    <span>📚 {selectedCourseObj.sessions} buổi</span>
+                    {selectedCourseObj.device && <span>🔧 {selectedCourseObj.device}</span>}
+                  </div>
+
+                  {/* Early Bird pricing (Sata1–Sata7) */}
+                  {selectedCourseObj.earlyBirdSataMath && (
+                    <div className="space-y-1.5 pt-2 border-t border-orange-200">
+                      <div className="text-xs text-text-muted line-through">
+                        Niêm yết: {fmt(selectedCourseObj.listPrice)}
+                      </div>
+                      <div className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors
+                        ${formData.sataMath === 'yes' ? 'bg-orange-100 ring-1 ring-primary-orange' : 'bg-white/60'}`}>
+                        <span className={`text-xs font-semibold ${formData.sataMath === 'yes' ? 'text-primary-orange font-extrabold' : 'text-text-muted'}`}>
+                          HV SataMath: {fmt(selectedCourseObj.earlyBirdSataMath)}
+                        </span>
+                        {formData.sataMath === 'yes' && (
+                          <span className="text-[10px] font-bold text-primary-orange ml-2">← Của bạn</span>
+                        )}
+                      </div>
+                      <div className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors
+                        ${formData.sataMath === 'no' ? 'bg-blue-50 ring-1 ring-blue-400' : 'bg-white/60'}`}>
+                        <span className={`text-xs font-semibold ${formData.sataMath === 'no' ? 'text-blue-700 font-extrabold' : 'text-text-muted'}`}>
+                          HV ngoài: {fmt(selectedCourseObj.earlyBirdOutside)}
+                        </span>
+                        {formData.sataMath === 'no' && (
+                          <span className="text-[10px] font-bold text-blue-700 ml-2">← Của bạn</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Combo pricing */}
+                  {selectedCourseObj.comboPrice && (
+                    <div className="pt-2 border-t border-orange-200 space-y-0.5">
+                      <div className="text-xs text-text-muted line-through">Niêm yết: {fmt(selectedCourseObj.listPrice)}</div>
+                      <div className="text-lg font-extrabold text-primary-orange">{fmt(selectedCourseObj.comboPrice)}</div>
+                      <div className="text-xs text-success font-semibold">✂️ Tiết kiệm {fmt(selectedCourseObj.savedAmount)}</div>
+                    </div>
+                  )}
+
+                  {/* Fixed pricing (Sata8) */}
+                  {selectedCourseObj.fixedPrice && !selectedCourseObj.earlyBirdSataMath && !selectedCourseObj.comboPrice && (
+                    <div className="pt-2 border-t border-orange-200">
+                      <div className="text-lg font-extrabold text-text-dark">{fmt(selectedCourseObj.fixedPrice)}</div>
+                    </div>
+                  )}
+
+                  <div className="text-[11px] text-text-muted italic border-t border-orange-200 pt-2">
+                    {selectedCourseObj.note}
+                  </div>
+                </div>
+              )}
+
+              {/* Consult box */}
+              {isConsult && (
+                <div className="mt-3 rounded-xl border border-primary-purple/30 bg-purple-50 p-4 text-sm animate-fade-in">
+                  <p className="text-primary-purple font-semibold leading-relaxed">
+                    💬 Tư vấn viên sẽ dựa trên độ tuổi, mục tiêu và lịch học của con để đề xuất khoá phù hợp nhất.
                   </p>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
+
+            {/* CƠ SỞ */}
+            <div>
+              <label htmlFor="center" className="block text-sm font-bold text-text-dark mb-1.5">
+                <MapPin className="inline w-4 h-4 mr-1 text-primary-orange" />
+                Chọn cơ sở học <span className="text-urgent">*</span>
+              </label>
+              <select
+                id="center"
+                name="center"
+                value={formData.center}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
+                  errors.center
+                    ? 'input-error border-urgent animate-shake'
+                    : 'border-gray-200 focus:border-primary-orange'
+                }`}
+              >
+                <option value="">-- Chọn địa chỉ cơ sở --</option>
+                {locations.map((loc) => (
+                  <option key={loc.id} value={loc.address}>
+                    {loc.address}
+                  </option>
+                ))}
+                <option value="Tư vấn cơ sở gần nhà nhất">
+                  Tư vấn cơ sở gần nhà nhất
+                </option>
+              </select>
+              {errors.center && (
+                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {errors.center}
+                </p>
+              )}
             </div>
 
             {/* SATAMATH QUESTION */}

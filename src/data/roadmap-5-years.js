@@ -4,139 +4,148 @@
 // =============================================
 
 export const roadmap5Years = [
-  // ============== NĂM 1 — ƯƠM MẦM TÀI NĂNG ==============
+  // ============== NĂM 1 — ƯƠM MẦM TÀI NĂNG (ROBOTICS VẬT LÝ) ==============
   {
     year: 1,
     name: 'Ươm Mầm Tài Năng',
     ageRange: '6 – 7 tuổi',
+    grade: 'Lớp 1 – 2',
     description:
-      'Bước đầu khám phá thế giới công nghệ. Con làm quen với tư duy lập trình qua trò chơi và câu chuyện sinh động — gieo hạt mầm yêu thích từ những giờ học đầu tiên.',
+      'Giai đoạn khởi đầu giúp trẻ 6–7 tuổi làm quen với Robotics thông qua lắp ráp mô hình, lập trình thẻ vật lý và học theo dự án. Trẻ được tiếp xúc với robot thật, cơ cấu truyền động, động cơ, bánh răng, trục, bánh xe và cảm biến siêu âm trong môi trường học tập trực quan, an toàn, hạn chế tiếp xúc màn hình.',
     totalSessions: 48,
     totalHours: 96,
     color: 'primary-orange',
-    note: 'Chặng này tập trung gieo niềm yêu thích với công nghệ — chưa hướng đến thi đấu.',
+    device: 'ZMRobo Alpha Series / Alpha A + C / Cảm biến siêu âm / Thẻ lập trình vật lý Physic Coding',
+    tags: ['Alpha Series', 'Physic Coding', 'Cảm biến siêu âm', '48 buổi', '4 học phần'],
+    note: 'Năm 1 tập trung gieo niềm yêu thích công nghệ, rèn tư duy logic, khả năng quan sát, sự tỉ mỉ và kỹ năng thuyết trình dự án mini sau mỗi học phần.',
     modules: [
       {
         id: 'HP1',
-        name: 'Khám Phá Lập Trình Kéo Thả',
+        name: 'Cơ Bản',
         sessions: 12,
         hours: 24,
         description:
-          'Con làm quen với Scratch — học những lệnh đầu tiên qua trò chơi và câu chuyện thân thuộc.',
+          'Con làm quen với bộ công cụ Alpha, hiểu cơ chế truyền động cơ bản, lắp ráp các mô hình đầu tiên và bắt đầu dùng thẻ lệnh vật lý để điều khiển robot.',
         skills: [
-          'Tư duy logic cơ bản',
-          'Lệnh di chuyển & âm thanh',
-          'Vòng lặp đơn giản',
-          'Tư duy sáng tạo qua trò chơi',
-          'Làm việc nhóm'
+          'Nhận biết linh kiện Alpha',
+          'Lắp ráp cơ khí cơ bản',
+          'Hiểu bánh răng, trục, bánh xe',
+          'Điều khiển động cơ tiến/lùi',
+          'Làm việc nhóm',
+          'Thuyết trình mô hình đơn giản'
         ],
         sessionList: [
-          { num: 1, content: 'Làm quen Scratch — Bố mẹ đi cùng con buổi đầu', type: 'Lý thuyết' },
-          { num: 2, content: 'Thiệp sinh nhật cho mẹ — Lệnh di chuyển', type: 'Thực hành' },
-          { num: 3, content: 'Chú gà tìm con — Điều kiện đơn giản', type: 'Thực hành' },
-          { num: 4, content: 'An toàn giao thông — Vòng lặp', type: 'Thực hành' },
-          { num: 5, content: 'Trò chơi đua xe Scratch', type: 'Thực hành' },
-          { num: 6, content: 'Câu chuyện cổ tích interactive', type: 'Dự án' },
-          { num: 7, content: 'Hoạt hình về gia đình', type: 'Thực hành' },
-          { num: 8, content: 'Mini game đầu tiên của con', type: 'Dự án' },
-          { num: 9, content: 'Kể chuyện bằng Scratch', type: 'Thực hành' },
-          { num: 10, content: 'Thử thách sáng tạo cá nhân', type: 'Thực hành' },
-          { num: 11, content: 'Hoàn thiện dự án cuối học phần', type: 'Dự án' },
-          { num: 12, content: 'Trình bày & Demo cho phụ huynh', type: 'Thi đấu' }
+          { num: 1,  content: 'Bàn Tay Ma Thuật — Giới thiệu bộ Alpha, lắp ráp bàn tay cơ khí, thực hành cơ chế gắp/thả', type: 'Dự án' },
+          { num: 2,  content: 'Đấu Trường Con Quay — Tìm hiểu truyền động bánh răng tăng tốc, chế tạo bệ phóng và thi đấu con quay', type: 'Dự án' },
+          { num: 3,  content: 'Siêu Xe Bứt Phá — Lắp ráp xe 4 bánh cơ bản, làm quen logic thẻ lệnh điều khiển động cơ', type: 'Dự án' },
+          { num: 4,  content: 'Chiến Xa Tốc Độ — Tối ưu kết cấu xe, giảm trọng lượng và thay đổi tốc độ bằng thẻ lệnh', type: 'Dự án' },
+          { num: 5,  content: 'Ôn tập kiến thức — Hệ thống lại truyền động, động cơ, bánh xe và ghép chuỗi thẻ lệnh', type: 'Ôn tập' },
+          { num: 6,  content: 'Vũ Công Robot — Dùng thẻ lệnh vòng lặp để tạo chuyển động nhảy múa liên tục', type: 'Dự án' },
+          { num: 7,  content: 'Trở Về Tuổi Thơ — Lắp ráp mô hình trò chơi dân gian như xích đu, bập bênh tự động', type: 'Dự án' },
+          { num: 8,  content: 'Kỹ Sư Làm Mát — Khám phá lực đẩy không khí, lắp ráp quạt máy và công tắc an toàn', type: 'Dự án' },
+          { num: 9,  content: 'Thủy Thủ Tài Ba — Lắp ráp mô hình thuyền, dùng động cơ tạo lực đẩy trên mặt phẳng mô phỏng', type: 'Dự án' },
+          { num: 10, content: 'Ý tưởng cuối học phần — Lên ý tưởng mô hình tự do tổng hợp kiến thức cơ bản', type: 'Ý tưởng' },
+          { num: 11, content: 'Demo cuối học phần — Chạy thử, phát hiện lỗi, tối ưu kết cấu và chuyển động', type: 'Demo' },
+          { num: 12, content: 'Thuyết trình cuối học phần — Trình bày nhóm, giải thích nguyên lý hoạt động của sản phẩm', type: 'Thuyết trình' }
         ],
         achievement:
-          'Con tự xây dựng 1 game Scratch hoặc câu chuyện hoạt hình hoàn chỉnh, trình bày trước phụ huynh.'
+          'Con hoàn thành một mô hình robot cơ bản, biết giải thích nguyên lý chuyển động và tự tin trình bày trước phụ huynh.'
       },
       {
         id: 'HP2',
-        name: 'Phát Triển Tư Duy Toán Học Với Lập Trình',
+        name: 'Nâng Cao',
         sessions: 12,
         hours: 24,
         description:
-          'Kết hợp toán học và lập trình — con học đếm, cộng trừ, hình học qua các dự án Scratch.',
+          'Con bước sang các cơ cấu chuyển động phức hợp hơn: nhiều chân, nâng hạ, vẽ tự động, mô phỏng sinh vật biển và sáng tạo sinh vật giả tưởng.',
         skills: [
-          'Tư duy toán học',
-          'Biến số cơ bản',
-          'Toán hình & toạ độ',
-          'Phép so sánh',
-          'Giải quyết vấn đề'
+          'Cơ cấu nhiều chân',
+          'Cơ chế nâng hạ',
+          'Giữ bút và vẽ hình học',
+          'Phối hợp chuyển động liên hoàn',
+          'Debug cơ khí',
+          'Phản biện kỹ thuật cơ bản'
         ],
         sessionList: [
-          { num: 1, content: 'Toán đếm cùng nhân vật Scratch', type: 'Lý thuyết' },
-          { num: 2, content: 'Bài toán cộng trừ tương tác', type: 'Thực hành' },
-          { num: 3, content: 'Vẽ hình bằng câu lệnh', type: 'Thực hành' },
-          { num: 4, content: 'Hệ toạ độ — Robot tìm kho báu', type: 'Thực hành' },
-          { num: 5, content: 'Trò chơi đố toán — biến số', type: 'Thực hành' },
-          { num: 6, content: 'Bảng cửu chương vui nhộn', type: 'Dự án' },
-          { num: 7, content: 'Đồng hồ digital tự lập trình', type: 'Thực hành' },
-          { num: 8, content: 'Máy tính bỏ túi mini', type: 'Dự án' },
-          { num: 9, content: 'Trò chơi toán học sáng tạo', type: 'Thực hành' },
-          { num: 10, content: 'Mê cung toán học', type: 'Thực hành' },
-          { num: 11, content: 'Hoàn thiện ứng dụng toán', type: 'Dự án' },
-          { num: 12, content: 'Demo & nhận chứng nhận HP2', type: 'Thi đấu' }
+          { num: 1,  content: 'Chiến Binh Cua Biển — Lắp ráp robot di chuyển ngang bằng đòn bẩy và truyền động nhiều chân', type: 'Dự án' },
+          { num: 2,  content: 'Cỗ Máy Xúc Cát — Lắp ráp hệ thống cần cẩu, máy xúc và cơ chế nâng hạ', type: 'Dự án' },
+          { num: 3,  content: 'Họa Sĩ Robot — Lắp cơ cấu giữ bút, lập trình robot vẽ đường nét hình học', type: 'Dự án' },
+          { num: 4,  content: 'Chinh Phục Đại Dương — Mô phỏng sinh vật biển với chuyển động uốn lượn liên hoàn', type: 'Dự án' },
+          { num: 5,  content: 'Ôn tập kiến thức — Củng cố kỹ năng lắp ráp cơ cấu phức hợp và dò lỗi lập trình', type: 'Ôn tập' },
+          { num: 6,  content: 'Chiếc Hộp Giai Điệu — Ứng dụng bánh răng chốt gạt tạo hộp nhạc cơ học đa nhịp điệu', type: 'Dự án' },
+          { num: 7,  content: 'Vận Động Viên Đạp Xe — Tái tạo chuyển động xoay vòng của bàn đạp và giữ thăng bằng', type: 'Dự án' },
+          { num: 8,  content: 'Công Viên Kỷ Jura — Lắp ráp khủng long bạo chúa, lập trình di chuyển ngắt quãng', type: 'Dự án' },
+          { num: 9,  content: 'Sinh Vật Đột Biến — Sáng tạo mô hình sinh vật giả tưởng với nhiều khớp động linh hoạt', type: 'Dự án' },
+          { num: 10, content: 'Ý tưởng cuối học phần — Thiết kế dự án máy móc kết hợp ít nhất 2 cơ chế chuyển động', type: 'Ý tưởng' },
+          { num: 11, content: 'Demo cuối học phần — Chạy thử hệ thống, khắc phục điểm nghẽn cơ khí', type: 'Demo' },
+          { num: 12, content: 'Thuyết trình cuối học phần — Trình bày dự án nâng cao và phản biện kỹ thuật', type: 'Thuyết trình' }
         ],
-        achievement: 'Con xây dựng được 1 ứng dụng học toán cá nhân hoá hoàn chỉnh.'
+        achievement:
+          'Con tạo được một mô hình chuyển động phức hợp, biết phân tích lỗi cơ khí và cải tiến mô hình.'
       },
       {
         id: 'HP3',
-        name: 'Kể Chuyện Và Hoạt Hình Số',
+        name: 'Chuyên Sâu',
         sessions: 12,
         hours: 24,
         description:
-          'Con phát triển khả năng kể chuyện qua hoạt hình số — kết hợp lập trình với kể chuyện sáng tạo.',
+          'Con phát triển tư duy kỹ thuật sâu hơn thông qua ròng rọc, đối trọng, chuyển động đa khớp, cánh tay robot, robot đối kháng và xe đua tốc độ.',
         skills: [
-          'Kể chuyện sáng tạo',
-          'Animation cơ bản',
-          'Âm thanh & lồng tiếng',
-          'Cốt truyện đa nhánh',
-          'Trình bày'
+          'Ròng rọc và đối trọng',
+          'Chuyển động đa khớp',
+          'Cánh tay robot',
+          'Robot đối kháng',
+          'Lực đàn hồi và ma sát',
+          'Kể chuyện bằng mô hình'
         ],
         sessionList: [
-          { num: 1, content: 'Cấu trúc một câu chuyện hay', type: 'Lý thuyết' },
-          { num: 2, content: 'Tạo nhân vật chính của con', type: 'Thực hành' },
-          { num: 3, content: 'Animation di chuyển nhân vật', type: 'Thực hành' },
-          { num: 4, content: 'Bối cảnh & sân khấu số', type: 'Thực hành' },
-          { num: 5, content: 'Lồng tiếng & âm thanh', type: 'Thực hành' },
-          { num: 6, content: 'Cốt truyện đa nhánh', type: 'Dự án' },
-          { num: 7, content: 'Hiệu ứng đặc biệt', type: 'Thực hành' },
-          { num: 8, content: 'Kể chuyện về gia đình', type: 'Dự án' },
-          { num: 9, content: 'Phát triển nhân vật phụ', type: 'Thực hành' },
-          { num: 10, content: 'Hoạt cảnh phức tạp', type: 'Thực hành' },
-          { num: 11, content: 'Hoàn thiện phim hoạt hình ngắn', type: 'Dự án' },
-          { num: 12, content: 'Buổi chiếu phim phụ huynh', type: 'Thi đấu' }
+          { num: 1,  content: 'Lực Sĩ Robot — Khám phá ròng rọc và đối trọng khi robot gắp/nâng vật nặng', type: 'Dự án' },
+          { num: 2,  content: 'Hoạt Náo Viên Sôi Động — Phối hợp chuyển động tay và chân đa khớp', type: 'Dự án' },
+          { num: 3,  content: 'Kình Ngư Vượt Sóng — Thiết kế thân dài, tái tạo nhịp bơi của sinh vật biển', type: 'Dự án' },
+          { num: 4,  content: 'Đầu Bếp Tài Ba — Cánh tay robot thực hiện chuỗi gắp, thả và khuấy trộn', type: 'Dự án' },
+          { num: 5,  content: 'Ôn tập kiến thức — Rèn tư duy thiết lập chuỗi lệnh thẻ vật lý dài hạn', type: 'Ôn tập' },
+          { num: 6,  content: 'Thần Long Trỗi Dậy — Lắp mô hình rồng đa khớp, cân bằng trọng tâm khi thay đổi độ cao', type: 'Dự án' },
+          { num: 7,  content: 'Đấu Sĩ Dũng Mãnh — Robot đối kháng với cơ chế tự vệ và cấu trúc chống va đập', type: 'Dự án' },
+          { num: 8,  content: 'Bước Nhảy Kỉ Lục — Ứng dụng lực đàn hồi kết hợp động cơ để tạo bật nhảy', type: 'Dự án' },
+          { num: 9,  content: 'Đường Đua Rực Lửa — Phân tích ma sát, thiết kế xe đua tốc độ và tối ưu khí động học', type: 'Dự án' },
+          { num: 10, content: 'Ý tưởng cuối học phần — Lên ý tưởng bối cảnh, cốt truyện cho robot tự sáng tạo', type: 'Ý tưởng' },
+          { num: 11, content: 'Demo cuối học phần — Mô phỏng tương tác giữa các robot của từng nhóm', type: 'Demo' },
+          { num: 12, content: 'Thuyết trình cuối học phần — Kể chuyện qua mô hình và trình bày giải pháp kỹ thuật', type: 'Thuyết trình' }
         ],
-        achievement: 'Phim hoạt hình ngắn 2-3 phút do con tự lập trình và lồng tiếng.'
+        achievement:
+          'Con hoàn thành một robot có câu chuyện, có cơ chế chuyển động rõ ràng và biết trình bày giải pháp kỹ thuật theo nhóm.'
       },
       {
         id: 'HP4',
-        name: 'Mini Game Đầu Đời',
+        name: 'Chuyên Gia',
         sessions: 12,
         hours: 24,
         description:
-          'Tổng hợp tất cả kiến thức năm 1 — con tự thiết kế và lập trình 1 mini game hoàn chỉnh từ đầu đến cuối.',
+          'Con tích hợp toàn diện cơ khí, cảm biến siêu âm và thẻ lệnh để xây dựng mô hình tự động nâng cao, hướng đến sản phẩm tốt nghiệp cuối năm.',
         skills: [
-          'Game design tư duy',
-          'Tổng hợp kiến thức',
-          'Tự lực thiết kế',
-          'Test & sửa lỗi',
-          'Phát hành dự án'
+          'Cảm biến siêu âm',
+          'Điều kiện Nếu…Thì…',
+          'Truyền động góc vuông',
+          'Ròng rọc và cáp treo',
+          'Băng chuyền tự động',
+          'Tích hợp cơ khí, cảm biến và lập trình'
         ],
         sessionList: [
-          { num: 1, content: 'Game mình thích là game gì?', type: 'Lý thuyết' },
-          { num: 2, content: 'Brainstorm ý tưởng game', type: 'Thực hành' },
-          { num: 3, content: 'Thiết kế nhân vật game', type: 'Thực hành' },
-          { num: 4, content: 'Cơ chế chơi cơ bản', type: 'Thực hành' },
-          { num: 5, content: 'Hệ thống điểm số', type: 'Thực hành' },
-          { num: 6, content: 'Mức độ khó tăng dần', type: 'Dự án' },
-          { num: 7, content: 'Boss & thử thách', type: 'Thực hành' },
-          { num: 8, content: 'Âm thanh & nhạc nền', type: 'Dự án' },
-          { num: 9, content: 'Test game với bạn bè', type: 'Thực hành' },
-          { num: 10, content: 'Sửa lỗi & cân bằng', type: 'Thực hành' },
-          { num: 11, content: 'Hoàn thiện game cuối năm', type: 'Dự án' },
-          { num: 12, content: 'Lễ tốt nghiệp Năm 1 + Demo game', type: 'Thi đấu' }
+          { num: 1,  content: 'Siêu Xe Chuyên Dụng — Tích hợp cảm biến siêu âm, lập trình xe nhận diện vật cản', type: 'Dự án' },
+          { num: 2,  content: 'Trực Thăng Lốc Xoáy — Cơ chế truyền động góc vuông, điều hướng cánh quạt song song', type: 'Dự án' },
+          { num: 3,  content: 'Kỹ Sư Cáp Treo — Chế tạo hệ thống ròng rọc di chuyển an toàn trên dây cáp', type: 'Dự án' },
+          { num: 4,  content: 'Máy Bắn Đá — Sử dụng cơ năng để ném vật thể, thử nghiệm góc ném mục tiêu', type: 'Dự án' },
+          { num: 5,  content: 'Ôn tập kiến thức — Thực hành chuyên sâu cấu trúc điều kiện rẽ nhánh Nếu…Thì…', type: 'Ôn tập' },
+          { num: 6,  content: 'Chinh Phục Bầu Trời — Lắp ráp mô phỏng drone đa cánh quạt, khám phá nguyên lý thăng bằng', type: 'Dự án' },
+          { num: 7,  content: 'Xưởng Cơ Khí — Xây dựng băng chuyền sản xuất tự động, đồng bộ nhịp chuyển động', type: 'Dự án' },
+          { num: 8,  content: 'Cỗ Máy Thời Gian — Khám phá bánh răng giảm tốc và tỷ lệ truyền động', type: 'Dự án' },
+          { num: 9,  content: 'Chiến Binh Bọc Thép — Kết hợp cảm biến siêu âm vào mô hình chiến đấu tự động', type: 'Dự án' },
+          { num: 10, content: 'Ý tưởng cuối khoá — Lên ý tưởng siêu dự án tích hợp cơ khí, cảm biến và thẻ lệnh', type: 'Ý tưởng' },
+          { num: 11, content: 'Demo cuối khoá — Thử thách mô hình thông qua giải đấu nhỏ nội bộ', type: 'Demo' },
+          { num: 12, content: 'Thuyết trình tốt nghiệp — Trình diễn sản phẩm, vinh danh kỹ sư nhí', type: 'Thuyết trình' }
         ],
         achievement:
-          'Con tốt nghiệp Năm 1 với 1 game hoàn chỉnh + bộ portfolio 4 dự án — sẵn sàng bước vào Năm 2 với robot vật lý.'
+          'Con tốt nghiệp Năm 1 với một siêu dự án Robotics vật lý, biết lắp ráp, điều khiển bằng thẻ lệnh, dùng cảm biến cơ bản và tự tin trình bày trước phụ huynh.'
       }
     ]
   },

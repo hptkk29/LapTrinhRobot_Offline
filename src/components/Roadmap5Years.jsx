@@ -30,10 +30,14 @@ export default function Roadmap5Years() {
   };
 
   const typeStyle = {
-    'Lý thuyết': 'bg-blue-50 text-blue-700 border-blue-200',
-    'Thực hành': 'bg-orange-50 text-primary-orange border-orange-200',
-    'Dự án': 'bg-purple-50 text-primary-purple border-purple-200',
-    'Thi đấu': 'bg-yellow-50 text-yellow-700 border-yellow-200'
+    'Lý thuyết':   'bg-blue-50 text-blue-700 border-blue-200',
+    'Thực hành':   'bg-orange-50 text-primary-orange border-orange-200',
+    'Dự án':       'bg-purple-50 text-primary-purple border-purple-200',
+    'Thi đấu':     'bg-yellow-50 text-yellow-700 border-yellow-200',
+    'Ôn tập':      'bg-blue-50 text-blue-700 border-blue-200',
+    'Ý tưởng':     'bg-orange-50 text-primary-orange border-orange-200',
+    'Demo':        'bg-yellow-50 text-yellow-700 border-yellow-200',
+    'Thuyết trình':'bg-green-50 text-success border-green-200'
   };
 
   return (
@@ -168,6 +172,11 @@ export default function Roadmap5Years() {
               💡 {currentYear.note}
             </div>
           )}
+          {currentYear.device && (
+            <div className="text-xs text-text-muted mt-2">
+              <span className="font-semibold text-text-dark">Học cụ:</span> {currentYear.device}
+            </div>
+          )}
 
           {/* 3 stat */}
           <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-5">
@@ -184,6 +193,15 @@ export default function Roadmap5Years() {
               <div className="text-[11px] sm:text-xs text-text-muted">học phần</div>
             </div>
           </div>
+          {currentYear.tags && (
+            <div className="flex flex-wrap gap-1.5 mt-3">
+              {currentYear.tags.map((tag, i) => (
+                <span key={i} className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-100 text-primary-orange border border-orange-200">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* TIMELINE 4 HỌC PHẦN */}
