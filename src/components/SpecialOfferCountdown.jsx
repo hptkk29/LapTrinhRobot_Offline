@@ -19,21 +19,18 @@ export default function SpecialOfferCountdown() {
   const offerCards = [
     {
       icon: Flame,
-      title: 'HV SataMath',
+      title: 'Học viên SataMath',
       value: 'Giảm 25%',
-      text: 'Từ 7.920.000đ cho khóa Ươm Mầm Tài Năng'
     },
     {
       icon: Sparkles,
-      title: 'HV ngoài hệ thống',
+      title: 'Học viên ngoài hệ thống',
       value: 'Giảm 15%',
-      text: 'Từ 8.976.000đ cho khóa Ươm Mầm Tài Năng'
     },
     {
       icon: Clock3,
       title: 'Trả góp 0%',
       value: 'Lộ trình 48 buổi',
-      text: 'Ví dụ: Ươm Mầm Tài Năng từ 660.000đ/tháng'
     }
   ];
 
@@ -101,7 +98,6 @@ export default function SpecialOfferCountdown() {
               </div>
               <h3 className="text-lg font-black text-text-dark mb-2">{title}</h3>
               <div className="text-3xl font-black text-primary-orange mb-3">{value}</div>
-              <p className="text-sm text-text-muted leading-relaxed">{text}</p>
             </article>
           ))}
         </div>

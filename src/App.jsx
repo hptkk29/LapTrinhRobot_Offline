@@ -1,6 +1,7 @@
 import TopCountdownBar from './components/TopCountdownBar.jsx';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
+import ContestInfo from './components/ContestInfo.jsx';
 import SpecialOfferCountdown from './components/SpecialOfferCountdown.jsx';
 import Roadmap5Years from './components/Roadmap5Years.jsx';
 import TeachingMethod from './components/TeachingMethod.jsx';
@@ -30,37 +31,40 @@ function App() {
         {/* Section 1 — Hero */}
         <Hero />
 
-        {/* Section 2 — Countdown ưu đãi đặc biệt */}
+        {/* Section 2 — Thông tin cuộc thi Robotics */}
+        <ContestInfo />
+
+        {/* Section 3 — Countdown ưu đãi đặc biệt */}
         <SpecialOfferCountdown />
 
-        {/* Section 3 — Lộ trình 5 năm có tab */}
+        {/* Section 4 — Lộ trình 5 năm có tab */}
         <Roadmap5Years />
 
-        {/* Section 4 — Phương pháp dạy */}
+        {/* Section 5 — Phương pháp dạy */}
         <TeachingMethod />
 
-        {/* Section 5 — 4 trung tâm Đà Nẵng */}
+        {/* Section 6 — 4 trung tâm Đà Nẵng */}
         <Locations />
 
-        {/* Section 6 — Cam kết minh bạch */}
+        {/* Section 7 — Cam kết minh bạch */}
         <Commitment />
 
-        {/* Section 7 — Quà tặng khi đăng ký */}
+        {/* Section 8 — Quà tặng khi đăng ký */}
         <Gifts />
 
-        {/* Section 8 — Giải thưởng nội bộ */}
+        {/* Section 9 — Giải thưởng nội bộ */}
         <InternalAwards />
 
-        {/* Section 9 — Testimonials */}
+        {/* Section 10 — Testimonials */}
         <Testimonials />
 
-        {/* Section 10 — Form đăng ký */}
+        {/* Section 11 — Form đăng ký */}
         <RegistrationForm />
 
-        {/* Section 11 — FAQ */}
+        {/* Section 12 — FAQ */}
         <FAQ />
 
-        {/* Section 12 — Kêu gọi cuối */}
+        {/* Section 13 — Kêu gọi cuối */}
         <FinalCTA />
       </main>
 

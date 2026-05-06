@@ -4,54 +4,20 @@ import { ageCourseOptions } from '../utils/courseSelection';
 
 const POPUP_SHOWN_KEY = 'sata-age-popup-shown';
 const SELECTED_COURSE_KEY = 'sata-selected-age-course';
+const REOPEN_DELAY_MS = 90000;
+const ROADMAP_OPEN_DELAY_MS = 600;
 
 export default function AgeCoursePopup() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(null);
   const [error, setError] = useState('');
   const [useFallbackMascot, setUseFallbackMascot] = useState(false);
+  const [hasStartedPrompting, setHasStartedPrompting] = useState(false);
 
-  useEffect(() => {
-    if (sessionStorage.getItem(POPUP_SHOWN_KEY)) return;
-
-    const roadmapEl = document.getElementById('roadmap');
-    if (!roadmapEl) return;
-
-    let timer = null;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-
-        sessionStorage.setItem(POPUP_SHOWN_KEY, '1');
-        timer = setTimeout(() => setIsOpen(true), 600);
-        observer.disconnect();
-      },
-      { threshold: 0.25 }
-    );
-
-    observer.observe(roadmapEl);
-
-    return () => {
-      if (timer) clearTimeout(timer);
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape') closePopup();
-    };
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+  const hasSelectedCourse = () => Boolean(sessionStorage.getItem(SELECTED_COURSE_KEY));
 
   const closePopup = () => {
-    sessionStorage.setItem(POPUP_SHOWN_KEY, '1');
+    sessionStorage.setItem(POPUP_SHOWN_KEY, String(Date.now()));
     setIsOpen(false);
   };
 
@@ -72,6 +38,67 @@ export default function AgeCoursePopup() {
     window.dispatchEvent(new CustomEvent('sata-course-selected', { detail: payload }));
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    if (hasSelectedCourse()) return;
+
+    sessionStorage.removeItem(POPUP_SHOWN_KEY);
+
+    const roadmapEl = document.getElementById('roadmap');
+    if (!roadmapEl) return;
+
+    let timer = null;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || hasSelectedCourse()) return;
+
+        timer = setTimeout(() => {
+          if (hasSelectedCourse()) return;
+          sessionStorage.setItem(POPUP_SHOWN_KEY, String(Date.now()));
+          setHasStartedPrompting(true);
+          setIsOpen(true);
+        }, ROADMAP_OPEN_DELAY_MS);
+        observer.disconnect();
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(roadmapEl);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hasStartedPrompting || hasSelectedCourse()) return;
+
+    const interval = setInterval(() => {
+      if (hasSelectedCourse()) {
+        clearInterval(interval);
+        return;
+      }
+
+      sessionStorage.setItem(POPUP_SHOWN_KEY, String(Date.now()));
+      setIsOpen(true);
+    }, REOPEN_DELAY_MS);
+
+    return () => clearInterval(interval);
+  }, [hasStartedPrompting]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') closePopup();
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
+
+  if (!isOpen) return null;
 
   return (
     <div
