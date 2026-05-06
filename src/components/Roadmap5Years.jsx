@@ -72,27 +72,50 @@ export default function Roadmap5Years() {
 
         {/* TAB NĂM */}
         <div className="mb-8">
-          {/* Mobile: compact 5-pill grid */}
-          <div className="sm:hidden grid grid-cols-5 gap-1.5 mb-2 px-1">
-            {roadmap5Years.map((y, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleYearChange(idx)}
-                className={`py-2.5 px-1 rounded-xl border-2 text-center transition-all
-                  ${idx === yearIdx
-                    ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
-                    : 'border-gray-200 bg-white'}`}
-              >
-                <div className={`text-[10px] font-black leading-tight
-                  ${idx === yearIdx ? 'text-primary-orange' : 'text-text-muted'}`}>
-                  NĂM {y.year}
-                </div>
-                <div className={`text-[9px] font-bold leading-tight mt-0.5
-                  ${idx === yearIdx ? 'text-text-dark' : 'text-text-dark/50'}`}>
-                  {y.name.split(' ').slice(0, 2).join(' ')}
-                </div>
-              </button>
-            ))}
+          {/* Mobile: stepper year selector */}
+          <div className="sm:hidden mb-4">
+            <div className="relative">
+              {/* Track background */}
+              <div className="absolute top-6 left-10 right-10 h-0.5 bg-gray-200 rounded-full" />
+              {/* Progress fill */}
+              <div
+                className="absolute top-6 left-10 h-0.5 bg-primary-orange rounded-full transition-all duration-500"
+                style={{ width: `calc(${yearIdx / 4} * (100% - 80px))` }}
+              />
+              {/* Step buttons */}
+              <div className="relative z-10 flex justify-between px-4">
+                {roadmap5Years.map((y, idx) => {
+                  const yearIcons = ['🌱', '🚀', '💡', '🏆', '🌟'];
+                  const isActive = idx === yearIdx;
+                  const isPast = idx < yearIdx;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => handleYearChange(idx)}
+                      className="flex flex-col items-center"
+                    >
+                      <div className={`w-12 h-12 rounded-[14px] border-2 flex flex-col items-center justify-center transition-all duration-200
+                        ${isActive
+                          ? 'bg-primary-orange border-primary-orange shadow-orange-glow'
+                          : isPast
+                            ? 'bg-orange-50 border-orange-200'
+                            : 'bg-white border-gray-200'}`}
+                      >
+                        <span className="text-base leading-none">{yearIcons[idx]}</span>
+                        <span className={`text-[8px] font-black leading-none mt-0.5
+                          ${isActive ? 'text-white' : isPast ? 'text-primary-orange' : 'text-gray-400'}`}>
+                          N{y.year}
+                        </span>
+                      </div>
+                      <span className={`text-[8px] font-semibold mt-1.5 text-center leading-tight w-12
+                        ${isActive ? 'text-primary-orange' : 'text-gray-400'}`}>
+                        {y.name.split(' ').slice(0, 2).join(' ')}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* Tablet / Desktop: scrollable cards */}
