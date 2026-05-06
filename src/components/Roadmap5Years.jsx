@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { roadmap5Years } from '../data/roadmap-5-years';
-import { Target, BookOpen, Clock, Trophy, ChevronLeft, ChevronRight, CheckCircle2, FlaskConical, ListOrdered, Award, Sparkles } from 'lucide-react';
+import { Target, BookOpen, Clock, Trophy, ChevronLeft, ChevronRight, FlaskConical, ListOrdered, Award, Sparkles, X } from 'lucide-react';
 
 export default function Roadmap5Years() {
   const [yearIdx, setYearIdx] = useState(0);
   const [moduleIdx, setModuleIdx] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isPopupOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') setIsPopupOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isPopupOpen]);
 
   const currentYear = roadmap5Years[yearIdx];
   const currentModule = currentYear.modules[moduleIdx];
@@ -12,6 +20,14 @@ export default function Roadmap5Years() {
   const handleYearChange = (idx) => {
     setYearIdx(idx);
     setModuleIdx(0);
+  };
+
+  const selectFromPopup = (idx) => {
+    handleYearChange(idx);
+    setIsPopupOpen(false);
+    setTimeout(() => {
+      document.getElementById('roadmap')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
 
   const goPrevModule = () => {
@@ -30,19 +46,20 @@ export default function Roadmap5Years() {
   };
 
   const typeStyle = {
-    'Lý thuyết':   'bg-blue-50 text-blue-700 border-blue-200',
-    'Thực hành':   'bg-orange-50 text-primary-orange border-orange-200',
-    'Dự án':       'bg-purple-50 text-primary-purple border-purple-200',
-    'Thi đấu':     'bg-yellow-50 text-yellow-700 border-yellow-200',
-    'Ôn tập':      'bg-blue-50 text-blue-700 border-blue-200',
-    'Ý tưởng':     'bg-orange-50 text-primary-orange border-orange-200',
-    'Demo':        'bg-yellow-50 text-yellow-700 border-yellow-200',
-    'Thuyết trình':'bg-green-50 text-success border-green-200'
+    'Lý thuyết':    'bg-blue-50 text-blue-700 border-blue-200',
+    'Thực hành':    'bg-orange-50 text-primary-orange border-orange-200',
+    'Dự án':        'bg-purple-50 text-primary-purple border-purple-200',
+    'Thi đấu':      'bg-yellow-50 text-yellow-700 border-yellow-200',
+    'Ôn tập':       'bg-blue-50 text-blue-700 border-blue-200',
+    'Ý tưởng':      'bg-orange-50 text-primary-orange border-orange-200',
+    'Demo':         'bg-yellow-50 text-yellow-700 border-yellow-200',
+    'Thuyết trình': 'bg-green-50 text-success border-green-200'
   };
 
   return (
     <section id="roadmap" className="section-padding bg-white">
       <div className="container-site">
+
         {/* Heading */}
         <div className="text-center mb-10 sm:mb-14">
           <div className="badge-purple mb-4">
@@ -52,10 +69,16 @@ export default function Roadmap5Years() {
           <h2 className="heading-2 mb-4">
             <span className="text-gradient-orange-purple">LỘ TRÌNH ROBOTICS AI 5 NĂM</span>
           </h2>
-          <p className="text-base sm:text-lg text-text-muted max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg text-text-muted max-w-3xl mx-auto mb-5">
             Dành cho con từ <strong>6 đến 13 tuổi</strong> — 4 học phần mỗi năm — 12 buổi mỗi học phần.<br />
             Chương trình chuẩn quốc tế, mỗi học phần là 1 bước tiến vững chắc cho con.
           </p>
+          <button
+            onClick={() => setIsPopupOpen(true)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-primary-purple text-primary-purple font-bold rounded-xl hover:bg-soft-purple transition-all text-sm"
+          >
+            🔍 Tìm khóa học phù hợp cho con
+          </button>
         </div>
 
         {/* 4 stat cards */}
@@ -79,17 +102,13 @@ export default function Roadmap5Years() {
           {/* Mobile: stepper year selector */}
           <div className="sm:hidden mb-4">
             <div className="relative">
-              {/* Track background */}
               <div className="absolute top-6 left-10 right-10 h-0.5 bg-gray-200 rounded-full" />
-              {/* Progress fill */}
               <div
                 className="absolute top-6 left-10 h-0.5 bg-primary-orange rounded-full transition-all duration-500"
                 style={{ width: `calc(${yearIdx / 4} * (100% - 80px))` }}
               />
-              {/* Step buttons */}
               <div className="relative z-10 flex justify-between px-4">
                 {roadmap5Years.map((y, idx) => {
-                  const yearIcons = ['🌱', '🚀', '💡', '🏆', '🌟'];
                   const isActive = idx === yearIdx;
                   const isPast = idx < yearIdx;
                   return (
@@ -105,7 +124,7 @@ export default function Roadmap5Years() {
                             ? 'bg-orange-50 border-orange-200'
                             : 'bg-white border-gray-200'}`}
                       >
-                        <span className="text-base leading-none">{yearIcons[idx]}</span>
+                        <span className="text-base leading-none">{y.productEmoji}</span>
                         <span className={`text-[8px] font-black leading-none mt-0.5
                           ${isActive ? 'text-white' : isPast ? 'text-primary-orange' : 'text-gray-400'}`}>
                           N{y.year}
@@ -139,7 +158,7 @@ export default function Roadmap5Years() {
                 </div>
                 <div className={`font-extrabold text-sm sm:text-base leading-tight mb-1
                   ${idx === yearIdx ? 'text-text-dark' : 'text-text-dark/70'}`}>
-                  {y.name}
+                  {y.productEmoji} {y.name}
                 </div>
                 <div className="text-[11px] sm:text-xs text-text-muted">
                   {y.ageRange}
@@ -151,35 +170,47 @@ export default function Roadmap5Years() {
 
         {/* NĂM ĐANG CHỌN — Header */}
         <div className="bg-gradient-cream rounded-2xl p-5 sm:p-7 mb-8 border-2 border-orange-100 animate-fade-in">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-3">
-            <div>
-              <div className="badge-orange mb-2">
-                NĂM {currentYear.year} · {currentYear.ageRange}
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-text-dark">
-                {currentYear.name}
-              </h3>
-            </div>
-            <div className="text-sm text-text-muted">
-              {currentYear.grade}
-            </div>
+          {/* Badge row */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="badge-orange">{currentYear.productCode}</span>
+            <span className="text-sm text-text-muted font-semibold">{currentYear.grade} · {currentYear.ageRange}</span>
           </div>
+
+          {/* Title */}
+          <h3 className="text-2xl sm:text-3xl font-extrabold text-text-dark mb-3">
+            {currentYear.productEmoji} {currentYear.productName}
+          </h3>
+
+          {/* Description */}
           <p className="text-sm sm:text-base text-text-dark/80 leading-relaxed mb-4">
             {currentYear.description}
           </p>
+
+          {/* Note */}
           {currentYear.note && (
-            <div className="text-xs sm:text-sm bg-white/70 px-3 py-2 rounded-lg inline-block border border-primary-purple/20 text-primary-purple font-semibold">
+            <div className="text-xs sm:text-sm bg-white/70 px-3 py-2 rounded-lg inline-block border border-primary-purple/20 text-primary-purple font-semibold mb-4">
               💡 {currentYear.note}
             </div>
           )}
-          {currentYear.device && (
-            <div className="text-xs text-text-muted mt-2">
-              <span className="font-semibold text-text-dark">Học cụ:</span> {currentYear.device}
-            </div>
-          )}
 
-          {/* 3 stat */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-5">
+          {/* 2-col info cards: device + mission */}
+          <div className="grid sm:grid-cols-2 gap-3 mb-5">
+            {currentYear.device && (
+              <div className="bg-white/80 rounded-xl p-3 border border-orange-100">
+                <div className="text-xs font-bold text-primary-orange uppercase tracking-wider mb-1">🔧 Học cụ</div>
+                <div className="text-xs sm:text-sm text-text-dark font-medium leading-relaxed">{currentYear.device}</div>
+              </div>
+            )}
+            {currentYear.mission && (
+              <div className="bg-white/80 rounded-xl p-3 border border-purple-100">
+                <div className="text-xs font-bold text-primary-purple uppercase tracking-wider mb-1">🎯 Sứ mệnh năm học</div>
+                <div className="text-xs sm:text-sm text-text-muted leading-relaxed">{currentYear.mission}</div>
+              </div>
+            )}
+          </div>
+
+          {/* 3 stats */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
             <div className="bg-white p-3 rounded-xl text-center">
               <div className="text-xl sm:text-2xl font-extrabold text-primary-orange">{currentYear.totalSessions}</div>
               <div className="text-[11px] sm:text-xs text-text-muted">buổi tổng</div>
@@ -193,6 +224,7 @@ export default function Roadmap5Years() {
               <div className="text-[11px] sm:text-xs text-text-muted">học phần</div>
             </div>
           </div>
+
           {currentYear.tags && (
             <div className="flex flex-wrap gap-1.5 mt-3">
               {currentYear.tags.map((tag, i) => (
@@ -291,19 +323,19 @@ export default function Roadmap5Years() {
                 </div>
                 <div className="bg-yellow-50 p-3 rounded-xl text-center">
                   <FlaskConical className="w-5 h-5 mx-auto text-yellow-600 mb-1" />
-                  <div className="font-extrabold text-base sm:text-lg text-text-dark">{currentModule.skills.length}</div>
-                  <div className="text-[11px] text-text-muted">Kỹ năng</div>
+                  <div className="font-extrabold text-base sm:text-lg text-text-dark">1</div>
+                  <div className="text-[11px] text-text-muted">Sản phẩm</div>
                 </div>
               </div>
 
-              {/* SKILLS */}
+              {/* YEAR SKILLS */}
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className="w-4 h-4 text-primary-orange" />
-                  <span className="font-bold text-sm sm:text-base text-text-dark">Kỹ năng đạt được</span>
+                  <span className="font-bold text-sm sm:text-base text-text-dark">Kỹ năng con đạt được sau năm học</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {currentModule.skills.map((skill, i) => (
+                  {currentYear.yearSkills.map((skill, i) => (
                     <span key={i} className="px-3 py-1.5 bg-soft-purple text-primary-purple text-xs sm:text-sm font-semibold rounded-full border border-primary-purple/20">
                       ✓ {skill}
                     </span>
@@ -348,7 +380,7 @@ export default function Roadmap5Years() {
                 </div>
               </div>
 
-              {/* NAV — Prev/Next nổi bật hơn */}
+              {/* NAV — Prev/Next */}
               <div className="flex items-center justify-between mt-6 pt-5 border-t border-gray-200 gap-2">
                 <button
                   onClick={goPrevModule}
@@ -379,7 +411,7 @@ export default function Roadmap5Years() {
             </div>
           </div>
 
-          {/* TABLET — danh sách HP dạng tabs (ẩn trên mobile, ẩn trên desktop) */}
+          {/* TABLET — danh sách HP dạng tabs */}
           <div className="hidden sm:block lg:hidden">
             <div className="grid grid-cols-2 gap-2">
               {currentYear.modules.map((mod, idx) => (
@@ -398,7 +430,70 @@ export default function Roadmap5Years() {
             </div>
           </div>
         </div>
+
+        {/* CTA BLOCK */}
+        <div className="mt-12 bg-gradient-orange-purple rounded-2xl p-6 sm:p-10 text-center text-white">
+          <div className="text-4xl mb-3">🚀</div>
+          <h3 className="text-xl sm:text-2xl font-extrabold mb-2">
+            Con bạn phù hợp với khoá học nào?
+          </h3>
+          <p className="text-white/80 text-sm sm:text-base mb-6 max-w-xl mx-auto">
+            Đăng ký ngay để nhận tư vấn miễn phí và ưu đãi Early Bird đến 31/05/2026
+          </p>
+          <a
+            href="#registration-form"
+            className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-primary-orange font-extrabold rounded-xl shadow-lg hover:scale-105 transition-all active:scale-95"
+          >
+            Đăng ký ngay — Early Bird
+          </a>
+        </div>
+
       </div>
+
+      {/* POPUP — Chọn năm học phù hợp */}
+      {isPopupOpen && (
+        <div
+          className="fixed inset-0 z-[9999] bg-black/70 flex items-center justify-center p-4"
+          onClick={() => setIsPopupOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-6 sm:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h3 className="text-lg sm:text-xl font-extrabold text-text-dark">Chọn năm học phù hợp cho con</h3>
+                <p className="text-xs text-text-muted mt-0.5">Bấm vào năm học để xem chi tiết lộ trình</p>
+              </div>
+              <button
+                onClick={() => setIsPopupOpen(false)}
+                className="flex-shrink-0 w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition"
+                aria-label="Đóng"
+              >
+                <X className="w-4 h-4 text-text-dark" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+              {roadmap5Years.map((y, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => selectFromPopup(idx)}
+                  className={`p-4 rounded-xl border-2 text-left transition-all hover:scale-[1.03]
+                    ${idx === yearIdx
+                      ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
+                      : 'border-gray-200 hover:border-primary-orange/50 bg-white'}`}
+                >
+                  <div className="text-3xl sm:text-4xl mb-2">{y.productEmoji}</div>
+                  <div className="text-[10px] font-bold text-primary-orange uppercase tracking-wider mb-1">{y.productCode}</div>
+                  <div className="font-extrabold text-xs sm:text-sm text-text-dark leading-tight mb-1">{y.productName}</div>
+                  <div className="text-[10px] text-primary-purple font-semibold">{y.grade}</div>
+                  <div className="text-[10px] text-text-muted">{y.ageRange}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

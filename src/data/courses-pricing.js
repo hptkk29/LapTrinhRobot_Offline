@@ -49,7 +49,7 @@ export const courseGroups = [
         savedAmount: 1632000,
         earlyBirdSataMath: null,
         earlyBirdOutside: null,
-        insiderPerSession: null,
+        insiderPerSession: 119000,
         badge: 'Gói đề xuất',
         note: 'Gói đề xuất — tiết kiệm 1.632.000đ so với mua lẻ',
         value: 'Combo Sata1 + Sata2 — Lớp 1–8 — 32 buổi — 3.808.000đ (tiết kiệm 1.632.000đ)'
