@@ -13,7 +13,7 @@ export const faqs = [
     id: 2,
     question: 'Học phí 1 năm khoảng bao nhiêu?',
     answer:
-      'Học phí phụ thuộc vào năm con đăng ký + ưu đãi đang chạy. Bố mẹ điền form để Sata Robo gửi báo giá cụ thể — mình không công khai giá trên web vì hay thay đổi theo chính sách học bổng (đăng ký sớm có thể giảm đến 50%).'
+      'Khóa chuyên sâu 48 buổi có học phí niêm yết từ 10.560.000đ. Early Bird đến hết 31/05/2026 áp dụng cho Sata1–Sata7: HV SataMath giảm 25%, HV ngoài giảm 15%. Riêng Sata8 giá cố định 2.500.000đ và không áp dụng giảm giá.'
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ export const faqs = [
     id: 4,
     question: 'Con học xong Năm 1 có buộc phải học tiếp không?',
     answer:
-      'Không. Mỗi năm là 1 khoá độc lập — bố mẹ tái đăng ký khi muốn con học tiếp. Sata Robo có ưu đãi đặc biệt cho học viên cũ tái đăng ký (giảm 20-30% học phí).'
+      'Không. Mỗi năm là 1 khoá độc lập — bố mẹ tái đăng ký khi muốn con học tiếp. Trong giai đoạn Early Bird đến hết 31/05/2026, học viên thuộc hệ thống SataMath được giảm 25% cho Sata1–Sata7.'
   },
   {
     id: 5,

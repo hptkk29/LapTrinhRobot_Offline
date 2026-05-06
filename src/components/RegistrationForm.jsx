@@ -12,6 +12,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { courseGroups, CONSULT_OPTION } from '../data/courses-pricing';
+import { isValidCourseSelection, readStoredCourseSelection } from '../utils/courseSelection';
 import { locations } from '../data/locations';
 import {
   handleLeadSubmission,
@@ -65,6 +66,24 @@ export default function RegistrationForm() {
     }, 1000);
     return () => clearTimeout(timer);
   }, [isSuccess, shouldRedirectToZalo, redirectCountdown]);
+
+  useEffect(() => {
+    const applyCourseSelection = (payload) => {
+      if (!isValidCourseSelection(payload)) return;
+
+      setFormData((prev) => ({ ...prev, course: payload.courseValue }));
+      setErrors((prev) => ({ ...prev, course: '' }));
+    };
+
+    applyCourseSelection(readStoredCourseSelection());
+
+    const handleCourseSelected = (event) => {
+      applyCourseSelection(event.detail);
+    };
+
+    window.addEventListener('sata-course-selected', handleCourseSelected);
+    return () => window.removeEventListener('sata-course-selected', handleCourseSelected);
+  }, []);
 
   // ============ HANDLERS ============
   const handleChange = (e) => {

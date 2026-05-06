@@ -14,6 +14,7 @@ import FAQ from './components/FAQ.jsx';
 import FinalCTA from './components/FinalCTA.jsx';
 import Footer from './components/Footer.jsx';
 import FloatingCTA from './components/FloatingCTA.jsx';
+import AgeCoursePopup from './components/AgeCoursePopup.jsx';
 
 function App() {
   return (
@@ -68,6 +69,8 @@ function App() {
 
       {/* ============ FLOATING CTA — Zalo + Đăng ký ============ */}
       <FloatingCTA />
+
+      <AgeCoursePopup />
     </>
   );
 }

@@ -1,18 +1,33 @@
 import { useState, useEffect } from 'react';
 import { roadmap5Years } from '../data/roadmap-5-years';
-import { Target, BookOpen, Clock, Trophy, ChevronLeft, ChevronRight, FlaskConical, ListOrdered, Award, Sparkles, X } from 'lucide-react';
+import { Target, BookOpen, Clock, Trophy, ChevronLeft, ChevronRight, FlaskConical, ListOrdered, Award, Sparkles } from 'lucide-react';
+import { readStoredCourseSelection } from '../utils/courseSelection';
 
 export default function Roadmap5Years() {
   const [yearIdx, setYearIdx] = useState(0);
   const [moduleIdx, setModuleIdx] = useState(0);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
-    if (!isPopupOpen) return;
-    const onKey = (e) => { if (e.key === 'Escape') setIsPopupOpen(false); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [isPopupOpen]);
+    const stored = readStoredCourseSelection();
+    if (stored) {
+      setYearIdx(stored.yearIndex);
+      setModuleIdx(0);
+    }
+
+    const handleCourseSelected = (event) => {
+      const yearIndex = event.detail?.yearIndex;
+      if (!Number.isInteger(yearIndex) || yearIndex < 0 || yearIndex >= roadmap5Years.length) return;
+
+      setYearIdx(yearIndex);
+      setModuleIdx(0);
+      setTimeout(() => {
+        document.getElementById('roadmap')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    };
+
+    window.addEventListener('sata-course-selected', handleCourseSelected);
+    return () => window.removeEventListener('sata-course-selected', handleCourseSelected);
+  }, []);
 
   const currentYear = roadmap5Years[yearIdx];
   const currentModule = currentYear.modules[moduleIdx];
@@ -20,14 +35,6 @@ export default function Roadmap5Years() {
   const handleYearChange = (idx) => {
     setYearIdx(idx);
     setModuleIdx(0);
-  };
-
-  const selectFromPopup = (idx) => {
-    handleYearChange(idx);
-    setIsPopupOpen(false);
-    setTimeout(() => {
-      document.getElementById('roadmap')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
   };
 
   const goPrevModule = () => {
@@ -73,12 +80,6 @@ export default function Roadmap5Years() {
             Dành cho con từ <strong>6 đến 13 tuổi</strong> — 4 học phần mỗi năm — 12 buổi mỗi học phần.<br />
             Chương trình chuẩn quốc tế, mỗi học phần là 1 bước tiến vững chắc cho con.
           </p>
-          <button
-            onClick={() => setIsPopupOpen(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-primary-purple text-primary-purple font-bold rounded-xl hover:bg-soft-purple transition-all text-sm"
-          >
-            🔍 Tìm khóa học phù hợp cho con
-          </button>
         </div>
 
         {/* 4 stat cards */}
@@ -168,72 +169,83 @@ export default function Roadmap5Years() {
           </div>
         </div>
 
-        {/* NĂM ĐANG CHỌN — Header */}
-        <div className="bg-gradient-cream rounded-2xl p-5 sm:p-7 mb-8 border-2 border-orange-100 animate-fade-in">
-          {/* Badge row */}
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="badge-orange">{currentYear.productCode}</span>
-            <span className="text-sm text-text-muted font-semibold">{currentYear.grade} · {currentYear.ageRange}</span>
-          </div>
-
-          {/* Title */}
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-text-dark mb-3">
-            {currentYear.productEmoji} {currentYear.productName}
-          </h3>
-
-          {/* Description */}
-          <p className="text-sm sm:text-base text-text-dark/80 leading-relaxed mb-4">
-            {currentYear.description}
-          </p>
-
-          {/* Note */}
-          {currentYear.note && (
-            <div className="text-xs sm:text-sm bg-white/70 px-3 py-2 rounded-lg inline-block border border-primary-purple/20 text-primary-purple font-semibold mb-4">
-              💡 {currentYear.note}
-            </div>
-          )}
-
-          {/* 2-col info cards: device + mission */}
-          <div className="grid sm:grid-cols-2 gap-3 mb-5">
-            {currentYear.device && (
-              <div className="bg-white/80 rounded-xl p-3 border border-orange-100">
-                <div className="text-xs font-bold text-primary-orange uppercase tracking-wider mb-1">🔧 Học cụ</div>
-                <div className="text-xs sm:text-sm text-text-dark font-medium leading-relaxed">{currentYear.device}</div>
+        {/* COURSE INTRO CARD */}
+        <div className="rounded-3xl p-5 sm:p-7 lg:p-8 mb-8 border-2 border-primary-orange/20 bg-gradient-to-br from-white via-soft-cream to-soft-purple/60 shadow-card animate-fade-in">
+          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
+            <div className="lg:col-span-8">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="text-3xl leading-none">{currentYear.productEmoji}</span>
+                <span className="badge-orange">{currentYear.productCode}</span>
+                <span className="text-sm text-text-muted font-semibold">{currentYear.grade} · {currentYear.ageRange}</span>
               </div>
-            )}
-            {currentYear.mission && (
-              <div className="bg-white/80 rounded-xl p-3 border border-purple-100">
-                <div className="text-xs font-bold text-primary-purple uppercase tracking-wider mb-1">🎯 Sứ mệnh năm học</div>
-                <div className="text-xs sm:text-sm text-text-muted leading-relaxed">{currentYear.mission}</div>
+
+              <h3 className="text-2xl sm:text-3xl font-black text-text-dark mb-3">
+                {currentYear.productCode} — {currentYear.productName}
+              </h3>
+
+              <p className="text-sm sm:text-base text-text-dark/80 leading-relaxed mb-5">
+                {currentYear.description}
+              </p>
+
+              <div className="grid sm:grid-cols-2 gap-3 mb-5">
+                <div className="bg-white/90 rounded-2xl p-4 border border-primary-orange/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FlaskConical className="w-4 h-4 text-primary-orange" />
+                    <div className="text-xs font-black text-primary-orange uppercase tracking-wider">Thiết bị học cụ</div>
+                  </div>
+                  <p className="text-sm text-text-dark leading-relaxed">{currentYear.device}</p>
+                </div>
+                <div className="bg-white/90 rounded-2xl p-4 border border-primary-purple/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-primary-purple" />
+                    <div className="text-xs font-black text-primary-purple uppercase tracking-wider">Sứ mệnh khóa học</div>
+                  </div>
+                  <p className="text-sm text-text-dark leading-relaxed">{currentYear.mission}</p>
+                </div>
               </div>
-            )}
-          </div>
 
-          {/* 3 stats */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-4">
-            <div className="bg-white p-3 rounded-xl text-center">
-              <div className="text-xl sm:text-2xl font-extrabold text-primary-orange">{currentYear.totalSessions}</div>
-              <div className="text-[11px] sm:text-xs text-text-muted">buổi tổng</div>
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className="w-4 h-4 text-primary-orange" />
+                  <span className="font-black text-sm sm:text-base text-text-dark">Kỹ năng con đạt được sau năm học</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {currentYear.yearSkills.map((skill) => (
+                    <span key={skill} className="px-3 py-1.5 bg-white text-primary-purple text-xs sm:text-sm font-bold rounded-full border border-primary-purple/20 shadow-sm">
+                      ✓ {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="bg-white p-3 rounded-xl text-center">
-              <div className="text-xl sm:text-2xl font-extrabold text-primary-purple">{currentYear.totalHours}</div>
-              <div className="text-[11px] sm:text-xs text-text-muted">giờ học</div>
-            </div>
-            <div className="bg-white p-3 rounded-xl text-center">
-              <div className="text-xl sm:text-2xl font-extrabold text-success">4</div>
-              <div className="text-[11px] sm:text-xs text-text-muted">học phần</div>
-            </div>
-          </div>
 
-          {currentYear.tags && (
-            <div className="flex flex-wrap gap-1.5 mt-3">
-              {currentYear.tags.map((tag, i) => (
-                <span key={i} className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-100 text-primary-orange border border-orange-200">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+            <aside className="lg:col-span-4 bg-white/95 rounded-3xl p-5 border border-primary-purple/20 shadow-card h-fit">
+              <div className="text-xs font-black uppercase tracking-wider text-primary-purple mb-4">Tóm tắt khóa học</div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-2xl bg-soft-cream p-4 text-center">
+                  <div className="text-2xl font-black text-primary-orange">{currentYear.totalSessions}</div>
+                  <div className="text-xs text-text-muted font-semibold">buổi</div>
+                </div>
+                <div className="rounded-2xl bg-soft-purple p-4 text-center">
+                  <div className="text-2xl font-black text-primary-purple">4</div>
+                  <div className="text-xs text-text-muted font-semibold">học phần</div>
+                </div>
+                <div className="rounded-2xl bg-orange-50 p-4 text-center">
+                  <div className="text-2xl font-black text-primary-orange">{currentYear.totalHours}</div>
+                  <div className="text-xs text-text-muted font-semibold">giờ học</div>
+                </div>
+                <div className="rounded-2xl bg-purple-50 p-4 text-center">
+                  <div className="text-2xl font-black text-primary-purple">1</div>
+                  <div className="text-xs text-text-muted font-semibold">portfolio</div>
+                </div>
+              </div>
+              {currentYear.note && (
+                <p className="mt-4 text-xs text-text-muted leading-relaxed bg-soft-cream rounded-2xl p-3 border border-primary-orange/20">
+                  {currentYear.note}
+                </p>
+              )}
+            </aside>
+          </div>
         </div>
 
         {/* TIMELINE 4 HỌC PHẦN */}
@@ -328,21 +340,6 @@ export default function Roadmap5Years() {
                 </div>
               </div>
 
-              {/* YEAR SKILLS */}
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-4 h-4 text-primary-orange" />
-                  <span className="font-bold text-sm sm:text-base text-text-dark">Kỹ năng con đạt được sau năm học</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {currentYear.yearSkills.map((skill, i) => (
-                    <span key={i} className="px-3 py-1.5 bg-soft-purple text-primary-purple text-xs sm:text-sm font-semibold rounded-full border border-primary-purple/20">
-                      ✓ {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
               {/* SESSION LIST — 12 buổi */}
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
@@ -431,69 +428,13 @@ export default function Roadmap5Years() {
           </div>
         </div>
 
-        {/* CTA BLOCK */}
-        <div className="mt-12 bg-gradient-orange-purple rounded-2xl p-6 sm:p-10 text-center text-white">
-          <div className="text-4xl mb-3">🚀</div>
-          <h3 className="text-xl sm:text-2xl font-extrabold mb-2">
-            Con bạn phù hợp với khoá học nào?
-          </h3>
-          <p className="text-white/80 text-sm sm:text-base mb-6 max-w-xl mx-auto">
-            Đăng ký ngay để nhận tư vấn miễn phí và ưu đãi Early Bird đến 31/05/2026
-          </p>
-          <a
-            href="#registration-form"
-            className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-primary-orange font-extrabold rounded-xl shadow-lg hover:scale-105 transition-all active:scale-95"
-          >
-            Đăng ký ngay — Early Bird
+        <div className="mt-8 sm:mt-10 flex justify-center">
+          <a href="#registration-form" className="btn-primary w-full sm:w-auto">
+            Đăng ký ngay
           </a>
         </div>
 
       </div>
-
-      {/* POPUP — Chọn năm học phù hợp */}
-      {isPopupOpen && (
-        <div
-          className="fixed inset-0 z-[9999] bg-black/70 flex items-center justify-center p-4"
-          onClick={() => setIsPopupOpen(false)}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-6 sm:p-8"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h3 className="text-lg sm:text-xl font-extrabold text-text-dark">Chọn năm học phù hợp cho con</h3>
-                <p className="text-xs text-text-muted mt-0.5">Bấm vào năm học để xem chi tiết lộ trình</p>
-              </div>
-              <button
-                onClick={() => setIsPopupOpen(false)}
-                className="flex-shrink-0 w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition"
-                aria-label="Đóng"
-              >
-                <X className="w-4 h-4 text-text-dark" />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-              {roadmap5Years.map((y, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => selectFromPopup(idx)}
-                  className={`p-4 rounded-xl border-2 text-left transition-all hover:scale-[1.03]
-                    ${idx === yearIdx
-                      ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
-                      : 'border-gray-200 hover:border-primary-orange/50 bg-white'}`}
-                >
-                  <div className="text-3xl sm:text-4xl mb-2">{y.productEmoji}</div>
-                  <div className="text-[10px] font-bold text-primary-orange uppercase tracking-wider mb-1">{y.productCode}</div>
-                  <div className="font-extrabold text-xs sm:text-sm text-text-dark leading-tight mb-1">{y.productName}</div>
-                  <div className="text-[10px] text-primary-purple font-semibold">{y.grade}</div>
-                  <div className="text-[10px] text-text-muted">{y.ageRange}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

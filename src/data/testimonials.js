@@ -24,7 +24,7 @@ export const testimonials = [
     avatar: 'TS',
     avatarColor: 'from-purple-400 to-purple-600',
     content:
-      'Ban đầu lo con học online không hiệu quả. Nhưng 27.000 đồng mỗi buổi — rẻ hơn cả nửa cốc trà sữa — mà con tiến bộ rõ rệt sau 2 tuần. Con học hào hứng và làm được bài tập thực hành rất tốt.'
+      'Ban đầu lo con học Robotics sẽ khó theo. Nhưng sau vài buổi con đã hiểu cách robot nhận lệnh, biết sửa lỗi từng bước và hào hứng kể lại sản phẩm sau mỗi buổi học.'
   },
   {
     id: 3,
