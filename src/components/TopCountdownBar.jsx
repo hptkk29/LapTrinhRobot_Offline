@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Flame } from 'lucide-react';
 import useCountdown from '../hooks/useCountdown';
 import useScrollPosition from '../hooks/useScrollPosition';
@@ -5,14 +6,23 @@ import useScrollPosition from '../hooks/useScrollPosition';
 export default function TopCountdownBar() {
   const { timeLeft } = useCountdown();
   const scrollY = useScrollPosition();
-  const isHidden = scrollY > 150;
+  const [isHidden, setIsHidden] = useState(false);
+
+  useEffect(() => {
+    setIsHidden((current) => {
+      if (!current && scrollY > 80) return true;
+      if (current && scrollY < 8) return false;
+      return current;
+    });
+  }, [scrollY]);
 
   const pad = (n) => String(n).padStart(2, '0');
 
   return (
     <div
-      className={`overflow-hidden transition-[max-height] duration-300
-        ${isHidden ? 'max-h-0' : 'max-h-16'}`}
+      aria-hidden={isHidden}
+      className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out
+        ${isHidden ? 'max-h-0 opacity-0 pointer-events-none' : 'max-h-16 opacity-100'}`}
     >
       <div className="bg-gradient-orange-purple text-white">
         <div className="container-site py-2 sm:py-2.5">
