@@ -1,54 +1,48 @@
 // =====================================
-// 6 CAM KẾT MINH BẠCH SATA ROBO
+// 6 CAM KET SATA ROBO
 // =====================================
 
 export const commitments = [
   {
     id: 1,
-    icon: '👨‍🏫',
-    title: 'Lớp học quy mô nhỏ',
+    icon: 'ShieldCheck',
+    title: 'Hoàn tiền 100% nếu không hài lòng',
     description:
-      'Tối đa 8 học viên/lớp — giảng viên theo sát từng con, không có chuyện "lớp đông quá thầy không kịp dạy."',
-    measurable: 'Đo được: sĩ số lớp công khai trên báo cáo định kỳ.'
+      'Buổi học thử đầu tiên 90 phút, nếu con không thích → hoàn tiền 100% học phí đã đóng, không câu hỏi. Hoàn lại sau 3 ngày làm việc.'
   },
   {
     id: 2,
-    icon: '📊',
-    title: 'Báo cáo tiến độ định kỳ',
+    icon: 'Users',
+    title: 'Lớp nhỏ ≤12 học viên',
     description:
-      'Mỗi tháng bố mẹ nhận báo cáo: con học gì, đạt gì, còn yếu gì — minh bạch 100% qua Zalo cá nhân.',
-    measurable: 'Đo được: 1 báo cáo/tháng/học viên — cam kết bằng văn bản.'
+      'Giáo viên biết tên và điểm mạnh từng con. Con không bị bỏ lại phía sau. Chất lượng giảng dạy được đảm bảo.'
   },
   {
     id: 3,
-    icon: '🎓',
-    title: 'Học bổng đến 50% học phí',
+    icon: 'Plane',
+    title: 'Giải thưởng du lịch 3–7 triệu',
     description:
-      'Phụ huynh đăng ký sớm + có nhiều con cùng học nhận học bổng đến 50% học phí năm đầu.',
-    measurable: 'Đo được: chính sách công khai trên hợp đồng đào tạo.'
+      'Học viên đạt giải cuộc thi cấp thành phố → thưởng chuyến du lịch 3–7 triệu kết hợp khai trương tháng 8/2026. Không trung tâm nào khác tại Đà Nẵng có cam kết này.'
   },
   {
     id: 4,
-    icon: '💰',
-    title: 'Hoàn phí nếu không hài lòng',
+    icon: 'Presentation',
+    title: 'Thuyết trình cuối mỗi học phần',
     description:
-      'Trong 3 buổi đầu, nếu con không thấy hứng thú — bố mẹ được hoàn 100% học phí, không hỏi lý do.',
-    measurable: 'Đo được: chính sách hoàn phí ghi rõ trên hợp đồng.'
+      'Cuối mỗi 12 buổi, học viên có 1 buổi thuyết trình trước phụ huynh, ghi hình kỷ niệm. Phụ huynh thấy kết quả thực tế — minh bạch hoàn toàn.'
   },
   {
     id: 5,
-    icon: '🛡️',
-    title: 'Lộ trình rõ ràng — không bán bớt',
+    icon: 'BadgeDollarSign',
+    title: 'Hỗ trợ lệ phí thi Quốc gia 3 triệu',
     description:
-      '5 năm 20 học phần — không phát sinh khoá phụ, không bán thêm "khoá đặc biệt" gì cả. Học phí công bố từ đầu năm học.',
-    measurable: 'Đo được: bảng giá công khai cho cả năm — không thay đổi giữa chừng.'
+      'Học viên hoàn thành khóa học và tham gia cuộc thi cấp Quốc gia → hỗ trợ 3.000.000đ/học viên/năm. Áp dụng cho học viên còn tham gia học đến thời điểm thi.'
   },
   {
     id: 6,
-    icon: '💬',
-    title: 'Đồng hành cả ngoài lớp học',
+    icon: 'Gift',
+    title: 'Học thử hoàn toàn miễn phí',
     description:
-      'Forum Zalo riêng cho phụ huynh + học sinh — hỏi đáp 24/7 với mentor trong suốt khoá học.',
-    measurable: 'Đo được: thời gian phản hồi trung bình < 30 phút giờ hành chính.'
+      'Buổi học thử 90 phút, nhóm tối đa 12 học sinh — 0 đồng, không điều kiện.'
   }
 ];

@@ -39,12 +39,12 @@ function App() {
 
         {/* Section 2 — Thông tin cuộc thi Robotics */}
         <ContestInfo />
-
+        {/* Section 4 — Lộ trình 5 năm có tab */}
+        <Roadmap5Years />
         {/* Section 3 — Countdown ưu đãi đặc biệt */}
         <SpecialOfferCountdown />
 
-        {/* Section 4 — Lộ trình 5 năm có tab */}
-        <Roadmap5Years />
+        
 
         {/* Section 5 — Phương pháp dạy */}
         <TeachingMethod />

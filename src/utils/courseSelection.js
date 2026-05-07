@@ -2,8 +2,29 @@ import { courseGroups } from '../data/courses-pricing';
 
 const allCourses = courseGroups.flatMap((group) => group.courses);
 
-const getCourseValue = (productCode) =>
-  allCourses.find((course) => course.id === productCode)?.value ?? '';
+export const getCourseById = (productCode) =>
+  allCourses.find((course) => course.id === productCode) ?? null;
+
+export const getCourseValue = (productCode) => getCourseById(productCode)?.value ?? '';
+
+export const selectCourse = (productCode, extra = {}) => {
+  const course = getCourseById(productCode);
+  if (!course) return;
+
+  const payload = {
+    productCode,
+    courseValue: course.value,
+    ...extra
+  };
+
+  try {
+    sessionStorage.setItem('sata-selected-age-course', JSON.stringify(payload));
+  } catch {
+    // Ignore storage issues; the event still updates the current page.
+  }
+
+  window.dispatchEvent(new CustomEvent('sata-course-selected', { detail: payload }));
+};
 
 export const ageCourseOptions = [
   {
@@ -47,11 +68,16 @@ export const ageCourseOptions = [
 }));
 
 export const isValidCourseSelection = (payload) =>
-  payload &&
-  Number.isInteger(payload.yearIndex) &&
-  payload.yearIndex >= 0 &&
-  payload.yearIndex <= 4 &&
-  allCourses.some((course) => course.value === payload.courseValue);
+  Boolean(payload?.courseValue) &&
+  allCourses.some((course) => course.value === payload.courseValue) &&
+  (
+    payload.yearIndex === undefined ||
+    (
+      Number.isInteger(payload.yearIndex) &&
+      payload.yearIndex >= 0 &&
+      payload.yearIndex <= 4
+    )
+  );
 
 export const readStoredCourseSelection = () => {
   try {

@@ -96,24 +96,23 @@ export default function Hero() {
             </button>
             <button onClick={() => scrollTo('roadmap')} className="btn-outline text-base">
               <span>📋</span>
-              XEM LỘ TRÌNH 5 NĂM
+              XEM CÁC LỘ TRÌNH ĐÀO TẠO
             </button>
           </div>
 
           {/* Trust footer */}
-          <div className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 text-xs sm:text-sm text-text-muted">
-            <span className="flex items-center gap-1.5">
-              <span className="text-success font-bold">✓</span> Tư vấn viên gọi trong 24h
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="text-success font-bold">✓</span> 100% miễn phí buổi tư vấn
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="text-success font-bold">✓</span> 4 trung tâm — chọn gần nhà
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="text-success font-bold">✓</span> Học bổng đến 50%
-            </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-7 gap-y-2 text-xs sm:text-sm text-text-muted max-w-2xl mx-auto lg:mx-0">
+            {[
+              'Tư vấn viên gọi trong 24h',
+              '100% miễn phí buổi tư vấn',
+              '4 trung tâm — chọn gần nhà',
+              'Ưu đãi Early Bird đến 31/05'
+            ].map((item) => (
+              <span key={item} className="grid grid-cols-[1rem_1fr] items-start gap-2 text-left">
+                <span className="text-success font-bold leading-5 text-center">✓</span>
+                <span className="leading-5">{item}</span>
+              </span>
+            ))}
           </div>
         </div>
 

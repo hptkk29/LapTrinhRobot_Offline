@@ -1,164 +1,97 @@
-import { useState, useEffect, useRef } from 'react';
 import { commitments } from '../data/commitments';
-import { ShieldCheck, FileCheck2, RotateCcw, FileText } from 'lucide-react';
+import {
+  BadgeDollarSign,
+  FileCheck2,
+  Gift,
+  Plane,
+  Presentation,
+  ShieldCheck,
+  Users
+} from 'lucide-react';
+
+const iconMap = {
+  BadgeDollarSign,
+  Gift,
+  Plane,
+  Presentation,
+  ShieldCheck,
+  Users
+};
+
+const toneClasses = [
+  'bg-orange-50 text-primary-orange border-orange-200',
+  'bg-purple-50 text-primary-purple border-purple-200',
+  'bg-green-50 text-success border-green-200'
+];
 
 export default function Commitment() {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const intervalRef = useRef(null);
-  const touchStartX = useRef(null);
-
-  const startAuto = () => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setActiveIdx((i) => (i + 1) % commitments.length);
-    }, 3000);
-  };
-
-  useEffect(() => {
-    startAuto();
-    return () => clearInterval(intervalRef.current);
-  }, []);
-
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e) => {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) setActiveIdx((i) => (i + 1) % commitments.length);
-      else setActiveIdx((i) => (i - 1 + commitments.length) % commitments.length);
-      startAuto();
-    }
-    touchStartX.current = null;
-  };
-
   return (
     <section id="commitment" className="section-padding bg-soft-cream">
       <div className="container-site">
-        {/* Heading */}
         <div className="text-center mb-10 sm:mb-14">
           <div className="badge-purple mb-4">
             <ShieldCheck className="w-4 h-4" />
-            CAM KẾT MINH BẠCH — ĐO ĐƯỢC — BẢO ĐẢM
+            CAM KẾT MINH BẠCH
           </div>
-          <h2 className="heading-2 mb-4">
-            6 Cam Kết Minh Bạch{' '}
-            <span className="text-gradient-orange-purple">Của Sata Robo</span>
+          <h2 className="heading-2 mb-4 text-text-dark">
+            6 cam kết của <span className="text-gradient-orange-purple">Sata Robo</span> với phụ huynh
           </h2>
           <p className="text-base sm:text-lg text-text-muted max-w-2xl mx-auto">
-            Mình hiểu — gửi gắm con đi học là quyết định lớn của bố mẹ.
-            Vì vậy, Học viện Sata Robo cam kết minh bạch <strong>6 điều</strong> — bằng văn bản,
-            có giá trị suốt khoá học.
+            Minh bạch về chất lượng học, kết quả đầu ra và quyền lợi của học viên.
           </p>
         </div>
 
-        {/* Mobile: auto-slide carousel */}
-        <div
-          className="md:hidden mb-8 relative overflow-hidden"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${activeIdx * 100}%)` }}
-          >
-            {commitments.map((c) => (
-              <div key={c.id} className="min-w-full px-1">
-                <div className="card-base p-6 hover:shadow-xl transition group">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-orange-purple flex items-center justify-center text-3xl mb-4">
-                    {c.icon}
+        <div className="grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 mb-10">
+          {commitments.map((commitment, index) => {
+            const Icon = iconMap[commitment.icon] ?? ShieldCheck;
+            const tone = toneClasses[index % toneClasses.length];
+
+            return (
+              <article
+                key={commitment.id}
+                className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-6 shadow-card transition hover:-translate-y-1 hover:shadow-card-hover"
+              >
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${tone}`}>
+                    <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-bold text-lg text-text-dark mb-2 leading-snug">
-                    <span className="text-primary-orange mr-1">✓</span>
-                    {c.title}
-                  </h3>
-                  <p className="text-sm text-text-muted leading-relaxed mb-3">
-                    {c.description}
-                  </p>
-                  <div className="pt-3 border-t border-gray-100">
-                    <p className="text-xs text-success font-semibold flex items-start gap-1.5">
-                      <FileCheck2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                      <span>{c.measurable}</span>
-                    </p>
-                  </div>
+                  <span className="text-3xl font-black text-primary-purple/15">
+                    {String(commitment.id).padStart(2, '0')}
+                  </span>
                 </div>
-              </div>
-            ))}
-          </div>
 
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-4">
-            {commitments.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => { setActiveIdx(idx); startAuto(); }}
-                className={`h-2 rounded-full transition-all duration-300
-                  ${idx === activeIdx ? 'w-6 bg-primary-orange' : 'w-2 bg-gray-300'}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Desktop/Tablet: grid */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-10">
-          {commitments.map((c) => (
-            <div
-              key={c.id}
-              className="card-base p-6 hover:shadow-xl hover:-translate-y-1 transition group"
-            >
-              <div className="w-14 h-14 rounded-xl bg-gradient-orange-purple flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
-                {c.icon}
-              </div>
-              <h3 className="font-bold text-lg sm:text-xl text-text-dark mb-2 leading-snug">
-                <span className="text-primary-orange mr-1">✓</span>
-                {c.title}
-              </h3>
-              <p className="text-sm sm:text-base text-text-muted leading-relaxed mb-3">
-                {c.description}
-              </p>
-              <div className="pt-3 border-t border-gray-100">
-                <p className="text-xs text-success font-semibold flex items-start gap-1.5">
-                  <FileCheck2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                  <span>{c.measurable}</span>
+                <h3 className="mb-3 text-lg font-black leading-tight text-text-dark">
+                  {commitment.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-text-muted">
+                  {commitment.description}
                 </p>
-              </div>
-            </div>
-          ))}
+              </article>
+            );
+          })}
         </div>
 
-        {/* 3 trust badges row */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
-          <div className="badge-green text-sm">
-            <FileText className="w-4 h-4" />
-            Cam kết bằng văn bản
+        <div className="mx-auto max-w-3xl rounded-2xl border-2 border-primary-purple/20 bg-white p-6 text-center shadow-md sm:p-8">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-green-50 px-4 py-2 text-sm font-bold text-success">
+            <FileCheck2 className="h-4 w-4" />
+            Cam kết rõ ràng trước khi phụ huynh ra quyết định
           </div>
-          <div className="badge-green text-sm">
-            <FileCheck2 className="w-4 h-4" />
-            Đo được sau mỗi 12 buổi
-          </div>
-        </div>
-
-        {/* Soft CTA */}
-        <div className="max-w-3xl mx-auto bg-white rounded-2xl p-6 sm:p-8 text-center border-2 border-primary-purple/20 shadow-md">
-          <h3 className="font-bold text-lg sm:text-xl text-text-dark mb-2">
-            🎯 6 Cam Kết = 6 Lý Do Bố Mẹ Tin Tưởng Sata Robo
+          <h3 className="mb-2 text-lg font-black text-text-dark sm:text-xl">
+            Học thử trước, nhìn kết quả thật, rồi mới chọn lộ trình phù hợp.
           </h3>
-          <p className="text-sm sm:text-base text-text-muted mb-5">
-            Không cần đặt cọc, không cần ký hợp đồng ngay. Đăng ký buổi Test miễn phí
-            trải nghiệm trực tiếp trước khi quyết định.
+          <p className="mb-5 text-sm text-text-muted sm:text-base">
+            Sata Robo ưu tiên sự minh bạch: lớp nhỏ, học thử miễn phí, quyền lợi học viên và các mốc thuyết trình đều được nói rõ ngay từ đầu.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href="#registration-form"
               className="btn-primary"
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={(event) => {
+                event.preventDefault();
                 document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              🚀 Đăng Ký Test Miễn Phí →
+              Đăng ký học thử miễn phí
             </a>
             <a
               href="https://zalo.me/0818823720"
@@ -166,7 +99,7 @@ export default function Commitment() {
               rel="noopener noreferrer"
               className="btn-outline"
             >
-              💬 Hỏi Thêm Qua Zalo
+              Hỏi thêm qua Zalo
             </a>
           </div>
         </div>

@@ -13,7 +13,7 @@ export const faqs = [
     id: 2,
     question: 'Học phí 1 năm khoảng bao nhiêu?',
     answer:
-      'Khóa chuyên sâu 48 buổi có học phí niêm yết từ 10.560.000đ. Early Bird đến hết 31/05/2026 áp dụng cho các khóa offline dài hạn: HV SataMath giảm 25%, HV ngoài giảm 15%.'
+      'Website hiện có 2 nhóm khóa: luyện thi ngắn hạn và khóa chuyên sâu 48 buổi. Sata1 từ 1.800.000đ cho HV SataMath, Combo Sata1 + Sata2 là 3.808.000đ, Sata8 là 2.500.000đ cố định. Khóa chuyên sâu 48 buổi có Early Bird từ 7.920.000đ cho HV SataMath.'
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ export const faqs = [
     id: 4,
     question: 'Con học xong Năm 1 có buộc phải học tiếp không?',
     answer:
-      'Không. Mỗi năm là 1 khoá độc lập — bố mẹ tái đăng ký khi muốn con học tiếp. Trong giai đoạn Early Bird đến hết 31/05/2026, học viên thuộc hệ thống SataMath được giảm 25% cho các khóa offline dài hạn.'
+      'Không. Mỗi năm là 1 khoá độc lập — bố mẹ tái đăng ký khi muốn con học tiếp. Trong giai đoạn Early Bird đến hết 31/05/2026, học viên thuộc hệ thống SataMath được giảm 25% cho Sata1–Sata7.'
   },
   {
     id: 5,
@@ -37,7 +37,7 @@ export const faqs = [
     id: 6,
     question: 'Nếu không hài lòng sau khi học, có hoàn tiền không?',
     answer:
-      'Có. Trong 3 buổi đầu, nếu con không hứng thú — bố mẹ được hoàn 100% học phí, không hỏi lý do. Cam kết bằng văn bản trên hợp đồng đào tạo. Đây là 1 trong 6 cam kết minh bạch của Sata Robo.'
+      'Có. Buổi học thử đầu tiên 90 phút, nếu con không thích → hoàn tiền 100% học phí đã đóng, không câu hỏi. Hoàn lại sau 3 ngày làm việc.'
   },
   {
     id: 7,

@@ -1,14 +1,38 @@
 import { useEffect, useState } from 'react';
 import { Bot, CheckCircle2, X } from 'lucide-react';
-import { ageCourseOptions } from '../utils/courseSelection';
+import { ageCourseOptions, selectCourse } from '../utils/courseSelection';
 
 const POPUP_SHOWN_KEY = 'sata-age-popup-shown';
 const SELECTED_COURSE_KEY = 'sata-selected-age-course';
 const REOPEN_DELAY_MS = 90000;
 const ROADMAP_OPEN_DELAY_MS = 600;
 
+const examGoalOptions = [
+  {
+    label: 'Luyện thi RoboSim / vòng loại',
+    courseName: 'Sata1 — Robosim Master',
+    productCode: 'Sata1'
+  },
+  {
+    label: 'Luyện robot Beta cấp khu vực',
+    courseName: 'Sata2 — Đấu trường Robot',
+    productCode: 'Sata2'
+  },
+  {
+    label: 'Học trọn gói luyện thi',
+    courseName: 'Combo Sata1 + Sata2',
+    productCode: 'Combo'
+  },
+  {
+    label: 'Chuyên binh cam kết vượt vòng loại',
+    courseName: 'Sata8 — Vé Vàng Chung Kết',
+    productCode: 'Sata8'
+  }
+];
+
 export default function AgeCoursePopup() {
   const [isOpen, setIsOpen] = useState(false);
+  const [goal, setGoal] = useState('exam');
   const [selectedIdx, setSelectedIdx] = useState(null);
   const [error, setError] = useState('');
   const [useFallbackMascot, setUseFallbackMascot] = useState(false);
@@ -21,21 +45,19 @@ export default function AgeCoursePopup() {
     setIsOpen(false);
   };
 
+  const currentOptions = goal === 'exam' ? examGoalOptions : ageCourseOptions;
+
   const handleConfirm = () => {
-    const selected = ageCourseOptions[selectedIdx];
+    const selected = currentOptions[selectedIdx];
     if (!selected) {
-      setError('Bố/Mẹ vui lòng chọn độ tuổi của con.');
+      setError(goal === 'exam' ? 'Bố/Mẹ vui lòng chọn mục tiêu luyện thi.' : 'Bố/Mẹ vui lòng chọn độ tuổi/lớp của con.');
       return;
     }
 
-    const payload = {
+    selectCourse(selected.productCode, {
       yearIndex: selected.yearIndex,
-      productCode: selected.productCode,
-      courseValue: selected.courseValue
-    };
-
-    sessionStorage.setItem(SELECTED_COURSE_KEY, JSON.stringify(payload));
-    window.dispatchEvent(new CustomEvent('sata-course-selected', { detail: payload }));
+      goal
+    });
     setIsOpen(false);
   };
 
@@ -106,7 +128,7 @@ export default function AgeCoursePopup() {
       onClick={closePopup}
     >
       <div
-        className="w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-white rounded-3xl shadow-2xl border border-white/50 p-5 sm:p-7 animate-slide-up"
+        className="w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-white rounded-3xl shadow-2xl border border-white/50 p-5 sm:p-7 animate-slide-up"
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -129,10 +151,10 @@ export default function AgeCoursePopup() {
             <div>
               <div className="badge-orange mb-2">AI chọn lộ trình</div>
               <h2 id="age-course-popup-title" className="text-xl sm:text-2xl font-black text-text-dark leading-tight">
-                Hiện tại con của Bố/Mẹ bao nhiêu tuổi?
+                Bố/Mẹ muốn con học theo mục tiêu nào?
               </h2>
               <p className="text-sm text-text-muted mt-1 leading-relaxed">
-                AI sẽ giúp Bố/Mẹ chọn khóa học hợp lý.
+                Chọn mục tiêu luyện thi hoặc học chuyên sâu dài hạn để Sata Robo gợi ý khóa phù hợp.
               </p>
             </div>
           </div>
@@ -147,8 +169,34 @@ export default function AgeCoursePopup() {
           </button>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {ageCourseOptions.map((option, idx) => {
+        <div className="grid sm:grid-cols-2 gap-3 mb-4">
+          {[
+            { id: 'exam', title: 'Mục tiêu luyện thi', text: 'RoboSim, robot Beta, Combo hoặc Vé Vàng' },
+            { id: 'deep', title: 'Học chuyên sâu dài hạn', text: 'Chọn theo lớp/tuổi cho Sata3–Sata7' }
+          ].map((item) => {
+            const active = goal === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  setGoal(item.id);
+                  setSelectedIdx(null);
+                  setError('');
+                }}
+                className={`text-left rounded-2xl border-2 p-4 transition-all ${
+                  active ? 'border-primary-orange bg-soft-cream shadow-orange-glow' : 'border-gray-200 bg-white hover:border-primary-orange/50'
+                }`}
+              >
+                <div className="font-black text-text-dark">{item.title}</div>
+                <div className="text-xs text-text-muted mt-1">{item.text}</div>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className={`grid gap-3 ${goal === 'exam' ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-5'}`}>
+          {currentOptions.map((option, idx) => {
             const active = selectedIdx === idx;
             return (
               <button
@@ -167,7 +215,7 @@ export default function AgeCoursePopup() {
                   {active && <CheckCircle2 className="w-4 h-4 text-success" />}
                 </div>
                 <div className="font-black text-text-dark text-base mb-1">{option.label}</div>
-                <div className="text-xs font-bold text-primary-purple mb-2">{option.grade}</div>
+                {option.grade && <div className="text-xs font-bold text-primary-purple mb-2">{option.grade}</div>}
                 <div className="text-xs text-text-muted leading-relaxed">{option.courseName}</div>
               </button>
             );
@@ -191,7 +239,7 @@ export default function AgeCoursePopup() {
             onClick={handleConfirm}
             className="btn-primary sm:py-3"
           >
-            AI chọn lộ trình cho con
+            Chọn khóa phù hợp cho con
           </button>
         </div>
       </div>
