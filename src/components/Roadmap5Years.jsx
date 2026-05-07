@@ -159,7 +159,7 @@ export default function Roadmap5Years() {
                 </div>
                 <div className={`font-extrabold text-sm sm:text-base leading-tight mb-1
                   ${idx === yearIdx ? 'text-text-dark' : 'text-text-dark/70'}`}>
-                  {y.productEmoji} {y.name}
+                  Chương trình dành cho {y.name}
                 </div>
                 <div className="text-[11px] sm:text-xs text-text-muted">
                   {y.ageRange}

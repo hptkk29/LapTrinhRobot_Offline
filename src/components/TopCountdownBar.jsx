@@ -11,10 +11,10 @@ export default function TopCountdownBar() {
 
   return (
     <div
-      className={`overflow-hidden transition-all duration-300
+      className={`overflow-hidden transition-[max-height] duration-300
         ${isHidden ? 'max-h-0' : 'max-h-16'}`}
     >
-      <div className="bg-gradient-orange-purple text-white shadow-lg">
+      <div className="bg-gradient-orange-purple text-white">
         <div className="container-site py-2 sm:py-2.5">
           <div className="flex items-center justify-center gap-2 sm:gap-3">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">

@@ -430,7 +430,7 @@ export default function RegistrationForm() {
                       <div className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors
                         ${formData.sataMath === 'yes' ? 'bg-orange-100 ring-1 ring-primary-orange' : 'bg-white/60'}`}>
                         <span className={`text-xs font-semibold ${formData.sataMath === 'yes' ? 'text-primary-orange font-extrabold' : 'text-text-muted'}`}>
-                          HV SataMath: {fmt(selectedCourseObj.earlyBirdSataMath)}
+                          Học viên SataMath: {fmt(selectedCourseObj.earlyBirdSataMath)}
                         </span>
                         {formData.sataMath === 'yes' && (
                           <span className="text-[10px] font-bold text-primary-orange ml-2">← Của bạn</span>
@@ -439,7 +439,7 @@ export default function RegistrationForm() {
                       <div className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors
                         ${formData.sataMath === 'no' ? 'bg-blue-50 ring-1 ring-blue-400' : 'bg-white/60'}`}>
                         <span className={`text-xs font-semibold ${formData.sataMath === 'no' ? 'text-blue-700 font-extrabold' : 'text-text-muted'}`}>
-                          HV ngoài: {fmt(selectedCourseObj.earlyBirdOutside)}
+                          Học viên ngoài: {fmt(selectedCourseObj.earlyBirdOutside)}
                         </span>
                         {formData.sataMath === 'no' && (
                           <span className="text-[10px] font-bold text-blue-700 ml-2">← Của bạn</span>

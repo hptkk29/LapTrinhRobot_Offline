@@ -21,11 +21,15 @@ function App() {
   return (
     <>
       {/* ============ TOP BAR — countdown ưu đãi ============ */}
-      <div className="sticky top-0 z-50">
-        <TopCountdownBar />
+      <div className="sticky top-0 z-50 isolate">
+        <div className="relative z-0">
+          <TopCountdownBar />
+        </div>
 
-      {/* ============ HEADER — logo + nav ============ */}
-        <Header />
+        {/* ============ HEADER — logo + nav ============ */}
+        <div className="relative z-10">
+          <Header />
+        </div>
       </div>
 
       {/* ============ MAIN CONTENT ============ */}
