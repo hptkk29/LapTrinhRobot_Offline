@@ -159,7 +159,7 @@ export default function Roadmap5Years() {
                 </div>
                 <div className={`font-extrabold text-sm sm:text-base leading-tight mb-1
                   ${idx === yearIdx ? 'text-text-dark' : 'text-text-dark/70'}`}>
-                  Chương trình dành cho {y.name}
+                  {y.productEmoji} {y.name}
                 </div>
                 <div className="text-[11px] sm:text-xs text-text-muted">
                   {y.ageRange}
@@ -174,7 +174,7 @@ export default function Roadmap5Years() {
           <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
             <div className="lg:col-span-8">
               <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="text-3xl leading-none">{currentYear.productEmoji}</span>
+                
                 <span className="text-sm text-text-muted font-semibold">{currentYear.grade} · {currentYear.ageRange}</span>
               </div>
 
