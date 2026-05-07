@@ -11,7 +11,7 @@ export default function TopCountdownBar() {
 
   return (
     <div
-      className={`sticky top-0 z-50 overflow-hidden transition-all duration-300
+      className={`overflow-hidden transition-all duration-300
         ${isHidden ? 'max-h-0' : 'max-h-16'}`}
     >
       <div className="bg-gradient-orange-purple text-white shadow-lg">

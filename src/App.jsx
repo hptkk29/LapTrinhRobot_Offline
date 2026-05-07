@@ -21,10 +21,12 @@ function App() {
   return (
     <>
       {/* ============ TOP BAR — countdown ưu đãi ============ */}
-      <TopCountdownBar />
+      <div className="sticky top-0 z-50">
+        <TopCountdownBar />
 
       {/* ============ HEADER — logo + nav ============ */}
-      <Header />
+        <Header />
+      </div>
 
       {/* ============ MAIN CONTENT ============ */}
       <main>
