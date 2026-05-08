@@ -1,46 +1,45 @@
 export const promotions = {
   primary: [
     {
-      id: 'satamath',
-      title: 'Học viên SataMath',
-      highlight: 'Giảm 25%',
-      description:
-        'Dành riêng cho phụ huynh có con đang học trong hệ thống SataMath. Áp dụng cho các khóa Sata1–Sata7 trong thời gian Early Bird.',
-      details: [
-        'Thời hạn: 01/05 – 31/05/2026',
-        'Sau 31/05 học phí trở về giá niêm yết',
-        'Không áp dụng cho Sata8'
-      ],
-      cta: 'Chọn khoá phù hợp',
-      target: 'registration-form',
-      icon: 'Flame',
-      featured: true
-    },
-    {
-      id: 'outside',
-      title: 'Học viên ngoài hệ thống',
+      id: 'early-bird',
+      title: 'Ưu đãi khai giảng',
       highlight: 'Giảm 15%',
       description:
-        'Dành cho phụ huynh đăng ký mới trong tháng khai trương. Áp dụng cho các khóa Sata1–Sata7, giúp gia đình giữ mức học phí tốt trước khi giá trở về niêm yết.',
+        'Dành cho phụ huynh đăng ký sớm trong tháng khai trương. Áp dụng cho các khóa Sata1-Sata7, giúp gia đình giữ mức học phí tốt trước khi giá trở về niêm yết.',
       details: [
-        'Thời hạn: 01/05 – 31/05/2026',
-        'Ưu đãi đăng ký sớm',
+        'Thời hạn: 01/05 - 31/05/2026',
+        'Áp dụng cho Sata1-Sata7',
         'Không áp dụng cho Sata8'
       ],
       cta: 'Đăng ký giữ ưu đãi',
       target: 'registration-form',
-      icon: 'Sparkles'
+      icon: 'Sparkles',
+      featured: true
+    },
+    {
+      id: 'combo',
+      title: 'Combo luyện thi',
+      highlight: '3.808.000đ',
+      description:
+        'Học trọn Robosim Master + Đấu trường Robot, từ mô phỏng RoboSim đến robot Beta thật, phù hợp khi bố mẹ muốn con đi đủ lộ trình luyện thi.',
+      details: [
+        '32 buổi - 90 phút/buổi',
+        'Tổng 48 giờ luyện thi',
+        'Tiết kiệm 1.632.000đ'
+      ],
+      cta: 'Chọn gói Combo',
+      target: 'roadmap',
+      icon: 'Trophy'
     },
     {
       id: 'installment',
       title: 'Trả góp 0%',
-      highlight: 'Lộ trình 48 buổi',
+      highlight: 'Sata3-Sata7',
       description:
-        'Chỉ áp dụng cho nhóm khóa chuyên sâu 48 buổi từ Sata3 đến Sata7. Phụ huynh có thể chia nhỏ học phí theo tháng để dễ đầu tư dài hạn cho con.',
+        'Áp dụng cho nhóm khóa chuyên sâu 48 buổi từ Sata3 đến Sata7. Phụ huynh có thể chia nhỏ học phí theo tháng để dễ đầu tư dài hạn cho con.',
       details: [
-        'Áp dụng: Sata3 → Sata7',
-        'Đối tác: VPBank / Sacombank / Home Credit',
-        'Ví dụ: Sata3 từ 660.000đ/tháng với HV SataMath',
+        'Áp dụng: Sata3 đến Sata7',
+        'Ví dụ Sata3: 748.000đ/tháng',
         'Chỉ cần CCCD theo chính sách trả góp'
       ],
       cta: 'Tư vấn trả góp',
@@ -57,7 +56,7 @@ export const promotions = {
         'Người giới thiệu nhận 300.000đ tiền mặt. Người được giới thiệu giảm thêm 300.000đ học phí.',
       condition:
         'Bạn được giới thiệu đóng tiền lần đầu. Không giới hạn số lượng bạn giới thiệu.',
-      note: 'Không cộng dồn với Gói đội thi 2 học viên nếu chính sách yêu cầu.',
+      note: 'Không cộng dồn với gói đội thi 2 học viên nếu chính sách yêu cầu.',
       icon: 'Gift'
     },
     {

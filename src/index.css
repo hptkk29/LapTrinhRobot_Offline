@@ -6,6 +6,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -13,6 +14,28 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+.hero-mobile-bound {
+  max-width: min(340px, calc(100vw - 2rem));
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+@media (min-width: 640px) {
+  .hero-mobile-bound {
+    max-width: none;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-mobile-bound {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
 }
 
 /* ============ CUSTOM SCROLLBAR ============ */
@@ -151,8 +174,8 @@ textarea:focus {
 /* ============ RESPONSIVE TYPO ============ */
 @media (max-width: 480px) {
   .heading-1 {
-    font-size: 1.75rem;
-    line-height: 1.2;
+    font-size: 1.35rem;
+    line-height: 1.18;
   }
 }
 

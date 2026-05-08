@@ -2,29 +2,39 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   Award,
   BookOpen,
+  Bot,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock,
   FlaskConical,
-  GraduationCap,
-  Layers,
   ListOrdered,
+  Rocket,
+  ShieldCheck,
   Sparkles,
+  Sprout,
+  Star,
   Target,
-  Trophy
+  Trophy,
+  Zap
 } from 'lucide-react';
 import { roadmap5Years } from '../data/roadmap-5-years';
 import { examRoadmap } from '../data/exam-roadmap';
 import { courseGroups } from '../data/courses-pricing';
 import { readStoredCourseSelection, selectCourse } from '../utils/courseSelection';
 
-const fmt = (n) => n ? `${n.toLocaleString('vi-VN')}đ` : '—';
-const durationSummary = (course) =>
-  `${course.sessions} buổi · ${course.durationPerSession ?? '90 phút'}/buổi · Tổng ${course.totalDuration}`;
+const fmt = (n) => n ? `${n.toLocaleString('vi-VN')}đ` : '-';
 
 const allCourses = courseGroups.flatMap((group) => group.courses);
 const getCourse = (id) => allCourses.find((course) => course.id === id);
+
+const courseIcons = {
+  Sata3: Sprout,
+  Sata4: Rocket,
+  Sata5: Zap,
+  Sata6: Trophy,
+  Sata7: Bot
+};
 
 const scrollToForm = () => {
   document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -44,83 +54,107 @@ function PriceLine({ label, value, muted = false }) {
   );
 }
 
-function ExamCourseCard({ item, course, isOpen, onToggle }) {
+function FocusCourseBox({ course }) {
   const isCombo = course.id === 'Combo';
-  const isSata8 = course.id === 'Sata8';
+  const Icon = isCombo ? Trophy : ShieldCheck;
 
   return (
     <article
-      className={`rounded-2xl border-2 bg-white p-5 shadow-card transition hover:-translate-y-1 hover:shadow-card-hover ${
-        isSata8
-          ? 'border-success/30 ring-1 ring-success/10'
-          : isCombo
-            ? 'border-primary-orange/40 ring-1 ring-primary-orange/10'
-            : 'border-gray-100'
+      className={`relative overflow-hidden rounded-3xl border-2 p-5 shadow-card sm:p-6 ${
+        isCombo
+          ? 'border-primary-orange/40 bg-gradient-to-br from-orange-50 via-yellow-50 to-white'
+          : 'border-primary-purple/35 bg-gradient-to-br from-purple-50 via-white to-orange-50'
       }`}
     >
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div>
-          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${
-            isSata8 ? 'bg-green-50 text-success' : isCombo ? 'bg-soft-cream text-primary-orange' : 'bg-soft-purple text-primary-purple'
-          }`}>
-            {course.id}
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md ${isCombo ? 'bg-primary-orange' : 'bg-primary-purple'}`}>
+            <Icon className="h-6 w-6" />
           </span>
-          <h3 className="mt-3 text-xl font-black text-text-dark leading-tight">{course.displayName}</h3>
-        </div>
-        {course.badge && (
-          <span className="rounded-full bg-gradient-orange-purple px-3 py-1 text-[11px] font-bold text-white">
-            {course.badge}
-          </span>
-        )}
-      </div>
-
-      <div className="grid grid-cols-3 gap-2 mb-4">
-        <div className="rounded-xl bg-gray-50 p-3 text-center">
-          <GraduationCap className="mx-auto mb-1 h-4 w-4 text-primary-orange" />
-          <div className="text-xs font-bold text-text-dark">{course.grade}</div>
-        </div>
-        <div className="rounded-xl bg-gray-50 p-3 text-center">
-          <Clock className="mx-auto mb-1 h-4 w-4 text-primary-purple" />
-          <div className="text-xs font-bold text-text-dark">{course.sessions} buổi</div>
-          <div className="text-[10px] font-semibold text-text-muted">{course.durationPerSession}/buổi</div>
-        </div>
-        <div className="rounded-xl bg-gray-50 p-3 text-center">
-          <FlaskConical className="mx-auto mb-1 h-4 w-4 text-success" />
-          <div className="text-xs font-bold text-text-dark line-clamp-2">{course.device}</div>
+          <div>
+            <div className="mb-1 flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-primary-orange shadow-sm">
+                {course.badge}
+              </span>
+              <span className="rounded-full bg-white/75 px-3 py-1 text-[11px] font-bold text-text-muted shadow-sm">
+                {isCombo ? 'Phụ huynh chọn nhiều' : 'Cam kết rõ điều kiện'}
+              </span>
+            </div>
+            <h3 className="text-xl font-black leading-tight text-text-dark sm:text-2xl">{course.displayName}</h3>
+          </div>
         </div>
       </div>
 
-      <div className="mb-4 rounded-xl border border-primary-orange/15 bg-soft-cream px-3 py-2 text-center text-xs font-black text-primary-orange">
-        {durationSummary(course)}
-      </div>
+      <p className="mb-4 text-base font-black text-primary-purple">{course.hook}</p>
 
-      <p className="mb-4 text-sm leading-relaxed text-text-muted">{item.description}</p>
-
-      <div className="mb-4 rounded-xl border border-gray-100 bg-gray-50 p-4 space-y-2">
-        <PriceLine label="Giá niêm yết" value={fmt(course.listPrice)} muted={!isSata8} />
-        {isCombo && (
-          <>
+      {isCombo ? (
+        <div className="mb-5 grid gap-2 text-sm text-text-dark">
+          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Bao gồm Robosim Master + Đấu trường Robot</div>
+          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 32 buổi - 90 phút/buổi - Tổng 48 giờ</div>
+          <div className="rounded-2xl bg-white/80 p-4">
+            <PriceLine label="Giá niêm yết" value={fmt(course.listPrice)} muted />
             <PriceLine label="Giá combo" value={fmt(course.comboPrice)} />
             <PriceLine label="Tiết kiệm" value={fmt(course.savedAmount)} />
-          </>
-        )}
-        {isSata8 && (
-          <>
-            <PriceLine label="Giá cố định" value={fmt(course.fixedPrice)} />
-            <div className="rounded-lg bg-green-50 px-3 py-2 text-xs font-bold text-success">
-              Cam kết hoàn tiền 100% · Không áp dụng giảm giá
-            </div>
-          </>
-        )}
-        {!isCombo && !isSata8 && (
-          <>
-            <PriceLine label="HV SataMath" value={fmt(course.earlyBirdSataMath)} />
-            <PriceLine label="HV ngoài" value={fmt(course.earlyBirdOutside)} />
-          </>
-        )}
+          </div>
+        </div>
+      ) : (
+        <div className="mb-5 grid gap-2 text-sm text-text-dark">
+          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 5 buổi chuyên sâu</div>
+          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 90 phút/buổi</div>
+          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Giá cố định: 2.500.000đ</div>
+          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Không áp dụng giảm giá</div>
+          <div className="rounded-2xl bg-white/80 p-4 text-sm font-semibold leading-relaxed text-text-dark">
+            Hoàn 100% học phí gói Sata8 nếu đủ điều kiện nhưng không vượt vòng loại.
+          </div>
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={() => chooseCourse(course.id)}
+        className={isCombo ? 'btn-primary w-full' : 'btn-outline w-full border-primary-purple text-primary-purple hover:bg-primary-purple hover:text-white'}
+      >
+        {isCombo ? 'Chọn gói Combo' : 'Tìm hiểu cam kết Sata8'}
+      </button>
+    </article>
+  );
+}
+
+function ExamCourseCard({ item, course, isOpen, onToggle }) {
+  return (
+    <article className="flex h-full flex-col rounded-3xl border-2 border-gray-100 bg-white p-5 shadow-card transition hover:-translate-y-1 hover:shadow-card-hover sm:p-6">
+      <div className="mb-4">
+        <span className="inline-flex rounded-full bg-soft-purple px-3 py-1 text-xs font-black text-primary-purple">
+          {course.id}
+        </span>
+        <h3 className="mt-3 text-xl font-black leading-tight text-text-dark">{course.displayName}</h3>
+        <p className="mt-1 text-sm font-black text-primary-orange">{course.hook}</p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-2">
+      <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">{course.note || item.description}</p>
+
+      <div className="mb-4 grid grid-cols-2 gap-2">
+        {[
+          ['Mục tiêu', course.hook],
+          ['Lớp phù hợp', course.grade],
+          ['Số buổi', `${course.sessions} buổi`],
+          ['Thời lượng', `${course.durationPerSession}/buổi`],
+          ['Tổng', course.totalDuration],
+          ['Thiết bị', course.device]
+        ].map(([label, value]) => (
+          <div key={label} className="rounded-2xl bg-gray-50 p-3">
+            <div className="text-[11px] font-black uppercase tracking-wide text-text-muted">{label}</div>
+            <div className="mt-1 text-sm font-bold leading-tight text-text-dark">{value}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mb-4 rounded-2xl border border-primary-orange/15 bg-soft-cream p-4 space-y-2">
+        <PriceLine label="Giá niêm yết" value={fmt(course.listPrice)} muted />
+        <PriceLine label="Giá ưu đãi hiện tại" value={fmt(course.earlyBirdPrice)} />
+      </div>
+
+      <div className="flex flex-col gap-2 sm:flex-row">
         <button type="button" onClick={() => chooseCourse(course.id)} className="btn-primary flex-1 px-4 py-3 text-sm">
           Chọn khóa này
         </button>
@@ -135,34 +169,86 @@ function ExamCourseCard({ item, course, isOpen, onToggle }) {
       </div>
 
       {isOpen && (
-        <div className="mt-5 rounded-xl border border-primary-orange/20 bg-soft-cream/70 p-4 animate-fade-in">
+        <div className="mt-5 rounded-2xl border border-primary-orange/20 bg-soft-cream/70 p-4 animate-fade-in">
           <div className="mb-3 flex items-center gap-2 font-black text-text-dark">
             <ListOrdered className="h-4 w-4 text-primary-orange" />
             Nội dung chi tiết
           </div>
-          {item.lessons ? (
-            <div className="grid sm:grid-cols-2 gap-2">
-              {item.lessons.map((lesson, index) => (
-                <div key={lesson} className="flex items-start gap-2 rounded-lg bg-white px-3 py-2 text-sm text-text-dark">
-                  <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary-orange/10 text-xs font-black text-primary-orange">
-                    {index + 1}
-                  </span>
-                  <span>{lesson}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid sm:grid-cols-2 gap-2">
-              {item.highlights.map((highlight) => (
-                <div key={highlight} className="flex items-start gap-2 rounded-lg bg-white px-3 py-2 text-sm font-semibold text-text-dark">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
-                  <span>{highlight}</span>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="grid gap-2 sm:grid-cols-2">
+            {(item.lessons || item.highlights || []).map((lesson, index) => (
+              <div key={lesson} className="flex items-start gap-2 rounded-lg bg-white px-3 py-2 text-sm text-text-dark">
+                <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary-orange/10 text-xs font-black text-primary-orange">
+                  {index + 1}
+                </span>
+                <span>{lesson}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
+    </article>
+  );
+}
+
+function Sata8CommitmentCard() {
+  return (
+    <article className="mt-7 rounded-3xl border-2 border-primary-purple/30 bg-white p-5 shadow-card sm:p-7">
+      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+        <div>
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-soft-purple px-4 py-2 text-xs font-black uppercase text-primary-purple">
+            <ShieldCheck className="h-4 w-4" />
+            Cam kết Sata8
+          </div>
+          <h3 className="mb-3 text-2xl font-black leading-tight text-text-dark">
+            Vé Vàng Chung Kết - Sata Robo cùng con cam kết đến cùng
+          </h3>
+          <p className="mb-4 text-sm font-semibold leading-relaxed text-text-dark sm:text-base">
+            Không phải cam kết suông. Sata Robo chỉ cam kết khi cả trung tâm, phụ huynh và học sinh cùng đi đủ lộ trình.
+          </p>
+          <p className="text-sm leading-relaxed text-text-muted">
+            Để cam kết hoàn tiền có hiệu lực, con cần đi trọn 5 buổi chuyên sâu và hoàn thành đầy đủ học liệu E-learning.
+            Đây không phải điều kiện làm khó phụ huynh, mà là cách Sata Robo đảm bảo con được chuẩn bị đủ trước khi bước vào vòng loại.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <div className="grid gap-2">
+            {[
+              'Dành cho học viên đã đăng ký Combo hoặc Robosim Master.',
+              'Áp dụng cho mục tiêu vượt vòng loại cuộc thi Robotics 2026.',
+              'Con tham gia đủ 5/5 buổi chuyên sâu.',
+              'Con hoàn thành đầy đủ học liệu E-learning được giao.',
+              'Nếu đã đi đủ lộ trình mà vẫn không vượt vòng loại, Sata Robo hoàn 100% học phí gói Sata8.'
+            ].map((text) => (
+              <div key={text} className="flex items-start gap-2 rounded-2xl bg-gray-50 px-3 py-2 text-sm text-text-dark">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl border border-primary-orange/20 bg-soft-cream p-4 text-sm font-semibold leading-relaxed text-text-dark">
+            Bố mẹ không phải tự theo dõi một mình - giáo viên sẽ nhắc tiến độ, kiểm tra học liệu và đồng hành cùng con trong suốt gói Sata8.
+          </div>
+
+          <div className="grid gap-2 sm:grid-cols-3">
+            {[
+              ['1', 'Đăng ký nền tảng'],
+              ['2', 'Đi đủ 5 buổi + E-learning'],
+              ['3', 'Thi vòng loại - đạt mục tiêu hoặc hoàn tiền']
+            ].map(([step, label]) => (
+              <div key={step} className="rounded-2xl border border-primary-purple/15 bg-purple-50 p-3 text-center">
+                <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary-purple text-sm font-black text-white">{step}</div>
+                <div className="text-xs font-bold leading-tight text-text-dark">{label}</div>
+              </div>
+            ))}
+          </div>
+
+          <button type="button" onClick={() => chooseCourse('Sata8')} className="btn-primary w-full">
+            Tư vấn điều kiện Sata8
+          </button>
+        </div>
+      </div>
     </article>
   );
 }
@@ -181,6 +267,8 @@ export default function Roadmap5Years() {
     () => examRoadmap.map((item) => ({ ...item, course: getCourse(item.id) })).filter((item) => item.course),
     []
   );
+  const focusItems = examItems.filter((item) => item.id === 'Combo' || item.id === 'Sata8');
+  const shortItems = examItems.filter((item) => item.id === 'Sata1' || item.id === 'Sata2');
 
   useEffect(() => {
     const stored = readStoredCourseSelection();
@@ -227,6 +315,8 @@ export default function Roadmap5Years() {
     }
   };
 
+  const CurrentIcon = courseIcons[currentYear.productCode] ?? Star;
+
   return (
     <section id="roadmap" className="section-padding bg-white">
       <div className="container-site">
@@ -246,7 +336,7 @@ export default function Roadmap5Years() {
         <div className="mx-auto mb-8 grid max-w-3xl grid-cols-1 gap-3 rounded-2xl bg-gray-50 p-2 sm:grid-cols-2">
           {[
             { id: 'exam', title: 'Khóa luyện thi', subtitle: 'RoboSim, Beta, Combo, Vé Vàng' },
-            { id: 'deep', title: 'Khóa chuyên sâu 48 buổi', subtitle: 'Lộ trình 5 năm Sata3–Sata7' }
+            { id: 'deep', title: 'Khóa chuyên sâu 48 buổi', subtitle: 'Lộ trình 5 năm Sata3-Sata7' }
           ].map((tab) => {
             const active = activeTrack === tab.id;
             return (
@@ -269,22 +359,14 @@ export default function Roadmap5Years() {
 
         {activeTrack === 'exam' && (
           <div className="animate-fade-in">
-            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {[
-                ['Sata1–Sata2', 'Luyện thi ngắn hạn'],
-                ['Combo', '32 buổi · 48 giờ'],
-                ['Sata8', 'Cam kết hoàn tiền 100%'],
-                ['31/05/2026', 'Hạn Early Bird']
-              ].map(([value, label]) => (
-                <div key={value} className="rounded-2xl border border-orange-100 bg-gradient-cream p-4 text-center">
-                  <div className="text-xl font-black text-primary-orange">{value}</div>
-                  <div className="text-xs font-semibold text-text-muted">{label}</div>
-                </div>
+            <div className="mb-5 grid gap-5 lg:grid-cols-2">
+              {focusItems.map((item) => (
+                <FocusCourseBox key={item.id} course={item.course} />
               ))}
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-2">
-              {examItems.map((item) => (
+            <div className="grid items-stretch gap-5 lg:grid-cols-2">
+              {shortItems.map((item) => (
                 <ExamCourseCard
                   key={item.id}
                   item={item}
@@ -294,78 +376,62 @@ export default function Roadmap5Years() {
                 />
               ))}
             </div>
+
+            <Sata8CommitmentCard />
           </div>
         )}
 
         {activeTrack === 'deep' && (
           <div className="animate-fade-in">
-            <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
-              {[
-                { icon: BookOpen, value: '48 buổi', label: '90 phút/buổi' },
-                { icon: Layers, value: '4 học phần', label: '12 buổi/học phần' },
-                { icon: Trophy, value: '72 giờ', label: 'tổng thời lượng/khóa' },
-                { icon: Sparkles, value: '0%', label: 'trả góp Sata3–Sata7' }
-              ].map(({ icon: Icon, value, label }) => (
-                <div key={value} className="rounded-2xl border border-primary-purple/10 bg-soft-purple/60 p-4 text-center">
-                  <Icon className="mx-auto mb-2 h-5 w-5 text-primary-purple" />
-                  <div className="text-xl font-black text-primary-purple">{value}</div>
-                  <div className="text-xs font-semibold text-text-muted">{label}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mb-8 hidden gap-3 overflow-x-auto py-2 sm:flex">
-              {roadmap5Years.map((year, idx) => (
-                <button
-                  key={year.productCode}
-                  type="button"
-                  onClick={() => {
-                    setYearIdx(idx);
-                    setModuleIdx(0);
-                  }}
-                  className={`min-w-[160px] rounded-xl border-2 p-3 text-left transition ${
-                    idx === yearIdx
-                      ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
-                      : 'border-gray-200 bg-white hover:border-primary-orange/50'
-                  }`}
-                >
-                  <div className="mb-1 text-xs font-black uppercase text-primary-orange">Năm {year.year}</div>
-                  <div className="text-sm font-black leading-tight text-text-dark">{year.productName}</div>
-                  <div className="mt-1 text-xs text-text-muted">{year.grade}</div>
-                </button>
-              ))}
-            </div>
-
-            <div className="mb-6 grid grid-cols-5 gap-2 sm:hidden">
-              {roadmap5Years.map((year, idx) => (
-                <button
-                  key={year.productCode}
-                  type="button"
-                  onClick={() => {
-                    setYearIdx(idx);
-                    setModuleIdx(0);
-                  }}
-                  className={`rounded-xl border p-2 text-center text-xs font-black ${
-                    idx === yearIdx ? 'border-primary-orange bg-primary-orange text-white' : 'border-gray-200 bg-white text-text-muted'
-                  }`}
-                >
-                  N{year.year}
-                </button>
-              ))}
+            <div className="mb-8 flex justify-center overflow-x-auto py-2">
+              <div className="flex min-w-max gap-3 px-1">
+                {roadmap5Years.map((year, idx) => {
+                  const Icon = courseIcons[year.productCode] ?? Star;
+                  return (
+                    <button
+                      key={year.productCode}
+                      type="button"
+                      onClick={() => {
+                        setYearIdx(idx);
+                        setModuleIdx(0);
+                      }}
+                      className={`min-w-[170px] rounded-2xl border-2 p-3 text-left transition ${
+                        idx === yearIdx
+                          ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
+                          : 'border-gray-200 bg-white hover:border-primary-orange/50'
+                      }`}
+                    >
+                      <div className="mb-2 flex items-center gap-2">
+                        <span className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
+                          idx === yearIdx ? 'bg-primary-orange text-white' : 'bg-soft-purple text-primary-purple'
+                        }`}>
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <span className="text-xs font-black uppercase text-primary-orange">Sata{year.year + 2}</span>
+                      </div>
+                      <div className="text-sm font-black leading-tight text-text-dark">{year.productName}</div>
+                      <div className="mt-1 text-xs text-text-muted">{year.grade}</div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="mb-8 rounded-3xl border-2 border-primary-orange/20 bg-gradient-to-br from-white via-soft-cream to-soft-purple/60 p-5 shadow-card sm:p-7 lg:p-8">
               <div className="grid gap-6 lg:grid-cols-12">
                 <div className="lg:col-span-8">
                   <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-orange text-white shadow-orange-glow">
+                      <CurrentIcon className="h-6 w-6" />
+                    </span>
                     <span className="badge-orange">Sata{currentYear.year + 2}</span>
-                    <span className="text-sm font-semibold text-text-muted">{currentYear.grade} · {currentYear.ageRange}</span>
+                    <span className="text-sm font-semibold text-text-muted">{currentYear.grade} - {currentYear.ageRange}</span>
                   </div>
                   <h3 className="mb-3 text-2xl font-black leading-tight text-text-dark sm:text-3xl">
                     {currentYear.productName}
                   </h3>
                   <div className="mb-4 inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-black text-primary-orange shadow-sm">
-                    {currentYear.totalSessions} buổi · {currentYear.durationPerSession}/buổi · Tổng {currentYear.totalDuration}
+                    {currentYear.totalSessions} buổi - {currentYear.durationPerSession}/buổi - Tổng {currentYear.totalDuration}
                   </div>
                   <p className="mb-5 text-sm leading-relaxed text-text-dark/80 sm:text-base">{currentYear.description}</p>
 
@@ -410,19 +476,15 @@ export default function Roadmap5Years() {
                 </div>
 
                 <aside className="h-fit rounded-3xl border border-primary-purple/20 bg-white/95 p-5 shadow-card lg:col-span-4">
-                  <div className="mb-4 text-xs font-black uppercase tracking-wider text-primary-purple">Học phí Early Bird</div>
+                  <div className="mb-4 text-xs font-black uppercase tracking-wider text-primary-purple">Học phí ưu đãi</div>
                   <div className="space-y-2 rounded-2xl bg-gray-50 p-4">
                     <PriceLine label="Giá niêm yết" value={fmt(currentCourse?.listPrice)} muted />
-                    <PriceLine label="HV SataMath" value={fmt(currentCourse?.earlyBirdSataMath)} />
-                    <PriceLine label="HV ngoài" value={fmt(currentCourse?.earlyBirdOutside)} />
+                    <PriceLine label="Giá ưu đãi" value={fmt(currentCourse?.earlyBirdPrice)} />
                   </div>
                   <div className="mt-3 rounded-2xl border border-green-200 bg-green-50 p-4 text-sm">
                     <div className="font-black text-success">Trả góp 0%</div>
                     <div className="mt-1 text-text-dark">
-                      HV SataMath: <strong>{fmt(currentCourse?.installmentSataMath)}/tháng</strong>
-                    </div>
-                    <div className="text-text-dark">
-                      HV ngoài: <strong>{fmt(currentCourse?.installmentOutside)}/tháng</strong>
+                      <strong>{fmt(currentCourse?.installmentOutside)}/tháng</strong> cho Sata3-Sata7
                     </div>
                   </div>
                   {currentYear.note && (
@@ -469,7 +531,7 @@ export default function Roadmap5Years() {
                   >
                     <div className="mb-2 flex items-center justify-between">
                       <span className="badge-orange text-xs">HP {idx + 1}</span>
-                      <span className="text-xs font-semibold text-text-muted">{mod.sessions} buổi · {mod.durationPerSession}/buổi</span>
+                      <span className="text-xs font-semibold text-text-muted">{mod.sessions} buổi - {mod.durationPerSession}/buổi</span>
                     </div>
                     <h4 className="mb-2 font-black leading-tight text-text-dark">{mod.name}</h4>
                     <p className="line-clamp-2 text-xs text-text-muted">{mod.description}</p>
@@ -483,7 +545,7 @@ export default function Roadmap5Years() {
                     <span className="badge-orange">
                       <Target className="h-3 w-3" /> {currentModule.id}
                     </span>
-                    <span className="badge-purple">Năm {currentYear.year} · {currentYear.ageRange}</span>
+                    <span className="badge-purple">Năm {currentYear.year} - {currentYear.ageRange}</span>
                   </div>
                   <h4 className="mb-3 text-xl font-black text-text-dark sm:text-2xl">{currentModule.name}</h4>
                   <p className="mb-5 text-sm leading-relaxed text-text-muted sm:text-base">{currentModule.description}</p>

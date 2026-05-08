@@ -1,48 +1,44 @@
-// =====================================
-// 6 CAM KET SATA ROBO
-// =====================================
-
 export const commitments = [
   {
     id: 1,
     icon: 'ShieldCheck',
     title: 'Hoàn tiền 100% nếu không hài lòng',
     description:
-      'Buổi học đầu tiên 90 phút, nếu con không thích → hoàn tiền 100% học phí đã đóng, không câu hỏi. Hoàn lại sau 3 ngày làm việc.'
+      'Buổi học đầu tiên 90 phút, nếu con không thích sẽ hoàn tiền 100% học phí đã đóng, không câu hỏi. Hoàn lại sau 3 ngày làm việc.'
   },
   {
     id: 2,
     icon: 'Users',
-    title: 'Lớp nhỏ ≤12 học viên',
+    title: 'Lớp nhỏ tối đa 12 học viên',
     description:
       'Giáo viên biết tên và điểm mạnh từng con. Con không bị bỏ lại phía sau. Chất lượng giảng dạy được đảm bảo.'
   },
   {
     id: 3,
     icon: 'Plane',
-    title: 'Giải thưởng du lịch 3–7 triệu',
+    title: 'Giải thưởng du lịch 3-7 triệu',
     description:
-      'Học viên đạt giải cuộc thi cấp thành phố → thưởng chuyến du lịch 3–7 triệu kết hợp khai trương tháng 8/2026. Không trung tâm nào khác tại Đà Nẵng có cam kết này.'
+      'Học viên đạt giải cuộc thi cấp thành phố được thưởng chuyến du lịch 3-7 triệu kết hợp khai trương tháng 8/2026.'
   },
   {
     id: 4,
     icon: 'Presentation',
     title: 'Thuyết trình cuối mỗi học phần',
     description:
-      'Cuối mỗi 12 buổi, học viên có 1 buổi thuyết trình trước phụ huynh, ghi hình kỷ niệm. Phụ huynh thấy kết quả thực tế — minh bạch hoàn toàn.'
+      'Cuối mỗi 12 buổi, học viên có 1 buổi thuyết trình trước phụ huynh, ghi hình kỷ niệm. Phụ huynh thấy kết quả thực tế.'
   },
   {
     id: 5,
     icon: 'BadgeDollarSign',
     title: 'Hỗ trợ lệ phí thi Quốc gia 3 triệu',
     description:
-      'Học viên hoàn thành khóa học và tham gia cuộc thi cấp Quốc gia → hỗ trợ 3.000.000đ/học viên/năm. Áp dụng cho học viên còn tham gia học đến thời điểm thi.'
+      'Học viên hoàn thành khóa học và tham gia cuộc thi cấp Quốc gia được hỗ trợ 3.000.000đ/học viên/năm theo chính sách.'
   },
   {
     id: 6,
     icon: 'Gift',
-    title: 'Học thử hoàn toàn miễn phí',
+    title: 'Học thử 90 phút - miễn phí hoàn toàn',
     description:
-      'Buổi học thử 90 phút, nhóm tối đa 12 học sinh — 0 đồng, không điều kiện.'
+      '01 buổi học thử 90 phút, nhóm tối đa 12 học sinh, không thu phí và không ràng buộc.'
   }
 ];

@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  ClipboardList,
-  CheckCircle2,
-  Loader2,
   AlertCircle,
-  Phone,
-  Mail,
-  User,
+  CheckCircle2,
+  ClipboardList,
   GraduationCap,
+  Loader2,
+  Mail,
   MapPin,
-  Sparkles
+  Phone,
+  Sparkles,
+  User
 } from 'lucide-react';
 import { courseGroups, CONSULT_OPTION } from '../data/courses-pricing';
 import { isValidCourseSelection, readStoredCourseSelection } from '../utils/courseSelection';
@@ -22,30 +22,16 @@ import {
   trackGA4Event
 } from '../utils/tracking';
 
-/**
- * Section 10 — Form đăng ký tư vấn miễn phí
- *
- * KPI quan trọng nhất của trang. Tracking đầy đủ:
- * - Submit → POST Google Sheet (Apps Script)
- * - Meta Pixel: fbq('track', 'Lead')
- * - GA4: gtag('event', 'generate_lead')
- * - Success popup → countdown → redirect Zalo group
- */
-
-// Link nhóm Zalo redirect sau khi submit thành công
 const ZALO_GROUP_LINK = 'https://zalo.me/g/ovma9qgjuedypjy8mnxc';
-// Link Zalo cá nhân fallback (nếu nhóm chưa có link)
 const ZALO_FALLBACK = 'https://zalo.me/0818823720';
 
 export default function RegistrationForm() {
-  // ============ STATE ============
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     course: '',
     center: '',
-    sataMath: null,
     consent: false
   });
   const [errors, setErrors] = useState({});
@@ -54,7 +40,6 @@ export default function RegistrationForm() {
   const [redirectCountdown, setRedirectCountdown] = useState(5);
   const [shouldRedirectToZalo, setShouldRedirectToZalo] = useState(true);
 
-  // ============ COUNTDOWN AUTO-REDIRECT SAU SUBMIT ============
   useEffect(() => {
     if (!isSuccess || !shouldRedirectToZalo) return;
     if (redirectCountdown <= 0) {
@@ -85,20 +70,17 @@ export default function RegistrationForm() {
     return () => window.removeEventListener('sata-course-selected', handleCourseSelected);
   }, []);
 
-  // ============ HANDLERS ============
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
-    // Clear error khi user sửa lại
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
-  // Validate toàn form
   const validate = () => {
     const e = {};
     if (!formData.name.trim()) e.name = 'Bố mẹ vui lòng nhập họ tên';
@@ -113,23 +95,19 @@ export default function RegistrationForm() {
 
     if (!formData.course) e.course = 'Bố mẹ vui lòng chọn khoá học';
     if (!formData.center) e.center = 'Bố mẹ vui lòng chọn trung tâm';
-    if (!formData.sataMath) e.sataMath = 'Bố mẹ vui lòng trả lời câu hỏi này';
     if (!formData.consent) e.consent = 'Bố mẹ vui lòng đồng ý điều khoản';
 
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Track click submit (intent)
     trackPixelEvent('FormSubmitClick', { source: 'registration-form' });
     trackGA4Event('form_submit_attempt', { source: 'registration-form' });
 
     if (!validate()) {
-      // Scroll đến lỗi đầu tiên
       const firstErrorField = document.querySelector('.input-error');
       firstErrorField?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -137,16 +115,13 @@ export default function RegistrationForm() {
 
     setIsSubmitting(true);
     try {
-      // Tổng hợp: gửi Sheet + track Pixel Lead + track GA4 generate_lead
       await handleLeadSubmission({
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         email: formData.email.trim(),
         course: formData.course,
-        center: formData.center,
-        satamath: formData.sataMath === 'yes' ? 'Có' : formData.sataMath === 'no' ? 'Không' : 'Không trả lời'
+        center: formData.center
       });
-      // Hiển thị popup thành công rồi tự chuyển sang nhóm Zalo
       setIsSuccess(true);
     } catch (err) {
       console.error('Submit error:', err);
@@ -156,87 +131,59 @@ export default function RegistrationForm() {
     }
   };
 
-  // ============ DERIVED — COURSE SELECTION ============
-  const allCoursesList = courseGroups.flatMap(g => g.courses);
-  const selectedCourseObj = allCoursesList.find(c => c.value === formData.course) ?? null;
+  const allCoursesList = courseGroups.flatMap((g) => g.courses);
+  const selectedCourseObj = allCoursesList.find((c) => c.value === formData.course) ?? null;
   const isConsult = formData.course === CONSULT_OPTION.value;
-  const fmt = (n) => n ? `${n.toLocaleString('vi-VN')}đ` : '—';
-  const getOptionPrice = (course) => {
-    if (course.comboPrice) return course.comboPrice;
-    if (course.fixedPrice) return course.fixedPrice;
-    return course.earlyBirdSataMath;
-  };
+  const fmt = (n) => n ? `${n.toLocaleString('vi-VN')}đ` : '-';
+  const getOptionPrice = (course) => course.comboPrice || course.fixedPrice || course.earlyBirdPrice;
   const getDurationSummary = (course) =>
-    `${course.sessions} buổi · ${course.durationPerSession ?? '90 phút'}/buổi · Tổng ${course.totalDuration}`;
+    `${course.sessions} buổi - ${course.durationPerSession ?? '90 phút'}/buổi - Tổng ${course.totalDuration}`;
 
-  // ============ RENDER SUCCESS POPUP ============
   if (isSuccess) {
     return (
       <section id="registration-form" className="section-padding bg-gradient-orange-purple relative overflow-hidden">
-        <div className="container-site min-h-[34rem] flex items-center justify-center">
-          <div className="max-w-xl mx-auto bg-white rounded-3xl p-7 sm:p-10 text-center shadow-2xl animate-fade-in border-4 border-white/40">
-            <div className="inline-flex w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-success/10 items-center justify-center mb-6">
-              <CheckCircle2 className="w-12 h-12 sm:w-14 sm:h-14 text-success" strokeWidth={2.5} />
+        <div className="container-site flex min-h-[34rem] items-center justify-center">
+          <div className="mx-auto max-w-xl animate-fade-in rounded-3xl border-4 border-white/40 bg-white p-7 text-center shadow-2xl sm:p-10">
+            <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-success/10 sm:h-24 sm:w-24">
+              <CheckCircle2 className="h-12 w-12 text-success sm:h-14 sm:w-14" strokeWidth={2.5} />
             </div>
 
-            <h2 className="text-2xl sm:text-4xl font-black text-text-dark mb-4">
+            <h2 className="mb-4 text-2xl font-black text-text-dark sm:text-4xl">
               Đăng ký thành công!
             </h2>
 
-            <p className="text-base sm:text-lg text-text-muted leading-relaxed mb-6">
+            <p className="mb-6 text-base leading-relaxed text-text-muted sm:text-lg">
               Học viện <strong>Sata Robo</strong> đã nhận được thông tin của bố mẹ.
               <br />
-              Tư vấn viên sẽ gọi cho bố mẹ trong vòng <strong className="text-primary-orange">24h</strong> để xếp lịch buổi Test miễn phí.
+              Tư vấn viên sẽ gọi trong vòng <strong className="text-primary-orange">24h</strong> để xếp lịch học thử miễn phí.
             </p>
 
-            <div className="bg-soft-cream rounded-2xl p-5 sm:p-6 mb-6 text-left">
-              <h3 className="font-bold text-base sm:text-lg text-text-dark mb-2 flex items-center gap-2">
-                Bước tiếp theo
-              </h3>
-              <p className="text-sm sm:text-base text-text-muted">
-                Vui lòng tham gia <strong>Nhóm Zalo phụ huynh Sata Robo</strong> để cập nhật
-                thông tin lớp học, lịch khai giảng và tài liệu STEM miễn phí.
-              </p>
-            </div>
-
             {shouldRedirectToZalo ? (
-              <div className="bg-soft-yellow rounded-xl p-4 mb-6 inline-flex items-center gap-2">
-                <Loader2 className="w-5 h-5 text-primary-orange animate-spin" />
-                <span className="text-sm sm:text-base text-text-dark">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-xl bg-soft-yellow p-4">
+                <Loader2 className="h-5 w-5 animate-spin text-primary-orange" />
+                <span className="text-sm text-text-dark sm:text-base">
                   Tự động chuyển sang nhóm Zalo trong{' '}
-                  <strong className="text-primary-orange text-lg">{redirectCountdown}s</strong>
+                  <strong className="text-lg text-primary-orange">{redirectCountdown}s</strong>
                 </span>
               </div>
             ) : (
-              <div className="bg-soft-cream rounded-xl p-4 mb-6 inline-flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-success" />
-                <span className="text-sm sm:text-base text-text-dark">
-                  Bố mẹ đang ở lại trang này. Thông tin đã được gửi thành công.
+              <div className="mb-6 inline-flex items-center gap-2 rounded-xl bg-soft-cream p-4">
+                <CheckCircle2 className="h-5 w-5 text-success" />
+                <span className="text-sm text-text-dark sm:text-base">
+                  Thông tin đã được gửi thành công.
                 </span>
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a
-                href={ZALO_GROUP_LINK}
-                className="btn-primary"
-              >
+            <div className="flex flex-col justify-center gap-3 sm:flex-row">
+              <a href={ZALO_GROUP_LINK} className="btn-primary">
                 Tham gia nhóm Zalo ngay
               </a>
-              <a
-                href={ZALO_FALLBACK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-outline"
-              >
+              <a href={ZALO_FALLBACK} target="_blank" rel="noopener noreferrer" className="btn-outline">
                 Zalo cá nhân: 0818.823.720
               </a>
               {shouldRedirectToZalo && (
-                <button
-                  type="button"
-                  onClick={() => setShouldRedirectToZalo(false)}
-                  className="btn-outline"
-                >
+                <button type="button" onClick={() => setShouldRedirectToZalo(false)} className="btn-outline">
                   Ở lại trang
                 </button>
               )}
@@ -247,48 +194,42 @@ export default function RegistrationForm() {
     );
   }
 
-  // ============ RENDER FORM ============
   return (
     <section id="registration-form" className="section-padding bg-gradient-orange-purple relative overflow-hidden">
-      {/* Decorative bubbles */}
-      <div className="absolute top-10 left-10 w-32 h-32 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-10 right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute left-10 top-10 h-32 w-32 rounded-full bg-white/5 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 h-40 w-40 rounded-full bg-white/5 blur-3xl pointer-events-none" />
 
       <div className="container-site relative z-10">
-        {/* Heading */}
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs sm:text-sm font-bold uppercase tracking-wider mb-4">
-            <ClipboardList className="w-4 h-4" />
-            ĐĂNG KÝ BUỔI TEST MIỄN PHÍ
+        <div className="mb-8 text-center sm:mb-12">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm sm:text-sm">
+            <ClipboardList className="h-4 w-4" />
+            ĐĂNG KÝ BUỔI HỌC THỬ MIỄN PHÍ
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white mb-4 leading-tight">
+          <h2 className="mb-4 text-3xl font-black leading-tight text-white sm:text-5xl">
             Bắt Đầu <span className="text-soft-yellow">Hành Trình</span>
             <br />
             Của Con Ngay Hôm Nay
           </h2>
-          <p className="text-base sm:text-lg text-white/90 max-w-2xl mx-auto">
-            Bố mẹ điền 4 thông tin dưới đây — Sata Robo gọi tư vấn trong{' '}
-            <strong>24h</strong> để xếp lịch buổi Test miễn phí cho con!
+          <p className="mx-auto max-w-2xl text-base text-white/90 sm:text-lg">
+            Bố mẹ vui lòng điền thông tin dưới đây - Sata Robo gọi tư vấn trong <strong>24h</strong> để xếp lịch học thử miễn phí cho con.
           </p>
         </div>
 
-        {/* Form card */}
-        <div className="max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-10 shadow-2xl">
-          <div className="text-center mb-6">
-            <h3 className="text-xl sm:text-2xl font-black text-text-dark mb-1 flex items-center justify-center gap-2">
-              <Sparkles className="w-6 h-6 text-primary-orange" />
+        <div className="mx-auto max-w-2xl rounded-3xl bg-white p-6 shadow-2xl sm:p-10">
+          <div className="mb-6 text-center">
+            <h3 className="mb-1 flex items-center justify-center gap-2 text-xl font-black text-text-dark sm:text-2xl">
+              <Sparkles className="h-6 w-6 text-primary-orange" />
               Thông Tin Đăng Ký
             </h3>
-            <p className="text-xs sm:text-sm text-text-muted">
-              Buổi học thử 90 phút miễn phí · Không ràng buộc · Hoàn tiền 100% nếu con không thích sau buổi học thử đầu tiên
+            <p className="text-xs text-text-muted sm:text-sm">
+              Buổi học thử 90 phút miễn phí - Không ràng buộc - Phụ huynh được tư vấn lộ trình phù hợp.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
-            {/* HỌ TÊN */}
             <div>
-              <label htmlFor="name" className="block text-sm font-bold text-text-dark mb-1.5">
-                <User className="inline w-4 h-4 mr-1 text-primary-orange" />
+              <label htmlFor="name" className="mb-1.5 block text-sm font-bold text-text-dark">
+                <User className="mr-1 inline h-4 w-4 text-primary-orange" />
                 Họ và tên phụ huynh <span className="text-urgent">*</span>
               </label>
               <input
@@ -298,25 +239,17 @@ export default function RegistrationForm() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Ví dụ: Nguyễn Thị Lan"
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base ${
-                  errors.name
-                    ? 'input-error border-urgent animate-shake'
-                    : 'border-gray-200 focus:border-primary-orange'
+                className={`w-full rounded-xl border-2 px-4 py-3 text-sm transition focus:outline-none sm:text-base ${
+                  errors.name ? 'input-error border-urgent animate-shake' : 'border-gray-200 focus:border-primary-orange'
                 }`}
               />
-              {errors.name && (
-                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.name}
-                </p>
-              )}
+              {errors.name && <ErrorText>{errors.name}</ErrorText>}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* SDT */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="phone" className="block text-sm font-bold text-text-dark mb-1.5">
-                  <Phone className="inline w-4 h-4 mr-1 text-primary-orange" />
+                <label htmlFor="phone" className="mb-1.5 block text-sm font-bold text-text-dark">
+                  <Phone className="mr-1 inline h-4 w-4 text-primary-orange" />
                   Số điện thoại <span className="text-urgent">*</span>
                 </label>
                 <input
@@ -327,25 +260,17 @@ export default function RegistrationForm() {
                   onChange={handleChange}
                   placeholder="0912 345 678"
                   inputMode="tel"
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base ${
-                    errors.phone
-                      ? 'input-error border-urgent animate-shake'
-                      : 'border-gray-200 focus:border-primary-orange'
+                  className={`w-full rounded-xl border-2 px-4 py-3 text-sm transition focus:outline-none sm:text-base ${
+                    errors.phone ? 'input-error border-urgent animate-shake' : 'border-gray-200 focus:border-primary-orange'
                   }`}
                 />
-                {errors.phone && (
-                  <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    {errors.phone}
-                  </p>
-                )}
+                {errors.phone && <ErrorText>{errors.phone}</ErrorText>}
               </div>
 
-              {/* EMAIL — không bắt buộc */}
               <div>
-                <label htmlFor="email" className="block text-sm font-bold text-text-dark mb-1.5">
-                  <Mail className="inline w-4 h-4 mr-1 text-primary-orange" />
-                  Email <span className="text-text-muted text-xs font-normal">(không bắt buộc)</span>
+                <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-text-dark">
+                  <Mail className="mr-1 inline h-4 w-4 text-primary-orange" />
+                  Email <span className="text-xs font-normal text-text-muted">(không bắt buộc)</span>
                 </label>
                 <input
                   type="email"
@@ -354,25 +279,17 @@ export default function RegistrationForm() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="email@gmail.com"
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base ${
-                    errors.email
-                      ? 'input-error border-urgent animate-shake'
-                      : 'border-gray-200 focus:border-primary-orange'
+                  className={`w-full rounded-xl border-2 px-4 py-3 text-sm transition focus:outline-none sm:text-base ${
+                    errors.email ? 'input-error border-urgent animate-shake' : 'border-gray-200 focus:border-primary-orange'
                   }`}
                 />
-                {errors.email && (
-                  <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    {errors.email}
-                  </p>
-                )}
+                {errors.email && <ErrorText>{errors.email}</ErrorText>}
               </div>
             </div>
 
-            {/* KHOÁ HỌC */}
             <div>
-              <label htmlFor="course" className="block text-sm font-bold text-text-dark mb-1.5">
-                <GraduationCap className="inline w-4 h-4 mr-1 text-primary-orange" />
+              <label htmlFor="course" className="mb-1.5 block text-sm font-bold text-text-dark">
+                <GraduationCap className="mr-1 inline h-4 w-4 text-primary-orange" />
                 Khoá học quan tâm <span className="text-urgent">*</span>
               </label>
               <select
@@ -380,10 +297,8 @@ export default function RegistrationForm() {
                 name="course"
                 value={formData.course}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
-                  errors.course
-                    ? 'input-error border-urgent animate-shake'
-                    : 'border-gray-200 focus:border-primary-orange'
+                className={`w-full rounded-xl border-2 bg-white px-4 py-3 text-sm transition focus:outline-none sm:text-base ${
+                  errors.course ? 'input-error border-urgent animate-shake' : 'border-gray-200 focus:border-primary-orange'
                 }`}
               >
                 <option value="">-- Chọn khoá học --</option>
@@ -393,122 +308,34 @@ export default function RegistrationForm() {
                       <option key={c.id} value={c.value}>
                         {c.shortName}
                         {c.grade ? ` | ${c.grade}` : ''}
-                        {` | ${c.sessions} buổi | ${c.durationPerSession}/buổi | Tổng ${c.totalDuration}`}
-                        {` | ${c.comboPrice || c.fixedPrice ? '' : 'từ '}${getOptionPrice(c).toLocaleString('vi-VN')}đ`}
+                        {` | ${c.sessions} buổi | ${c.durationPerSession}/buổi`}
                       </option>
                     ))}
                   </optgroup>
                 ))}
                 <option value={CONSULT_OPTION.value}>{CONSULT_OPTION.name}</option>
               </select>
-              <p className="text-[11px] text-text-muted mt-1.5">
-                Early Bird áp dụng đến hết 31/05/2026 cho Sata1–Sata7. Sata8 là gói giá cố định, không giảm giá.
+              <p className="mt-1.5 text-[11px] text-text-muted">
+                Early Bird áp dụng đến hết 31/05/2026 cho Sata1-Sata7. Sata8 là gói giá cố định, không giảm giá.
               </p>
-              {errors.course && (
-                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.course}
-                </p>
-              )}
+              {errors.course && <ErrorText>{errors.course}</ErrorText>}
 
-              {/* Course detail box */}
               {selectedCourseObj && (
-                <div className="mt-3 rounded-xl border border-orange-200 bg-orange-50 p-4 text-sm space-y-2 animate-fade-in">
-                  <div className="flex items-start justify-between gap-2 flex-wrap">
-                    <span className="font-extrabold text-text-dark leading-tight">{selectedCourseObj.name}</span>
-                    {selectedCourseObj.badge && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 bg-primary-orange text-white rounded-full whitespace-nowrap flex-shrink-0">
-                        {selectedCourseObj.badge}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-muted">
-                    {selectedCourseObj.grade && <span>🏫 {selectedCourseObj.grade}</span>}
-                    <span>📚 {getDurationSummary(selectedCourseObj)}</span>
-                    {selectedCourseObj.device && <span>🔧 {selectedCourseObj.device}</span>}
-                  </div>
-
-                  {/* Pricing detail */}
-                  {selectedCourseObj.comboPrice ? (
-                    <div className="space-y-1.5 pt-2 border-t border-orange-200">
-                      <div className="text-xs text-text-muted line-through">
-                        Giá niêm yết: {fmt(selectedCourseObj.listPrice)}
-                      </div>
-                      <div className="flex items-center justify-between rounded-lg px-2.5 py-1.5 bg-white/80">
-                        <span className="text-xs font-extrabold text-primary-orange">
-                          Giá combo: {fmt(selectedCourseObj.comboPrice)}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between rounded-lg px-2.5 py-1.5 bg-green-50">
-                        <span className="text-xs font-bold text-success">
-                          Tiết kiệm: {fmt(selectedCourseObj.savedAmount)}
-                        </span>
-                      </div>
-                      <p className="text-xs text-text-muted leading-relaxed">
-                        Bao gồm Robosim Master + Đấu trường Robot.
-                      </p>
-                    </div>
-                  ) : selectedCourseObj.fixedPrice ? (
-                    <div className="space-y-1.5 pt-2 border-t border-orange-200">
-                      <div className="flex items-center justify-between rounded-lg px-2.5 py-1.5 bg-white/80">
-                        <span className="text-xs font-extrabold text-primary-purple">
-                          Giá cố định: {fmt(selectedCourseObj.fixedPrice)}
-                        </span>
-                      </div>
-                      <div className="rounded-lg px-2.5 py-1.5 bg-green-50 text-xs font-bold text-success">
-                        Không giảm giá · Cam kết hoàn tiền 100%
-                      </div>
-                    </div>
-                  ) : selectedCourseObj.earlyBirdSataMath && (
-                    <div className="space-y-1.5 pt-2 border-t border-orange-200">
-                      <div className="text-xs text-text-muted line-through">
-                        Giá niêm yết: {fmt(selectedCourseObj.listPrice)}
-                      </div>
-                      <div className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors
-                        ${formData.sataMath === 'yes' ? 'bg-orange-100 ring-1 ring-primary-orange' : 'bg-white/60'}`}>
-                        <span className={`text-xs font-semibold ${formData.sataMath === 'yes' ? 'text-primary-orange font-extrabold' : 'text-text-muted'}`}>
-                          HV SataMath: {fmt(selectedCourseObj.earlyBirdSataMath)}
-                        </span>
-                        {formData.sataMath === 'yes' && (
-                          <span className="text-[10px] font-bold text-primary-orange ml-2">← Của bạn</span>
-                        )}
-                      </div>
-                      <div className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors
-                        ${formData.sataMath === 'no' ? 'bg-blue-50 ring-1 ring-blue-400' : 'bg-white/60'}`}>
-                        <span className={`text-xs font-semibold ${formData.sataMath === 'no' ? 'text-blue-700 font-extrabold' : 'text-text-muted'}`}>
-                          HV ngoài: {fmt(selectedCourseObj.earlyBirdOutside)}
-                        </span>
-                        {formData.sataMath === 'no' && (
-                          <span className="text-[10px] font-bold text-blue-700 ml-2">← Của bạn</span>
-                        )}
-                      </div>
-                      {selectedCourseObj.installmentSataMath && (
-                        <div className="rounded-lg bg-green-50 px-2.5 py-1.5 text-xs text-success font-semibold">
-                          Trả góp 0%: {fmt(selectedCourseObj.installmentSataMath)}/tháng cho HV SataMath, {fmt(selectedCourseObj.installmentOutside)}/tháng cho HV ngoài.
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  <div className="text-[11px] text-text-muted italic border-t border-orange-200 pt-2">
-                    {selectedCourseObj.note}
-                  </div>
-                </div>
+                <CourseDetailBox course={selectedCourseObj} fmt={fmt} getDurationSummary={getDurationSummary} />
               )}
 
-              {/* Consult box */}
               {isConsult && (
-                <div className="mt-3 rounded-xl border border-primary-purple/30 bg-purple-50 p-4 text-sm animate-fade-in">
-                  <p className="text-primary-purple font-semibold leading-relaxed">
-                    💬 Tư vấn viên sẽ dựa trên độ tuổi, mục tiêu và lịch học của con để đề xuất khoá phù hợp nhất.
+                <div className="mt-3 animate-fade-in rounded-xl border border-primary-purple/30 bg-purple-50 p-4 text-sm">
+                  <p className="font-semibold leading-relaxed text-primary-purple">
+                    Tư vấn viên sẽ dựa trên độ tuổi, mục tiêu và lịch học của con để đề xuất khoá phù hợp nhất.
                   </p>
                 </div>
               )}
             </div>
 
-            {/* CƠ SỞ */}
             <div>
-              <label htmlFor="center" className="block text-sm font-bold text-text-dark mb-1.5">
-                <MapPin className="inline w-4 h-4 mr-1 text-primary-orange" />
+              <label htmlFor="center" className="mb-1.5 block text-sm font-bold text-text-dark">
+                <MapPin className="mr-1 inline h-4 w-4 text-primary-orange" />
                 Chọn cơ sở học <span className="text-urgent">*</span>
               </label>
               <select
@@ -516,10 +343,8 @@ export default function RegistrationForm() {
                 name="center"
                 value={formData.center}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition text-sm sm:text-base bg-white ${
-                  errors.center
-                    ? 'input-error border-urgent animate-shake'
-                    : 'border-gray-200 focus:border-primary-orange'
+                className={`w-full rounded-xl border-2 bg-white px-4 py-3 text-sm transition focus:outline-none sm:text-base ${
+                  errors.center ? 'input-error border-urgent animate-shake' : 'border-gray-200 focus:border-primary-orange'
                 }`}
               >
                 <option value="">-- Chọn địa chỉ cơ sở --</option>
@@ -528,118 +353,117 @@ export default function RegistrationForm() {
                     {loc.address}
                   </option>
                 ))}
-                <option value="Tư vấn cơ sở gần nhà nhất">
-                  Tư vấn cơ sở gần nhà nhất
-                </option>
               </select>
-              {errors.center && (
-                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.center}
-                </p>
-              )}
+              {errors.center && <ErrorText>{errors.center}</ErrorText>}
             </div>
 
-            {/* SATAMATH QUESTION */}
-            <div className={`rounded-xl border-2 bg-soft-cream p-4 transition ${errors.sataMath ? 'border-urgent' : 'border-gray-100'}`}>
-              <p className="text-sm font-bold text-text-dark mb-3">
-                Con của Bố/Mẹ đang học ở hệ thống{' '}
-                <span className="text-primary-orange">SataMath</span>?{' '}
-                <span className="text-urgent">*</span>
-              </p>
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFormData((prev) => ({ ...prev, sataMath: 'yes' }));
-                    setErrors((prev) => ({ ...prev, sataMath: '' }));
-                  }}
-                  className={`flex-1 py-2.5 rounded-xl font-bold text-sm border-2 transition active:scale-95
-                    ${formData.sataMath === 'yes'
-                      ? 'bg-primary-orange text-white border-primary-orange shadow-orange-glow'
-                      : 'bg-white text-text-dark border-gray-200 hover:border-primary-orange hover:text-primary-orange'}`}
-                >
-                  ✅ Có
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFormData((prev) => ({ ...prev, sataMath: 'no' }));
-                    setErrors((prev) => ({ ...prev, sataMath: '' }));
-                  }}
-                  className={`flex-1 py-2.5 rounded-xl font-bold text-sm border-2 transition active:scale-95
-                    ${formData.sataMath === 'no'
-                      ? 'bg-primary-purple text-white border-primary-purple'
-                      : 'bg-white text-text-dark border-gray-200 hover:border-primary-purple hover:text-primary-purple'}`}
-                >
-                  ❌ Không
-                </button>
-              </div>
-              {errors.sataMath && (
-                <p className="mt-2 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.sataMath}
-                </p>
-              )}
-              {formData.sataMath === 'yes' && (
-                <p className="mt-2 text-xs text-success font-semibold">
-                  🎉 Báo với tư vấn viên để nhận ưu đãi đặc biệt dành cho gia đình SataMath!
-                </p>
-              )}
-            </div>
-
-            {/* CONSENT CHECKBOX */}
             <div>
-              <label className="flex items-start gap-3 cursor-pointer">
+              <label className="flex cursor-pointer items-start gap-3">
                 <input
                   type="checkbox"
                   name="consent"
                   checked={formData.consent}
                   onChange={handleChange}
-                  className="mt-0.5 w-5 h-5 accent-primary-orange flex-shrink-0"
+                  className="mt-0.5 h-5 w-5 flex-shrink-0 accent-primary-orange"
                 />
-                <span className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                  Tôi đồng ý nhận tin tư vấn từ <strong>Sata Robo</strong> qua điện thoại / Zalo
-                  và đồng ý với{' '}
+                <span className="text-xs leading-relaxed text-text-muted sm:text-sm">
+                  Tôi đồng ý nhận tin tư vấn từ <strong>Sata Robo</strong> qua điện thoại / Zalo và đồng ý với{' '}
                   <a href="#" className="text-primary-purple underline">
                     chính sách bảo mật
                   </a>{' '}
                   của Học viện.
                 </span>
               </label>
-              {errors.consent && (
-                <p className="mt-1 text-xs text-urgent flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.consent}
-                </p>
-              )}
+              {errors.consent && <ErrorText>{errors.consent}</ErrorText>}
             </div>
 
-            {/* SUBMIT BUTTON */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 bg-gradient-orange-purple text-white font-black text-base sm:text-lg rounded-xl
-                shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition disabled:opacity-60 disabled:cursor-not-allowed
-                disabled:hover:scale-100"
+              className="w-full rounded-xl bg-gradient-orange-purple py-4 text-base font-black text-white shadow-lg transition hover:scale-[1.02] hover:shadow-xl active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100 sm:text-lg"
             >
               {isSubmitting ? (
                 <span className="inline-flex items-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Đang gửi thông tin...
                 </span>
               ) : (
-                '🚀 ĐĂNG KÝ NHẬN TƯ VẤN MIỄN PHÍ →'
+                'ĐĂNG KÝ NHẬN TƯ VẤN MIỄN PHÍ →'
               )}
             </button>
 
-            <p className="text-xs text-text-muted text-center pt-2 border-t border-gray-100">
-              🔒 Thông tin của bạn được bảo mật tuyệt đối. Sata Robo cam kết không chia sẻ
-              dữ liệu với bên thứ ba.
+            <p className="border-t border-gray-100 pt-2 text-center text-xs text-text-muted">
+              Thông tin của bạn được bảo mật tuyệt đối. Sata Robo cam kết không chia sẻ dữ liệu với bên thứ ba.
             </p>
           </form>
         </div>
       </div>
     </section>
+  );
+}
+
+function ErrorText({ children }) {
+  return (
+    <p className="mt-1 flex items-center gap-1 text-xs text-urgent">
+      <AlertCircle className="h-3.5 w-3.5" />
+      {children}
+    </p>
+  );
+}
+
+function CourseDetailBox({ course, fmt, getDurationSummary }) {
+  return (
+    <div className="mt-3 animate-fade-in space-y-2 rounded-xl border border-orange-200 bg-orange-50 p-4 text-sm">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <span className="font-extrabold leading-tight text-text-dark">{course.name}</span>
+        {course.badge && (
+          <span className="flex-shrink-0 whitespace-nowrap rounded-full bg-primary-orange px-2 py-0.5 text-[10px] font-bold text-white">
+            {course.badge}
+          </span>
+        )}
+      </div>
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-muted">
+        {course.grade && <span>{course.grade}</span>}
+        <span>{getDurationSummary(course)}</span>
+        {course.device && <span>{course.device}</span>}
+      </div>
+
+      {course.comboPrice ? (
+        <div className="space-y-1.5 border-t border-orange-200 pt-2">
+          <div className="text-xs text-text-muted line-through">Giá niêm yết: {fmt(course.listPrice)}</div>
+          <div className="rounded-lg bg-white/80 px-2.5 py-1.5 text-xs font-extrabold text-primary-orange">
+            Giá combo: {fmt(course.comboPrice)}
+          </div>
+          <div className="rounded-lg bg-green-50 px-2.5 py-1.5 text-xs font-bold text-success">
+            Tiết kiệm: {fmt(course.savedAmount)}
+          </div>
+          <p className="text-xs leading-relaxed text-text-muted">Bao gồm Robosim Master + Đấu trường Robot.</p>
+        </div>
+      ) : course.fixedPrice ? (
+        <div className="space-y-1.5 border-t border-orange-200 pt-2">
+          <div className="rounded-lg bg-white/80 px-2.5 py-1.5 text-xs font-extrabold text-primary-purple">
+            Giá cố định: {fmt(course.fixedPrice)}
+          </div>
+          <div className="rounded-lg bg-green-50 px-2.5 py-1.5 text-xs font-bold text-success">
+            Không giảm giá - Cam kết hoàn tiền 100%
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-1.5 border-t border-orange-200 pt-2">
+          <div className="text-xs text-text-muted line-through">Giá niêm yết: {fmt(course.listPrice)}</div>
+          <div className="rounded-lg bg-white/80 px-2.5 py-1.5 text-xs font-extrabold text-primary-orange">
+            Giá ưu đãi: {fmt(course.earlyBirdPrice)}
+          </div>
+          {course.installmentOutside && (
+            <div className="rounded-lg bg-green-50 px-2.5 py-1.5 text-xs font-semibold text-success">
+              Trả góp 0%: {fmt(course.installmentOutside)}/tháng
+            </div>
+          )}
+        </div>
+      )}
+      <div className="border-t border-orange-200 pt-2 text-[11px] italic text-text-muted">
+        {course.note}
+      </div>
+    </div>
   );
 }

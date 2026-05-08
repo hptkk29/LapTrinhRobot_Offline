@@ -1,60 +1,50 @@
-// =====================================
-// FAQ — Câu hỏi phụ huynh thường hỏi
-// =====================================
-
 export const faqs = [
   {
     id: 1,
-    question: 'Con chưa biết gì về Robotics — bắt đầu được không?',
+    question: 'Con chưa biết gì về Robotics - bắt đầu được không?',
     answer:
-      'Hoàn toàn được. Năm 1 (Ươm Mầm Tài Năng) thiết kế cho con HOÀN TOÀN chưa có nền tảng. Mình bắt đầu từ tư duy logic cơ bản nhất — qua trò chơi và câu chuyện con thích. Hơn 80% học viên năm đầu đều bắt đầu từ con số 0.'
+      'Hoàn toàn được. Năm 1 (Ươm Mầm Tài Năng) thiết kế cho con chưa có nền tảng. Mình bắt đầu từ tư duy logic cơ bản nhất qua trò chơi, câu chuyện và robot thật.'
   },
   {
     id: 2,
-    question: 'Học phí 1 năm khoảng bao nhiêu?',
+    question: 'Học phí khoảng bao nhiêu?',
     answer:
-      'Website hiện có 2 nhóm khóa: luyện thi ngắn hạn và khóa chuyên sâu 48 buổi. Sata1 từ 1.800.000đ cho HV SataMath, Combo Sata1 + Sata2 là 3.808.000đ, Sata8 là 2.500.000đ cố định. Khóa chuyên sâu 48 buổi có Early Bird từ 7.920.000đ cho HV SataMath.'
+      'Website hiện có 2 nhóm khóa: luyện thi ngắn hạn và khóa chuyên sâu 48 buổi. Sata1 giá ưu đãi 2.040.000đ, Sata2 giá ưu đãi 2.584.000đ, Combo Sata1 + Sata2 là 3.808.000đ, Sata8 là 2.500.000đ cố định. Khóa chuyên sâu 48 buổi có giá ưu đãi từ 8.976.000đ và có trả góp 0%.'
   },
   {
     id: 3,
     question: 'Lịch học như thế nào? Lớp học có đông không?',
     answer:
-      '1 buổi/tuần — 90 phút/buổi. Sata1 và Sata2 có 16 buổi, tổng 24 giờ; Combo có 32 buổi, tổng 48 giờ; Sata8 có 5 buổi, tổng 7,5 giờ; Sata3–Sata7 có 48 buổi, tổng 72 giờ. Bố mẹ chọn lịch sáng hoặc chiều cuối tuần — phù hợp với con. Sĩ số tối đa 8 học viên/lớp — giảng viên theo sát từng con.'
+      '1 buổi/tuần, 90 phút/buổi. Sata1 và Sata2 có 16 buổi, Combo có 32 buổi, Sata8 có 5 buổi, Sata3-Sata7 có 48 buổi. Sĩ số tối đa 12 học viên/lớp để giáo viên theo sát từng con.'
   },
   {
     id: 4,
-    question: 'Con học xong Năm 1 có buộc phải học tiếp không?',
+    question: 'Trung tâm có gần nhà mình không?',
     answer:
-      'Không. Mỗi năm là 1 khoá độc lập — bố mẹ tái đăng ký khi muốn con học tiếp. Trong giai đoạn Early Bird đến hết 31/05/2026, học viên thuộc hệ thống SataMath được giảm 25% cho Sata1–Sata7.'
+      'Sata Robo có 4 trung tâm tại Đà Nẵng: Hải Châu (60 Lê Lợi), Hòa Cường (258 Lê Thanh Nghị), Thanh Khê (269 Điện Biên Phủ), Hòa Khê (232 Nguyễn Phước Lan). Bố mẹ inbox Zalo gửi địa chỉ nhà, mình gợi ý trung tâm thuận tiện nhất.'
   },
   {
     id: 5,
-    question: 'Trung tâm có gần nhà mình không?',
+    question: 'Sata8 cam kết hoàn tiền như thế nào?',
     answer:
-      'Sata Robo có 4 trung tâm tại Đà Nẵng: Hải Châu (60 Lê Lợi), Hoà Cường (258 Lê Thanh Nghị — Trụ sở), Cẩm Lệ (232 Nguyễn Phước Lan), Hoà Khê (269 Điện Biên Phủ). Bố mẹ inbox Zalo gửi địa chỉ nhà — mình gợi ý trung tâm thuận tiện nhất.'
+      'Sata8 là gói Vé Vàng Chung Kết giá cố định 2.500.000đ. Gói áp dụng cho học viên đã đăng ký Combo hoặc Robosim Master, đi đủ 5/5 buổi chuyên sâu và hoàn thành học liệu E-learning. Nếu đã đi đủ lộ trình mà vẫn không vượt vòng loại Robotics 2026 theo điều kiện cam kết, Sata Robo hoàn 100% học phí gói Sata8.'
   },
   {
     id: 6,
-    question: 'Nếu không hài lòng sau khi học, có hoàn tiền không?',
+    question: 'Phụ huynh nhận được thông tin gì về quá trình học của con?',
     answer:
-      'Có. Buổi học thử đầu tiên 90 phút, nếu con không thích → hoàn tiền 100% học phí đã đóng, không câu hỏi. Hoàn lại sau 3 ngày làm việc.'
+      'Mỗi tháng phụ huynh nhận báo cáo qua Zalo: con học gì, đạt gì, còn cần rèn thêm gì. Cuối mỗi học phần có buổi Demo Day để bố mẹ xem trực tiếp con thuyết trình sản phẩm.'
   },
   {
     id: 7,
-    question: 'Phụ huynh nhận được thông tin gì về quá trình học của con?',
+    question: 'Khoá có đủ để con thi các cuộc thi Robotics không?',
     answer:
-      'Mỗi tháng phụ huynh nhận báo cáo qua Zalo: con học gì, đạt gì, còn yếu gì. Cuối mỗi học phần (12 buổi) có buổi Demo Day — bố mẹ đến xem trực tiếp con thuyết trình sản phẩm. Forum Zalo riêng để hỏi đáp 24/7 với mentor.'
+      'Các khóa luyện thi tập trung cho mục tiêu Robotics 2026. Lộ trình chuyên sâu giúp con xây nền tảng dài hạn về lập trình, lắp ráp robot, thuyết trình và giải quyết vấn đề.'
   },
   {
     id: 8,
-    question: 'Khoá có đủ để con thi cuộc thi TW Đoàn / WRC không?',
-    answer:
-      'Năm 2 trở đi con đủ năng lực dự thi Bảng R1 (cấp địa phương). Năm 3-4 con bước vào Bảng R2 (cấp Quốc Gia). Năm 5 hướng đến Quốc Tế (WRC, FLL). Sata Robo có giảng viên đào tạo nhiều học sinh đạt huy chương quốc gia.'
-  },
-  {
-    id: 9,
     question: 'Muốn tư vấn thêm trước khi quyết định, liên hệ ở đâu?',
     answer:
-      'Bố mẹ liên hệ Zalo: 0818.823.720 — phản hồi trong 30 phút giờ hành chính. Hoặc điền form đăng ký trên website — Sata Robo sẽ gọi lại trong 24h. Không bắt buộc đăng ký, không spam.'
+      'Bố mẹ liên hệ Zalo: 0818.823.720 hoặc điền form đăng ký trên website. Sata Robo sẽ gọi lại trong 24h, không bắt buộc đăng ký và không spam.'
   }
 ];

@@ -1,4 +1,4 @@
-// Sata Robo — Google Sheets Integration
+// Sata Robo - Google Sheets Integration
 // Sheet ID: 1sN0s_l71m9SrAm8hzdUmJEnsRM23FZuUJOFCbUSIAx0
 
 function doPost(e) {
@@ -8,14 +8,8 @@ function doPost(e) {
     );
 
     var sheet = ss.getSheets()[0];
-
-    // Parse data từ request trước
     var data = JSON.parse(e.postData.contents);
 
-    // Lấy dữ liệu câu hỏi SataMath
-    var sataMath = data.satamath || data.sataMath || '';
-
-    // Tạo header nếu sheet trống
     if (sheet.getLastRow() === 0) {
       sheet.appendRow([
         'Thời gian',
@@ -23,27 +17,15 @@ function doPost(e) {
         'Điện thoại',
         'Email',
         'Khóa học quan tâm',
-        'Cơ sở học',
-        'Con đang học SataMath?'
+        'Cơ sở học'
       ]);
 
-      sheet.getRange(1, 1, 1, 7)
+      sheet.getRange(1, 1, 1, 6)
         .setFontWeight('bold')
         .setBackground('#6B21A8')
         .setFontColor('#ffffff');
-    } else {
-      // Nếu sheet cũ đang thiếu cột SataMath thì tự thêm tên cột
-      var lastColumn = sheet.getLastColumn();
-      if (lastColumn < 7) {
-        sheet.getRange(1, 7).setValue('Con đang học SataMath?');
-        sheet.getRange(1, 1, 1, 7)
-          .setFontWeight('bold')
-          .setBackground('#6B21A8')
-          .setFontColor('#ffffff');
-      }
     }
 
-    // Thêm row mới
     sheet.appendRow([
       new Date().toLocaleString('vi-VN', {
         timeZone: 'Asia/Ho_Chi_Minh'
@@ -52,11 +34,9 @@ function doPost(e) {
       data.phone || '',
       data.email || '',
       data.course || '',
-      data.center || '',
-      sataMath || ''
+      data.center || ''
     ]);
 
-    // Gửi email thông báo sau khi đã có data
     MailApp.sendEmail({
       to: 'satarobo@gmail.com',
       subject: '[Sata Robo] Đăng ký mới: ' + (data.name || 'Không có tên'),
@@ -66,7 +46,6 @@ function doPost(e) {
         'Email: ' + (data.email || ''),
         'Khóa học: ' + (data.course || ''),
         'Cơ sở: ' + (data.center || ''),
-        'Con đang học SataMath?: ' + (sataMath || ''),
         'Thời gian: ' + new Date().toLocaleString('vi-VN', {
           timeZone: 'Asia/Ho_Chi_Minh'
         })
