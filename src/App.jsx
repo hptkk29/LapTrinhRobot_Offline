@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       {/* ============ TOP BAR — countdown ưu đãi ============ */}
-      <div className="sticky top-0 z-[100] isolate">
+      <div className="fixed left-0 right-0 top-0 z-[100] isolate">
         <div className="relative z-0">
           <TopCountdownBar />
         </div>
@@ -33,7 +33,7 @@ function App() {
       </div>
 
       {/* ============ MAIN CONTENT ============ */}
-      <main>
+      <main className="pt-[104px] sm:pt-[118px]">
         {/* Section 1 — Hero */}
         <Hero />
 

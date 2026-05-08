@@ -30,6 +30,23 @@ const fmt = (n) => n ? `${n.toLocaleString('vi-VN')}đ` : '-';
 const allCourses = courseGroups.flatMap((group) => group.courses);
 const getCourse = (id) => allCourses.find((course) => course.id === id);
 
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia(query).matches;
+  });
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const update = () => setMatches(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, [query]);
+
+  return matches;
+}
+
 const courseMeta = {
   Sata3: {
     Icon: Sprout,
@@ -197,7 +214,7 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
 
   return (
     <article
-      className={`rounded-3xl border-2 p-5 shadow-card sm:p-6 ${
+      className={`rounded-3xl border-2 p-5 shadow-card md:flex md:h-full md:flex-col sm:p-6 ${
         isCombo
           ? 'border-primary-orange/40 bg-gradient-to-br from-orange-50 via-yellow-50 to-white'
           : 'border-primary-purple/35 bg-gradient-to-br from-purple-50 via-white to-orange-50'
@@ -238,7 +255,7 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
         )}
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div className="flex flex-col gap-2 sm:flex-row md:mt-auto">
         <button
           type="button"
           onClick={() => chooseCourse(course.id)}
@@ -419,6 +436,7 @@ export default function Roadmap5Years() {
   const [activeTrack, setActiveTrack] = useState('exam');
   const [openExamIds, setOpenExamIds] = useState([]);
   const [openFocusIds, setOpenFocusIds] = useState([]);
+  const isTabletUp = useMediaQuery('(min-width: 768px)');
   const [yearIdx, setYearIdx] = useState(0);
   const [moduleIdx, setModuleIdx] = useState(0);
   const [lightboxProject, setLightboxProject] = useState(null);
@@ -435,6 +453,8 @@ export default function Roadmap5Years() {
   );
   const shortItems = examItems.filter((item) => item.id === 'Sata1' || item.id === 'Sata2');
   const focusItems = examItems.filter((item) => item.id === 'Combo' || item.id === 'Sata8');
+  const shortOpenIds = isTabletUp && openExamIds.length ? shortItems.map((item) => item.id) : openExamIds;
+  const focusOpenIds = isTabletUp && openFocusIds.length ? focusItems.map((item) => item.id) : openFocusIds;
 
   useEffect(() => {
     const stored = readStoredCourseSelection();
@@ -540,27 +560,29 @@ export default function Roadmap5Years() {
                   key={item.id}
                   item={item}
                   course={item.course}
-                  isOpen={openExamIds.includes(item.id)}
+                  isOpen={shortOpenIds.includes(item.id)}
                   onToggle={() =>
-                    setOpenExamIds((current) =>
-                      current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id]
-                    )
+                    setOpenExamIds((current) => {
+                      if (isTabletUp) return current.length ? [] : shortItems.map((courseItem) => courseItem.id);
+                      return current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id];
+                    })
                   }
                 />
               ))}
             </div>
 
-            <div className="grid items-start gap-5 lg:grid-cols-2">
+            <div className="grid gap-5 md:items-stretch lg:grid-cols-2">
               {focusItems.map((item) => (
                 <FocusCourseBox
                   key={item.id}
                   item={item}
                   course={item.course}
-                  isOpen={openFocusIds.includes(item.id)}
+                  isOpen={focusOpenIds.includes(item.id)}
                   onToggle={() =>
-                    setOpenFocusIds((current) =>
-                      current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id]
-                    )
+                    setOpenFocusIds((current) => {
+                      if (isTabletUp) return current.length ? [] : focusItems.map((courseItem) => courseItem.id);
+                      return current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id];
+                    })
                   }
                 />
               ))}
