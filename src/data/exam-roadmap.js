@@ -73,7 +73,7 @@ export const examRoadmap = [
   {
     id: 'Combo',
     displayName: 'Full Lộ Trình Luyện Thi',
-    grade: 'Lớp 3-9',
+    grade: 'Lớp 1-8',
     sessions: 32,
     totalDuration: '48 giờ',
     device: 'RoboSim phần mềm + Robot Beta thật',

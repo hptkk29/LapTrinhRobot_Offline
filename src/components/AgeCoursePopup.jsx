@@ -10,12 +10,12 @@ const ROADMAP_OPEN_DELAY_MS = 600;
 const examGoalOptions = [
   {
     label: 'Luyện thi RoboSim / vòng loại',
-    courseName: 'Sata1 — Robosim Master',
+    courseName: 'Sata1 - Robosim Master',
     productCode: 'Sata1'
   },
   {
     label: 'Luyện robot Beta cấp khu vực',
-    courseName: 'Sata2 — Đấu trường Robot',
+    courseName: 'Sata2 - Đấu trường Robot',
     productCode: 'Sata2'
   },
   {
@@ -24,8 +24,8 @@ const examGoalOptions = [
     productCode: 'Combo'
   },
   {
-    label: 'Chuyên binh cam kết vượt vòng loại',
-    courseName: 'Sata8 — Vé Vàng Chung Kết',
+    label: 'Cam kết Vé Vàng',
+    courseName: 'Sata8 - Vé Vàng Chung Kết',
     productCode: 'Sata8'
   }
 ];
@@ -33,7 +33,7 @@ const examGoalOptions = [
 const durationSummary = (productCode) => {
   const course = getCourseById(productCode);
   if (!course) return '';
-  return `${course.sessions} buổi · ${course.durationPerSession}/buổi · Tổng ${course.totalDuration}`;
+  return `${course.sessions} buổi - ${course.durationPerSession}/buổi - Tổng ${course.totalDuration}`;
 };
 
 export default function AgeCoursePopup() {
@@ -56,7 +56,7 @@ export default function AgeCoursePopup() {
   const handleConfirm = () => {
     const selected = currentOptions[selectedIdx];
     if (!selected) {
-      setError(goal === 'exam' ? 'Bố/Mẹ vui lòng chọn mục tiêu luyện thi.' : 'Bố/Mẹ vui lòng chọn độ tuổi/lớp của con.');
+      setError(goal === 'exam' ? 'Bố/Mẹ vui lòng chọn mục tiêu luyện thi.' : 'Bố/Mẹ vui lòng chọn lớp của con.');
       return;
     }
 
@@ -130,37 +130,37 @@ export default function AgeCoursePopup() {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] bg-black/65 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
       onClick={closePopup}
     >
       <div
-        className="w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-white rounded-3xl shadow-2xl border border-white/50 p-5 sm:p-7 animate-slide-up"
+        className="max-h-[92vh] w-full max-w-4xl animate-slide-up overflow-y-auto rounded-3xl border border-white/50 bg-white p-5 shadow-2xl sm:p-7"
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="age-course-popup-title"
       >
-        <div className="flex items-start justify-between gap-3 mb-5">
+        <div className="mb-5 flex items-start justify-between gap-3">
           <div className="flex items-center gap-4">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-cream border border-primary-orange/20 overflow-hidden flex items-center justify-center flex-shrink-0">
+            <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-primary-orange/20 bg-gradient-cream sm:h-24 sm:w-24">
               {useFallbackMascot ? (
-                <Bot className="w-12 h-12 text-primary-purple" />
+                <Bot className="h-12 w-12 text-primary-purple" />
               ) : (
                 <img
                   src="/image/LinhVat.png"
                   alt="Linh vật Sata Robo"
-                  className="w-full h-full object-contain p-1"
+                  className="h-full w-full object-contain p-1"
                   onError={() => setUseFallbackMascot(true)}
                 />
               )}
             </div>
             <div>
-              <div className="badge-orange mb-2">AI chọn lộ trình</div>
-              <h2 id="age-course-popup-title" className="text-xl sm:text-2xl font-black text-text-dark leading-tight">
+              <div className="badge-orange mb-2">Chọn lộ trình</div>
+              <h2 id="age-course-popup-title" className="text-xl font-black leading-tight text-text-dark sm:text-2xl">
                 Bố/Mẹ muốn con học theo mục tiêu nào?
               </h2>
-              <p className="text-sm text-text-muted mt-1 leading-relaxed">
-                Chọn mục tiêu luyện thi hoặc học chuyên sâu dài hạn để Sata Robo gợi ý khóa phù hợp.
+              <p className="mt-1 text-sm leading-relaxed text-text-muted">
+                Chọn mục tiêu luyện thi hoặc lớp hiện tại để Sata Robo gợi ý khóa phù hợp.
               </p>
             </div>
           </div>
@@ -168,17 +168,17 @@ export default function AgeCoursePopup() {
           <button
             type="button"
             onClick={closePopup}
-            className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition flex-shrink-0"
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 transition hover:bg-gray-200"
             aria-label="Đóng popup"
           >
-            <X className="w-4 h-4 text-text-dark" />
+            <X className="h-4 w-4 text-text-dark" />
           </button>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-3 mb-4">
+        <div className="mb-4 grid gap-3 sm:grid-cols-2">
           {[
             { id: 'exam', title: 'Mục tiêu luyện thi', text: 'RoboSim, robot Beta, Combo hoặc Vé Vàng' },
-            { id: 'deep', title: 'Học chuyên sâu dài hạn', text: 'Chọn theo lớp/tuổi cho Sata3–Sata7' }
+            { id: 'deep', title: 'Học chuyên sâu dài hạn', text: 'Chọn theo lớp cho Sata3-Sata7' }
           ].map((item) => {
             const active = goal === item.id;
             return (
@@ -190,12 +190,12 @@ export default function AgeCoursePopup() {
                   setSelectedIdx(null);
                   setError('');
                 }}
-                className={`text-left rounded-2xl border-2 p-4 transition-all ${
+                className={`rounded-2xl border-2 p-4 text-left transition-all ${
                   active ? 'border-primary-orange bg-soft-cream shadow-orange-glow' : 'border-gray-200 bg-white hover:border-primary-orange/50'
                 }`}
               >
                 <div className="font-black text-text-dark">{item.title}</div>
-                <div className="text-xs text-text-muted mt-1">{item.text}</div>
+                <div className="mt-1 text-xs text-text-muted">{item.text}</div>
               </button>
             );
           })}
@@ -212,17 +212,18 @@ export default function AgeCoursePopup() {
                   setSelectedIdx(idx);
                   setError('');
                 }}
-                className={`text-left rounded-2xl border-2 p-4 transition-all active:scale-95
-                  ${active
+                className={`rounded-2xl border-2 p-4 text-left transition-all active:scale-95 ${
+                  active
                     ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
-                    : 'border-gray-200 bg-white hover:border-primary-orange/50 hover:bg-soft-cream/40'}`}
+                    : 'border-gray-200 bg-white hover:border-primary-orange/50 hover:bg-soft-cream/40'
+                }`}
               >
-                <div className="flex items-center justify-end mb-3 min-h-4">
-                  {active && <CheckCircle2 className="w-4 h-4 text-success" />}
+                <div className="mb-3 flex min-h-4 items-center justify-end">
+                  {active && <CheckCircle2 className="h-4 w-4 text-success" />}
                 </div>
-                <div className="font-black text-text-dark text-base mb-1">{option.label}</div>
-                {option.grade && <div className="text-xs font-bold text-primary-purple mb-2">{option.grade}</div>}
-                <div className="text-xs text-text-muted leading-relaxed">{option.courseName}</div>
+                <div className="mb-1 text-base font-black text-text-dark">{option.label}</div>
+                {option.grade && <div className="mb-2 text-xs font-bold text-primary-purple">{option.grade}</div>}
+                <div className="text-xs leading-relaxed text-text-muted">{option.courseName}</div>
                 <div className="mt-2 text-[11px] font-bold text-primary-orange">
                   {option.durationSummary ?? durationSummary(option.productCode)}
                 </div>
@@ -232,22 +233,14 @@ export default function AgeCoursePopup() {
         </div>
 
         {error && (
-          <p className="mt-3 text-sm text-urgent font-semibold">{error}</p>
+          <p className="mt-3 text-sm font-semibold text-urgent">{error}</p>
         )}
 
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:justify-end">
-          <button
-            type="button"
-            onClick={closePopup}
-            className="btn-outline sm:py-3"
-          >
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <button type="button" onClick={closePopup} className="btn-outline sm:py-3">
             Để sau
           </button>
-          <button
-            type="button"
-            onClick={handleConfirm}
-            className="btn-primary sm:py-3"
-          >
+          <button type="button" onClick={handleConfirm} className="btn-primary sm:py-3">
             Chọn khóa phù hợp cho con
           </button>
         </div>

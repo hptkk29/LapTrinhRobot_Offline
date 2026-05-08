@@ -327,7 +327,7 @@ export default function RegistrationForm() {
               {isConsult && (
                 <div className="mt-3 animate-fade-in rounded-xl border border-primary-purple/30 bg-purple-50 p-4 text-sm">
                   <p className="font-semibold leading-relaxed text-primary-purple">
-                    Tư vấn viên sẽ dựa trên độ tuổi, mục tiêu và lịch học của con để đề xuất khoá phù hợp nhất.
+                    Tư vấn viên sẽ dựa trên lớp hiện tại, mục tiêu và lịch học của con để đề xuất khoá phù hợp nhất.
                   </p>
                 </div>
               )}

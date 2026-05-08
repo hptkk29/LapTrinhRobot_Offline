@@ -36,9 +36,9 @@ export const commitments = [
   },
   {
     id: 6,
-    icon: 'Gift',
-    title: 'Học thử 90 phút - miễn phí hoàn toàn',
+    icon: 'FileText',
+    title: 'Cam kết văn bản cho gói Sata8',
     description:
-      '01 buổi học thử 90 phút, nhóm tối đa 12 học sinh, không thu phí và không ràng buộc.'
+      'Quyền lợi hoàn tiền của phụ huynh được ghi rõ bằng văn bản trước khi đăng ký gói Sata8.'
   }
 ];

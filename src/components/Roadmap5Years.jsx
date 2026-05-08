@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Clock,
   FlaskConical,
+  Image as ImageIcon,
   ListOrdered,
   Rocket,
   ShieldCheck,
@@ -16,6 +17,7 @@ import {
   Star,
   Target,
   Trophy,
+  X,
   Zap
 } from 'lucide-react';
 import { roadmap5Years } from '../data/roadmap-5-years';
@@ -28,13 +30,79 @@ const fmt = (n) => n ? `${n.toLocaleString('vi-VN')}đ` : '-';
 const allCourses = courseGroups.flatMap((group) => group.courses);
 const getCourse = (id) => allCourses.find((course) => course.id === id);
 
-const courseIcons = {
-  Sata3: Sprout,
-  Sata4: Rocket,
-  Sata5: Zap,
-  Sata6: Trophy,
-  Sata7: Bot
+const courseMeta = {
+  Sata3: {
+    Icon: Sprout,
+    emoji: '🌱',
+    iconWrap: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    activeWrap: 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/25'
+  },
+  Sata4: {
+    Icon: Rocket,
+    emoji: '🚀',
+    iconWrap: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+    activeWrap: 'bg-indigo-500 text-white border-indigo-500 shadow-lg shadow-indigo-500/25'
+  },
+  Sata5: {
+    Icon: Zap,
+    emoji: '⚡',
+    iconWrap: 'bg-amber-100 text-amber-700 border-amber-200',
+    activeWrap: 'bg-amber-500 text-white border-amber-500 shadow-lg shadow-amber-500/25'
+  },
+  Sata6: {
+    Icon: Trophy,
+    emoji: '🏆',
+    iconWrap: 'bg-orange-100 text-orange-700 border-orange-200',
+    activeWrap: 'bg-orange-500 text-white border-orange-500 shadow-lg shadow-orange-500/25'
+  },
+  Sata7: {
+    Icon: Bot,
+    emoji: '🤖',
+    iconWrap: 'bg-violet-100 text-violet-700 border-violet-200',
+    activeWrap: 'bg-violet-500 text-white border-violet-500 shadow-lg shadow-violet-500/25'
+  }
 };
+
+const featuredProjectsByCourse = {
+  Sata3: [
+    ['Bàn Tay Ma Thuật', '/image/sata3_1.jpg', 'Lắp ráp chuyển động cơ bản và quan sát cơ cấu.'],
+    ['Siêu Xe Bứt Phá', '/image/sata3_2.jpg', 'Tạo mô hình xe robot đầu tiên.'],
+    ['Vũ Công Robot', '/image/sata3_3.jpg', 'Điều khiển robot bằng chuỗi lệnh trực quan.'],
+    ['Thần Long Trỗi Dậy', '/image/sata3_4.jpg', 'Khám phá truyền động và cân bằng mô hình.'],
+    ['Siêu Xe Chuyên Dụng', '/image/sata3_5.jpg', 'Tối ưu cấu trúc xe theo nhiệm vụ.']
+  ],
+  Sata4: [
+    ['Xe robot di chuyển', '/image/sata4_1.jpg', 'Lập trình robot di chuyển theo nhiệm vụ.'],
+    ['Cảm biến dò line', '/image/sata4_2.jpg', 'Nhận biết vạch và tín hiệu cảm biến.'],
+    ['Xe robot tự hành', '/image/sata4_3.jpg', 'Kết hợp cảm biến để robot tự vận hành.'],
+    ['Dò line nâng cao', '/image/sata4_4.jpg', 'Tinh chỉnh đường chạy và tốc độ.'],
+    ['Thi đấu nội bộ', '/image/sata4_5.jpg', 'Rèn phản xạ chiến thuật trong sa bàn.']
+  ],
+  Sata5: [
+    ['Máy đập bóng cơ', '/image/sata5_1.jpg', 'Thiết kế cơ cấu chuyển động có lực.'],
+    ['Cổng quét an ninh', '/image/sata5_2.jpg', 'Ứng dụng cảm biến vào mô hình tự động.'],
+    ['Cửa nhà thông minh', '/image/sata5_3.jpg', 'Mô phỏng smart-home bằng robot.'],
+    ['Xe bám mục tiêu', '/image/sata5_4.jpg', 'Robot phản hồi theo tín hiệu môi trường.'],
+    ['Hệ thống phân loại', '/image/sata5_5.jpg', 'Phân loại vật thể theo quy trình tự động.']
+  ],
+  Sata6: [
+    ['Cảm biến dò line', '/image/sata6_1.jpg', 'Xây nền xử lý cảm biến cho thi đấu.'],
+    ['Dò line chuyên sâu PID', '/image/sata6_2.jpg', 'Giữ robot ổn định trên đường chạy.'],
+    ['Tối ưu chương trình', '/image/sata6_3.jpg', 'Rút ngắn thời gian và giảm lỗi vận hành.'],
+    ['Demo thi đấu', '/image/sata6_4.jpg', 'Thử nghiệm chiến thuật trên sa bàn.'],
+    ['Thi đấu nội bộ', '/image/sata6_5.jpg', 'Luyện áp lực và phối hợp đội thi.']
+  ],
+  Sata7: [
+    ['AI ra lệnh robot', '/image/sata7_1.jpg', 'Điều khiển robot bằng tín hiệu thông minh.'],
+    ['AI nhận diện màu', '/image/sata7_2.jpg', 'Ứng dụng thị giác máy tính cơ bản.'],
+    ['AI robot tự hành', '/image/sata7_3.jpg', 'Robot xử lý môi trường và ra quyết định.'],
+    ['AI quét mã QR', '/image/sata7_4.jpg', 'Nhận diện dữ liệu bằng camera.'],
+    ['AI nhận diện mặt', '/image/sata7_5.jpg', 'Mô phỏng bài toán nhận diện trong thực tế.']
+  ]
+};
+
+const toProjects = (productCode) =>
+  (featuredProjectsByCourse[productCode] ?? []).map(([title, image, caption]) => ({ title, image, caption }));
 
 const scrollToForm = () => {
   document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -54,93 +122,27 @@ function PriceLine({ label, value, muted = false }) {
   );
 }
 
-function FocusCourseBox({ course }) {
-  const isCombo = course.id === 'Combo';
-  const Icon = isCombo ? Trophy : ShieldCheck;
-
-  return (
-    <article
-      className={`relative overflow-hidden rounded-3xl border-2 p-5 shadow-card sm:p-6 ${
-        isCombo
-          ? 'border-primary-orange/40 bg-gradient-to-br from-orange-50 via-yellow-50 to-white'
-          : 'border-primary-purple/35 bg-gradient-to-br from-purple-50 via-white to-orange-50'
-      }`}
-    >
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <span className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md ${isCombo ? 'bg-primary-orange' : 'bg-primary-purple'}`}>
-            <Icon className="h-6 w-6" />
-          </span>
-          <div>
-            <div className="mb-1 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-primary-orange shadow-sm">
-                {course.badge}
-              </span>
-              <span className="rounded-full bg-white/75 px-3 py-1 text-[11px] font-bold text-text-muted shadow-sm">
-                {isCombo ? 'Phụ huynh chọn nhiều' : 'Cam kết rõ điều kiện'}
-              </span>
-            </div>
-            <h3 className="text-xl font-black leading-tight text-text-dark sm:text-2xl">{course.displayName}</h3>
-          </div>
-        </div>
-      </div>
-
-      <p className="mb-4 text-base font-black text-primary-purple">{course.hook}</p>
-
-      {isCombo ? (
-        <div className="mb-5 grid gap-2 text-sm text-text-dark">
-          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Bao gồm Robosim Master + Đấu trường Robot</div>
-          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 32 buổi - 90 phút/buổi - Tổng 48 giờ</div>
-          <div className="rounded-2xl bg-white/80 p-4">
-            <PriceLine label="Giá niêm yết" value={fmt(course.listPrice)} muted />
-            <PriceLine label="Giá combo" value={fmt(course.comboPrice)} />
-            <PriceLine label="Tiết kiệm" value={fmt(course.savedAmount)} />
-          </div>
-        </div>
-      ) : (
-        <div className="mb-5 grid gap-2 text-sm text-text-dark">
-          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 5 buổi chuyên sâu</div>
-          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 90 phút/buổi</div>
-          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Giá cố định: 2.500.000đ</div>
-          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Không áp dụng giảm giá</div>
-          <div className="rounded-2xl bg-white/80 p-4 text-sm font-semibold leading-relaxed text-text-dark">
-            Hoàn 100% học phí gói Sata8 nếu đủ điều kiện nhưng không vượt vòng loại.
-          </div>
-        </div>
-      )}
-
-      <button
-        type="button"
-        onClick={() => chooseCourse(course.id)}
-        className={isCombo ? 'btn-primary w-full' : 'btn-outline w-full border-primary-purple text-primary-purple hover:bg-primary-purple hover:text-white'}
-      >
-        {isCombo ? 'Chọn gói Combo' : 'Tìm hiểu cam kết Sata8'}
-      </button>
-    </article>
-  );
-}
-
 function ExamCourseCard({ item, course, isOpen, onToggle }) {
   return (
-    <article className="flex h-full flex-col rounded-3xl border-2 border-gray-100 bg-white p-5 shadow-card transition hover:-translate-y-1 hover:shadow-card-hover sm:p-6">
-      <div className="mb-4">
-        <span className="inline-flex rounded-full bg-soft-purple px-3 py-1 text-xs font-black text-primary-purple">
-          {course.id}
-        </span>
-        <h3 className="mt-3 text-xl font-black leading-tight text-text-dark">{course.displayName}</h3>
-        <p className="mt-1 text-sm font-black text-primary-orange">{course.hook}</p>
+    <article className="flex h-full flex-col rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <span className="inline-flex rounded-full bg-soft-purple px-3 py-1 text-xs font-black text-primary-purple">
+            {course.id}
+          </span>
+          <h3 className="mt-3 text-xl font-black leading-tight text-text-dark">{course.displayName}</h3>
+          <p className="mt-1 text-sm font-black text-primary-orange">{course.hook}</p>
+        </div>
       </div>
 
       <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">{course.note || item.description}</p>
 
       <div className="mb-4 grid grid-cols-2 gap-2">
         {[
-          ['Mục tiêu', course.hook],
-          ['Lớp phù hợp', course.grade],
+          ['Lớp', course.grade],
           ['Số buổi', `${course.sessions} buổi`],
           ['Thời lượng', `${course.durationPerSession}/buổi`],
-          ['Tổng', course.totalDuration],
-          ['Thiết bị', course.device]
+          ['Tổng', course.totalDuration]
         ].map(([label, value]) => (
           <div key={label} className="rounded-2xl bg-gray-50 p-3">
             <div className="text-[11px] font-black uppercase tracking-wide text-text-muted">{label}</div>
@@ -149,9 +151,8 @@ function ExamCourseCard({ item, course, isOpen, onToggle }) {
         ))}
       </div>
 
-      <div className="mb-4 rounded-2xl border border-primary-orange/15 bg-soft-cream p-4 space-y-2">
-        <PriceLine label="Giá niêm yết" value={fmt(course.listPrice)} muted />
-        <PriceLine label="Giá ưu đãi hiện tại" value={fmt(course.earlyBirdPrice)} />
+      <div className="mb-4 rounded-2xl border border-primary-orange/15 bg-soft-cream p-4">
+        <PriceLine label="Giá ưu đãi" value={fmt(course.earlyBirdPrice)} />
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -164,7 +165,7 @@ function ExamCourseCard({ item, course, isOpen, onToggle }) {
           className="btn-outline flex-1 px-4 py-3 text-sm"
           aria-expanded={isOpen}
         >
-          {isOpen ? 'Thu gọn' : 'Xem nội dung'}
+          {isOpen ? 'Thu gọn' : 'Xem nội dung chi tiết'}
         </button>
       </div>
 
@@ -172,10 +173,10 @@ function ExamCourseCard({ item, course, isOpen, onToggle }) {
         <div className="mt-5 rounded-2xl border border-primary-orange/20 bg-soft-cream/70 p-4 animate-fade-in">
           <div className="mb-3 flex items-center gap-2 font-black text-text-dark">
             <ListOrdered className="h-4 w-4 text-primary-orange" />
-            Nội dung chi tiết
+            Nội dung 16 buổi
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
-            {(item.lessons || item.highlights || []).map((lesson, index) => (
+            {(item.lessons || []).map((lesson, index) => (
               <div key={lesson} className="flex items-start gap-2 rounded-lg bg-white px-3 py-2 text-sm text-text-dark">
                 <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary-orange/10 text-xs font-black text-primary-orange">
                   {index + 1}
@@ -190,85 +191,266 @@ function ExamCourseCard({ item, course, isOpen, onToggle }) {
   );
 }
 
-function Sata8CommitmentCard() {
+function FocusCourseBox({ item, course, openFocusId, onToggle }) {
+  const isCombo = course.id === 'Combo';
+  const isOpen = openFocusId === course.id;
+  const Icon = isCombo ? Trophy : ShieldCheck;
+
   return (
-    <article className="mt-7 rounded-3xl border-2 border-primary-purple/30 bg-white p-5 shadow-card sm:p-7">
-      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+    <article
+      className={`rounded-3xl border-2 p-5 shadow-card sm:p-6 ${
+        isCombo
+          ? 'border-primary-orange/40 bg-gradient-to-br from-orange-50 via-yellow-50 to-white'
+          : 'border-primary-purple/35 bg-gradient-to-br from-purple-50 via-white to-orange-50'
+      }`}
+    >
+      <div className="mb-4 flex items-start gap-3">
+        <span className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl text-white shadow-md ${isCombo ? 'bg-primary-orange' : 'bg-primary-purple'}`}>
+          <Icon className="h-6 w-6" />
+        </span>
         <div>
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-soft-purple px-4 py-2 text-xs font-black uppercase text-primary-purple">
-            <ShieldCheck className="h-4 w-4" />
-            Cam kết Sata8
-          </div>
-          <h3 className="mb-3 text-2xl font-black leading-tight text-text-dark">
-            Vé Vàng Chung Kết - Sata Robo cùng con cam kết đến cùng
-          </h3>
-          <p className="mb-4 text-sm font-semibold leading-relaxed text-text-dark sm:text-base">
-            Không phải cam kết suông. Sata Robo chỉ cam kết khi cả trung tâm, phụ huynh và học sinh cùng đi đủ lộ trình.
-          </p>
-          <p className="text-sm leading-relaxed text-text-muted">
-            Để cam kết hoàn tiền có hiệu lực, con cần đi trọn 5 buổi chuyên sâu và hoàn thành đầy đủ học liệu E-learning.
-            Đây không phải điều kiện làm khó phụ huynh, mà là cách Sata Robo đảm bảo con được chuẩn bị đủ trước khi bước vào vòng loại.
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          <div className="grid gap-2">
-            {[
-              'Dành cho học viên đã đăng ký Combo hoặc Robosim Master.',
-              'Áp dụng cho mục tiêu vượt vòng loại cuộc thi Robotics 2026.',
-              'Con tham gia đủ 5/5 buổi chuyên sâu.',
-              'Con hoàn thành đầy đủ học liệu E-learning được giao.',
-              'Nếu đã đi đủ lộ trình mà vẫn không vượt vòng loại, Sata Robo hoàn 100% học phí gói Sata8.'
-            ].map((text) => (
-              <div key={text} className="flex items-start gap-2 rounded-2xl bg-gray-50 px-3 py-2 text-sm text-text-dark">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
-                <span>{text}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="rounded-2xl border border-primary-orange/20 bg-soft-cream p-4 text-sm font-semibold leading-relaxed text-text-dark">
-            Bố mẹ không phải tự theo dõi một mình - giáo viên sẽ nhắc tiến độ, kiểm tra học liệu và đồng hành cùng con trong suốt gói Sata8.
-          </div>
-
-          <div className="grid gap-2 sm:grid-cols-3">
-            {[
-              ['1', 'Đăng ký nền tảng'],
-              ['2', 'Đi đủ 5 buổi + E-learning'],
-              ['3', 'Thi vòng loại - đạt mục tiêu hoặc hoàn tiền']
-            ].map(([step, label]) => (
-              <div key={step} className="rounded-2xl border border-primary-purple/15 bg-purple-50 p-3 text-center">
-                <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary-purple text-sm font-black text-white">{step}</div>
-                <div className="text-xs font-bold leading-tight text-text-dark">{label}</div>
-              </div>
-            ))}
-          </div>
-
-          <button type="button" onClick={() => chooseCourse('Sata8')} className="btn-primary w-full">
-            Tư vấn điều kiện Sata8
-          </button>
+          <span className="mb-2 inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-black text-primary-orange shadow-sm">
+            {course.badge}
+          </span>
+          <h3 className="text-xl font-black leading-tight text-text-dark sm:text-2xl">{course.displayName}</h3>
+          <p className="mt-1 text-sm font-black text-primary-purple">{isCombo ? 'Học trọn từ RoboSim đến robot Beta' : 'Sata Robo cùng con cam kết đến cùng'}</p>
         </div>
       </div>
+
+      <div className="mb-5 grid gap-2 text-sm text-text-dark">
+        {isCombo ? (
+          <>
+            <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Bao gồm Robosim Master + Đấu trường Robot</div>
+            <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 32 buổi - 90 phút/buổi - Tổng 48 giờ</div>
+            <div className="rounded-2xl bg-white/80 p-4">
+              <PriceLine label="Giá combo" value={fmt(course.comboPrice)} />
+              <PriceLine label="Tiết kiệm" value={fmt(course.savedAmount)} />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 5 buổi chuyên sâu</div>
+            <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 90 phút/buổi - Tổng 7,5 giờ</div>
+            <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Giá cố định: 2.500.000đ</div>
+            <div className="rounded-2xl bg-white/80 p-4 text-sm font-semibold leading-relaxed text-text-dark">
+              Hoàn 100% học phí gói Sata8 nếu đủ điều kiện nhưng không vượt vòng loại.
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <button
+          type="button"
+          onClick={() => chooseCourse(course.id)}
+          className={isCombo ? 'btn-primary flex-1 px-4 py-3 text-sm' : 'btn-primary flex-1 px-4 py-3 text-sm'}
+        >
+          {isCombo ? 'Chọn gói Combo' : 'Tư vấn Sata8'}
+        </button>
+        <button type="button" onClick={onToggle} className="btn-outline flex-1 px-4 py-3 text-sm" aria-expanded={isOpen}>
+          {isCombo ? (isOpen ? 'Thu gọn' : 'Combo gồm gì?') : (isOpen ? 'Thu gọn' : 'Xem điều kiện')}
+        </button>
+      </div>
+
+      {isOpen && (
+        <div className="mt-5 rounded-2xl border border-white/70 bg-white/85 p-4 animate-fade-in">
+          {isCombo ? (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(item.highlights || []).map((text) => (
+                <div key={text} className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2 text-sm text-text-dark">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
+                  <span>{text}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid gap-2">
+              {[
+                'Điều kiện: phụ huynh đã đăng ký Combo hoặc Robosim Master.',
+                'Phạm vi: vòng loại quốc gia / vòng loại cuộc thi Robotics 2026.',
+                'Học sinh đi đủ 5/5 buổi chuyên sâu.',
+                'Hoàn thành học liệu E-learning được giao.',
+                'Giáo viên đồng hành nhắc tiến độ, phụ huynh không phải tự theo dõi một mình.',
+                'Nếu đã đi đủ lộ trình mà vẫn không vượt vòng loại, Sata Robo hoàn 100% học phí gói Sata8.'
+              ].map((text) => (
+                <div key={text} className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2 text-sm text-text-dark">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
+                  <span>{text}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </article>
+  );
+}
+
+function FeaturedProjects({ productCode, onOpen, paused = false }) {
+  const projects = useMemo(() => toProjects(productCode), [productCode]);
+  const [active, setActive] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+
+  useEffect(() => {
+    if (paused || !projects.length) return undefined;
+    const timer = setInterval(() => {
+      setActive((current) => (current + 1) % projects.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [paused, projects.length]);
+
+  useEffect(() => {
+    setActive(0);
+  }, [productCode]);
+
+  if (!projects.length) return null;
+
+  const go = (index) => {
+    const next = (index + projects.length) % projects.length;
+    setActive(next);
+  };
+
+  const handleTouchEnd = (event) => {
+    if (touchStart === null) return;
+    const delta = event.changedTouches[0].clientX - touchStart;
+    if (Math.abs(delta) > 40) go(active + (delta < 0 ? 1 : -1));
+    setTouchStart(null);
+  };
+
+  return (
+    <div className="mb-5 rounded-3xl border border-primary-purple/15 bg-white/95 p-4 shadow-sm">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2 text-sm font-black text-text-dark">
+            <ImageIcon className="h-4 w-4 text-primary-orange" />
+            Dự án tiêu biểu trong khóa học
+          </div>
+          <p className="mt-1 text-xs text-text-muted">5 sản phẩm giúp phụ huynh hình dung con sẽ làm được gì.</p>
+        </div>
+        <div className="hidden gap-1 sm:flex">
+          {projects.map((project, index) => (
+            <button
+              key={project.title}
+              type="button"
+              onClick={() => go(index)}
+              className={`h-2.5 rounded-full transition-all ${index === active ? 'w-6 bg-primary-orange' : 'w-2.5 bg-gray-300'}`}
+              aria-label={`Xem dự án ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div
+        className="overflow-hidden rounded-2xl"
+        onTouchStart={(event) => setTouchStart(event.touches[0].clientX)}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          className="flex transition-transform duration-500 ease-out"
+          style={{ transform: `translateX(-${active * 100}%)` }}
+        >
+          {projects.map((project, index) => (
+            <button
+              key={project.title}
+              type="button"
+              onClick={() => onOpen(project)}
+              className="min-w-full text-left"
+              aria-label={`Mở ảnh ${project.title}`}
+            >
+              <div className="grid gap-3 sm:grid-cols-[180px_1fr] sm:items-center">
+                <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-cream">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="h-full w-full object-cover transition duration-300 hover:scale-105"
+                  />
+                </div>
+                <div>
+                  <div className="mb-1 text-xs font-black uppercase text-primary-orange">Dự án {index + 1}/5</div>
+                  <h4 className="text-lg font-black text-text-dark">{project.title}</h4>
+                  <p className="mt-1 text-sm leading-relaxed text-text-muted">{project.caption}</p>
+                  <span className="mt-3 inline-flex rounded-xl border border-primary-purple/20 bg-soft-purple px-3 py-1.5 text-xs font-bold text-primary-purple">
+                    Xem chi tiết
+                  </span>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-3 flex justify-center gap-1 sm:hidden">
+        {projects.map((project, index) => (
+          <button
+            key={project.title}
+            type="button"
+            onClick={() => go(index)}
+            className={`h-2.5 rounded-full transition-all ${index === active ? 'w-6 bg-primary-orange' : 'w-2.5 bg-gray-300'}`}
+            aria-label={`Xem dự án ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ProjectLightbox({ project, onClose }) {
+  useEffect(() => {
+    if (!project) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [project, onClose]);
+
+  if (!project) return null;
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 p-4" onClick={onClose}>
+      <div
+        className="max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="flex items-center justify-between gap-3 border-b border-gray-100 p-4">
+          <div>
+            <h3 className="text-lg font-black text-text-dark">{project.title}</h3>
+            <p className="text-sm text-text-muted">{project.caption}</p>
+          </div>
+          <button type="button" onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200" aria-label="Đóng ảnh">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="max-h-[72vh] overflow-auto bg-gray-50 p-3">
+          <img src={project.image} alt={project.title} className="mx-auto max-h-[68vh] rounded-2xl object-contain" />
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default function Roadmap5Years() {
   const [activeTrack, setActiveTrack] = useState('exam');
-  const [openExamId, setOpenExamId] = useState('Sata1');
+  const [openExamId, setOpenExamId] = useState('');
+  const [openFocusId, setOpenFocusId] = useState('');
   const [yearIdx, setYearIdx] = useState(0);
   const [moduleIdx, setModuleIdx] = useState(0);
+  const [lightboxProject, setLightboxProject] = useState(null);
 
   const currentYear = roadmap5Years[yearIdx];
   const currentModule = currentYear.modules[moduleIdx];
   const currentCourse = getCourse(currentYear.productCode);
+  const currentMeta = courseMeta[currentYear.productCode] ?? courseMeta.Sata3;
+  const CurrentIcon = currentMeta.Icon;
 
   const examItems = useMemo(
     () => examRoadmap.map((item) => ({ ...item, course: getCourse(item.id) })).filter((item) => item.course),
     []
   );
-  const focusItems = examItems.filter((item) => item.id === 'Combo' || item.id === 'Sata8');
   const shortItems = examItems.filter((item) => item.id === 'Sata1' || item.id === 'Sata2');
+  const focusItems = examItems.filter((item) => item.id === 'Combo' || item.id === 'Sata8');
 
   useEffect(() => {
     const stored = readStoredCourseSelection();
@@ -291,7 +473,8 @@ export default function Roadmap5Years() {
 
       if (productCode && examRoadmap.some((course) => course.id === productCode)) {
         setActiveTrack('exam');
-        setOpenExamId(productCode);
+        setOpenExamId('');
+        setOpenFocusId(productCode === 'Combo' || productCode === 'Sata8' ? productCode : '');
       }
     };
 
@@ -315,7 +498,7 @@ export default function Roadmap5Years() {
     }
   };
 
-  const CurrentIcon = courseIcons[currentYear.productCode] ?? Star;
+  const visibleSkills = currentYear.yearSkills.slice(0, 6);
 
   return (
     <section id="roadmap" className="section-padding bg-white">
@@ -329,7 +512,7 @@ export default function Roadmap5Years() {
             Lộ trình học Robotics tại <span className="text-gradient-orange-purple">Sata Robo</span>
           </h2>
           <p className="mx-auto max-w-3xl text-base leading-relaxed text-text-muted sm:text-lg">
-            Phụ huynh có thể chọn khóa luyện thi ngắn hạn theo mục tiêu cuộc thi hoặc lộ trình chuyên sâu 48 buổi theo độ tuổi của con.
+            Phụ huynh có thể chọn khóa luyện thi Robotics 2026 hoặc lộ trình chuyên sâu 48 buổi theo lớp của con.
           </p>
         </div>
 
@@ -359,13 +542,14 @@ export default function Roadmap5Years() {
 
         {activeTrack === 'exam' && (
           <div className="animate-fade-in">
-            <div className="mb-5 grid gap-5 lg:grid-cols-2">
-              {focusItems.map((item) => (
-                <FocusCourseBox key={item.id} course={item.course} />
-              ))}
+            <div className="mx-auto mb-6 max-w-3xl text-center">
+              <h3 className="mb-2 text-2xl font-black text-text-dark">Khóa luyện thi Robotics 2026</h3>
+              <p className="text-sm leading-relaxed text-text-muted sm:text-base">
+                Dành cho học sinh cần luyện thi ngắn hạn, tập trung vào RoboSim, robot Beta và chiến thuật thi đấu.
+              </p>
             </div>
 
-            <div className="grid items-stretch gap-5 lg:grid-cols-2">
+            <div className="mb-5 grid items-stretch gap-5 lg:grid-cols-2">
               {shortItems.map((item) => (
                 <ExamCourseCard
                   key={item.id}
@@ -377,7 +561,17 @@ export default function Roadmap5Years() {
               ))}
             </div>
 
-            <Sata8CommitmentCard />
+            <div className="grid gap-5 lg:grid-cols-2">
+              {focusItems.map((item) => (
+                <FocusCourseBox
+                  key={item.id}
+                  item={item}
+                  course={item.course}
+                  openFocusId={openFocusId}
+                  onToggle={() => setOpenFocusId((current) => current === item.id ? '' : item.id)}
+                />
+              ))}
+            </div>
           </div>
         )}
 
@@ -386,7 +580,8 @@ export default function Roadmap5Years() {
             <div className="mb-8 flex justify-center overflow-x-auto py-2">
               <div className="flex min-w-max gap-3 px-1">
                 {roadmap5Years.map((year, idx) => {
-                  const Icon = courseIcons[year.productCode] ?? Star;
+                  const meta = courseMeta[year.productCode] ?? courseMeta.Sata3;
+                  const Icon = meta.Icon;
                   return (
                     <button
                       key={year.productCode}
@@ -402,8 +597,8 @@ export default function Roadmap5Years() {
                       }`}
                     >
                       <div className="mb-2 flex items-center gap-2">
-                        <span className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
-                          idx === yearIdx ? 'bg-primary-orange text-white' : 'bg-soft-purple text-primary-purple'
+                        <span className={`flex h-11 w-11 items-center justify-center rounded-2xl border text-lg ${
+                          idx === yearIdx ? meta.activeWrap : meta.iconWrap
                         }`}>
                           <Icon className="h-5 w-5" />
                         </span>
@@ -421,11 +616,11 @@ export default function Roadmap5Years() {
               <div className="grid gap-6 lg:grid-cols-12">
                 <div className="lg:col-span-8">
                   <div className="mb-3 flex flex-wrap items-center gap-2">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-orange text-white shadow-orange-glow">
+                    <span className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${currentMeta.activeWrap}`}>
                       <CurrentIcon className="h-6 w-6" />
                     </span>
                     <span className="badge-orange">Sata{currentYear.year + 2}</span>
-                    <span className="text-sm font-semibold text-text-muted">{currentYear.grade} - {currentYear.ageRange}</span>
+                    <span className="text-sm font-semibold text-text-muted">{currentYear.grade}</span>
                   </div>
                   <h3 className="mb-3 text-2xl font-black leading-tight text-text-dark sm:text-3xl">
                     {currentYear.productName}
@@ -457,14 +652,21 @@ export default function Roadmap5Years() {
                       <Sparkles className="h-4 w-4 text-primary-orange" />
                       <span className="text-sm font-black text-text-dark sm:text-base">Kỹ năng con đạt được sau năm học</span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {currentYear.yearSkills.map((skill) => (
-                        <span key={skill} className="rounded-full border border-primary-purple/20 bg-white px-3 py-1.5 text-xs font-bold text-primary-purple shadow-sm sm:text-sm">
-                          ✓ {skill}
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {visibleSkills.map((skill) => (
+                        <span key={skill} className="flex items-center gap-1.5 rounded-2xl border border-primary-purple/20 bg-white px-3 py-2 text-[11px] font-bold leading-tight text-primary-purple shadow-sm sm:text-xs">
+                          <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-success" />
+                          <span className="line-clamp-1">{skill}</span>
                         </span>
                       ))}
                     </div>
                   </div>
+
+                  <FeaturedProjects
+                    productCode={currentYear.productCode}
+                    onOpen={setLightboxProject}
+                    paused={Boolean(lightboxProject)}
+                  />
 
                   <button
                     type="button"
@@ -545,7 +747,7 @@ export default function Roadmap5Years() {
                     <span className="badge-orange">
                       <Target className="h-3 w-3" /> {currentModule.id}
                     </span>
-                    <span className="badge-purple">Năm {currentYear.year} - {currentYear.ageRange}</span>
+                    <span className="badge-purple">Năm {currentYear.year} - {currentYear.grade}</span>
                   </div>
                   <h4 className="mb-3 text-xl font-black text-text-dark sm:text-2xl">{currentModule.name}</h4>
                   <p className="mb-5 text-sm leading-relaxed text-text-muted sm:text-base">{currentModule.description}</p>
@@ -627,6 +829,8 @@ export default function Roadmap5Years() {
           </div>
         )}
       </div>
+
+      <ProjectLightbox project={lightboxProject} onClose={() => setLightboxProject(null)} />
     </section>
   );
 }

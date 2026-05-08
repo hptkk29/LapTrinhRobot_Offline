@@ -7,16 +7,16 @@ export const gifts = [
     id: 1,
     icon: '👕',
     title: 'Bộ đồng phục Sata Robo',
-    value: '350.000đ',
-    description: 'Áo + balo + sổ tay học viên — con tự hào mặc đến lớp.'
+    value: '200.000đ',
+    description: 'Đồng phục SataRobo — con tự hào mặc đến lớp.'
   },
   {
     id: 2,
     icon: '🎓',
-    title: 'Voucher học bổng 1.000.000đ',
-    value: '1.000.000đ',
+    title: 'Bộ đề luyện thi và giải đề RoboSim 2026',
+    value: '490.000đ',
     description:
-      'Áp dụng cho học phí năm đầu — chỉ dành cho phụ huynh đăng ký trong tháng này.'
+      'Áp dụng cho mọi học viên khi mua bất kỳ khoá học Offline nào.'
   },
   {
     id: 3,
@@ -36,4 +36,4 @@ export const gifts = [
   }
 ];
 
-export const totalGiftValue = '2,5 triệu đồng';
+export const totalGiftValue = ' 2 triệu đồng';

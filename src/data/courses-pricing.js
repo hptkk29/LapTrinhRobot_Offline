@@ -64,7 +64,7 @@ export const courseGroups = [
         shortName: 'Combo Sata1 + Sata2',
         displayName: 'Full Lộ Trình Luyện Thi',
         hook: 'Học trọn từ RoboSim đến robot Beta',
-        grade: 'Lớp 3-9',
+        grade: 'Lớp 1-8',
         sessions: 32,
         device: 'RoboSim phần mềm + Robot Beta thật',
         format: 'Trực tiếp, kết hợp E-learning',
@@ -88,7 +88,7 @@ export const courseGroups = [
         fixedPrice: 2500000,
         badge: 'Gói Chiến binh cam kết hoàn tiền 100%',
         note: 'Giá cố định 2.500.000đ, không áp dụng giảm giá. Hoàn 100% học phí gói Sata8 nếu học sinh đi đủ lộ trình nhưng không vượt vòng loại theo điều kiện cam kết.',
-        value: 'Sata8 - Vé Vàng Chung Kết - Lớp 3-9 - 5 buổi - 90 phút/buổi - Tổng 7,5 giờ - Giá cố định 2.500.000đ'
+        value: 'Sata8 - Vé Vàng Chung Kết - Lớp 1-8 - 5 buổi - 90 phút/buổi - Tổng 7,5 giờ - Giá cố định 2.500.000đ'
       })
     ]
   },
@@ -103,7 +103,6 @@ export const courseGroups = [
         displayName: 'Ươm Mầm Tài Năng',
         academicName: 'Robotics Ươm Mầm Tài Năng',
         grade: 'Lớp 1-2',
-        ageRange: '6-7 tuổi',
         sessions: 48,
         device: 'Alpha A + C & Cảm biến siêu âm',
         pricePerSession: 220000,
@@ -123,7 +122,6 @@ export const courseGroups = [
         displayName: 'Bứt Phá Giới Hạn',
         academicName: 'Robotics Bứt Phá Giới Hạn',
         grade: 'Lớp 3-4',
-        ageRange: '8-9 tuổi',
         sessions: 48,
         device: 'RoboSim + Beta Set + Saban',
         pricePerSession: 240000,
@@ -142,7 +140,6 @@ export const courseGroups = [
         displayName: 'Khơi Nguồn Sáng Tạo',
         academicName: 'Robotics Khơi Nguồn Sáng Tạo',
         grade: 'Lớp 5',
-        ageRange: '10 tuổi',
         sessions: 48,
         device: 'Hệ thống chuyên gia Storm',
         pricePerSession: 260000,
@@ -161,7 +158,6 @@ export const courseGroups = [
         displayName: 'Chinh Phục Đấu Trường',
         academicName: 'Robotics Chinh Phục Đấu Trường',
         grade: 'Lớp 6-7',
-        ageRange: '11-12 tuổi',
         sessions: 48,
         device: 'RoboSim + Beta Set + Saban Competition Standard',
         pricePerSession: 280000,
@@ -180,7 +176,6 @@ export const courseGroups = [
         displayName: 'Kiến Tạo Tương Lai',
         academicName: 'Robotics Chắp Cánh Tương Lai',
         grade: 'Lớp 8',
-        ageRange: '13 tuổi',
         sessions: 48,
         device: 'Storm + AI (Computer Vision Modules)',
         pricePerSession: 300000,

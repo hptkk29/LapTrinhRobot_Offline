@@ -28,36 +28,36 @@ export const selectCourse = (productCode, extra = {}) => {
 
 export const ageCourseOptions = [
   {
-    label: '6–7 tuổi',
-    grade: 'Lớp 1–2',
+    label: 'Lớp 1-2',
+    grade: 'Sata3',
     productCode: 'Sata3',
     courseName: 'Ươm Mầm Tài Năng',
     yearIndex: 0
   },
   {
-    label: '8–9 tuổi',
-    grade: 'Lớp 3–4',
+    label: 'Lớp 3-4',
+    grade: 'Sata4',
     productCode: 'Sata4',
     courseName: 'Bứt Phá Giới Hạn',
     yearIndex: 1
   },
   {
-    label: '10 tuổi',
-    grade: 'Lớp 5',
+    label: 'Lớp 5',
+    grade: 'Sata5',
     productCode: 'Sata5',
     courseName: 'Khơi Nguồn Sáng Tạo',
     yearIndex: 2
   },
   {
-    label: '11–12 tuổi',
-    grade: 'Lớp 6–7',
+    label: 'Lớp 6-7',
+    grade: 'Sata6',
     productCode: 'Sata6',
     courseName: 'Chinh Phục Đấu Trường',
     yearIndex: 3
   },
   {
-    label: '13 tuổi',
-    grade: 'Lớp 8',
+    label: 'Lớp 8',
+    grade: 'Sata7',
     productCode: 'Sata7',
     courseName: 'Kiến Tạo Tương Lai',
     yearIndex: 4
@@ -67,7 +67,7 @@ export const ageCourseOptions = [
   courseValue: getCourseValue(option.productCode),
   durationSummary: (() => {
     const course = getCourseById(option.productCode);
-    return course ? `${course.sessions} buổi · ${course.durationPerSession}/buổi · Tổng ${course.totalDuration}` : '';
+    return course ? `${course.sessions} buổi - ${course.durationPerSession}/buổi - Tổng ${course.totalDuration}` : '';
   })()
 }));
 

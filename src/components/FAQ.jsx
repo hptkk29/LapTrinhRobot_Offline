@@ -1,6 +1,35 @@
 import { useState } from 'react';
 import { faqs } from '../data/faqs';
-import { HelpCircle, Plus, Minus, MessageCircle } from 'lucide-react';
+import { HelpCircle, Plus, Minus, MessageCircle, CheckCircle2 } from 'lucide-react';
+
+function AnswerBlock({ answer }) {
+  const blocks = Array.isArray(answer) ? answer : String(answer).split('\n').filter(Boolean);
+
+  return (
+    <div className="space-y-2 text-sm leading-relaxed text-text-muted sm:text-base">
+      {blocks.map((block, index) => {
+        if (typeof block === 'object' && block?.type === 'list') {
+          return (
+            <ul key={`list-${index}`} className="space-y-1.5">
+              {block.items.map((item) => (
+                <li key={item} className="grid grid-cols-[1rem_1fr] gap-2">
+                  <CheckCircle2 className="mt-1 h-3.5 w-3.5 text-success" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+
+        return (
+          <p key={String(block).slice(0, 24)} className="mb-2 last:mb-0">
+            {block}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function FAQ() {
   const [openId, setOpenId] = useState(1);
@@ -10,23 +39,21 @@ export default function FAQ() {
   return (
     <section id="faq" className="section-padding bg-soft-cream">
       <div className="container-site">
-        {/* Heading */}
-        <div className="text-center mb-10 sm:mb-14">
+        <div className="mb-10 text-center sm:mb-14">
           <div className="badge-orange mb-4">
-            <HelpCircle className="w-4 h-4" />
+            <HelpCircle className="h-4 w-4" />
             CÂU HỎI THƯỜNG GẶP
           </div>
           <h2 className="heading-2 mb-4">
             Bố mẹ thường hỏi mình{' '}
             <span className="text-gradient-orange-purple">những câu này</span>
           </h2>
-          <p className="text-base sm:text-lg text-text-muted max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-base text-text-muted sm:text-lg">
             Những câu hỏi phụ huynh thường hỏi nhất trước khi quyết định cho con học.
           </p>
         </div>
 
-        {/* Accordion — mobile: 6 câu, desktop: tất cả */}
-        <div className="max-w-3xl mx-auto space-y-3">
+        <div className="mx-auto max-w-3xl space-y-3">
           {faqs.map((faq, index) => {
             const isOpen = openId === faq.id;
             return (
@@ -38,21 +65,21 @@ export default function FAQ() {
               >
                 <button
                   onClick={() => toggle(faq.id)}
-                  className="w-full flex items-center justify-between gap-3 p-4 sm:p-5 text-left hover:bg-soft-cream transition"
+                  className="flex w-full items-center justify-between gap-3 p-4 text-left transition hover:bg-soft-cream sm:p-5"
                   aria-expanded={isOpen}
                 >
-                  <span className="font-bold text-sm sm:text-base text-text-dark flex items-start gap-2 flex-1">
-                    <span className="text-primary-orange flex-shrink-0">❓</span>
+                  <span className="flex flex-1 items-start gap-2 text-sm font-bold text-text-dark sm:text-base">
+                    <span className="flex-shrink-0 text-primary-orange">?</span>
                     <span>{faq.question}</span>
                   </span>
                   <span
-                    className={`flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition ${
+                    className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full transition sm:h-8 sm:w-8 ${
                       isOpen
-                        ? 'bg-primary-orange text-white rotate-180'
+                        ? 'rotate-180 bg-primary-orange text-white'
                         : 'bg-soft-yellow text-primary-orange'
                     }`}
                   >
-                    {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                    {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                   </span>
                 </button>
 
@@ -62,11 +89,9 @@ export default function FAQ() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-1">
-                      <div className="pl-7 border-l-2 border-primary-orange/30">
-                        <p className="text-sm sm:text-base text-text-muted leading-relaxed">
-                          {faq.answer}
-                        </p>
+                    <div className="px-4 pb-4 pt-1 sm:px-5 sm:pb-5">
+                      <div className="border-l-2 border-primary-orange/30 pl-7">
+                        <AnswerBlock answer={faq.answer} />
                       </div>
                     </div>
                   </div>
@@ -76,20 +101,18 @@ export default function FAQ() {
           })}
         </div>
 
-        {/* CTA dưới FAQ */}
-        <div className="max-w-2xl mx-auto mt-10 bg-white rounded-2xl p-6 sm:p-7 text-center border-2 border-primary-purple/20 shadow-md">
-          <p className="text-sm sm:text-base text-text-dark mb-4">
-            Còn câu hỏi khác? <strong>Inbox Zalo</strong> — Sata Robo phản hồi trong{' '}
+        <div className="mx-auto mt-10 max-w-2xl rounded-2xl border-2 border-primary-purple/20 bg-white p-6 text-center shadow-md sm:p-7">
+          <p className="mb-4 text-sm text-text-dark sm:text-base">
+            Còn câu hỏi khác? <strong>Inbox Zalo</strong> - Sata Robo phản hồi trong{' '}
             <strong className="text-primary-orange">30 phút</strong>.
           </p>
           <a
             href="https://zalo.me/0818823720"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary-purple text-white font-bold text-sm sm:text-base rounded-xl
-              hover:bg-primary-purple-dark hover:scale-105 transition shadow-md"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-purple px-6 py-3 text-sm font-bold text-white shadow-md transition hover:scale-105 hover:bg-primary-purple-dark sm:text-base"
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="h-5 w-5" />
             Chat Zalo Ngay →
           </a>
         </div>

@@ -2,18 +2,17 @@ import { commitments } from '../data/commitments';
 import {
   BadgeDollarSign,
   CheckCircle2,
-  FileCheck2,
-  Gift,
+  FileText,
+  PenLine,
   Plane,
   Presentation,
   ShieldCheck,
-  Sparkles,
   Users
 } from 'lucide-react';
 
 const iconMap = {
   BadgeDollarSign,
-  Gift,
+  FileText,
   Plane,
   Presentation,
   ShieldCheck,
@@ -75,31 +74,30 @@ export default function Commitment() {
           })}
         </div>
 
-        <div className="mx-auto mb-10 max-w-4xl rounded-3xl border-2 border-primary-orange/35 bg-gradient-to-br from-orange-50 via-white to-yellow-50 p-5 shadow-card sm:p-8">
-          <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+        <div className="mx-auto mb-10 max-w-4xl rounded-3xl border-2 border-primary-purple/25 bg-white p-5 shadow-card sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-primary-orange shadow-sm">
-                <Gift className="h-4 w-4" />
-                0đ
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-soft-purple px-4 py-2 text-sm font-black text-primary-purple">
+                <FileText className="h-4 w-4" />
+                Cam kết số 6
               </div>
               <h3 className="mb-3 text-2xl font-black leading-tight text-text-dark sm:text-3xl">
-                Học thử 90 phút - miễn phí hoàn toàn
+                Cam kết văn bản cho gói Sata8
               </h3>
               <p className="text-base font-semibold leading-relaxed text-text-dark">
-                Bố mẹ không cần quyết định ngay. Hãy để con trải nghiệm robot thật trước.
+                Không chỉ nói miệng - quyền lợi của phụ huynh được ghi rõ bằng văn bản.
               </p>
             </div>
 
             <div>
-              <div className="mb-5 grid gap-2 sm:grid-cols-2">
+              <div className="mb-5 grid gap-2">
                 {[
-                  '01 buổi học thử 90 phút',
-                  'Nhóm tối đa 12 học sinh',
-                  'Không thu phí',
-                  'Không ràng buộc',
-                  'Phụ huynh quan sát được mức độ hứng thú và sự phù hợp của con'
+                  'Áp dụng cho gói Sata8 - Vé Vàng Chung Kết.',
+                  'Có điều kiện cam kết rõ ràng trước khi đăng ký.',
+                  'Phụ huynh được tư vấn phạm vi hoàn tiền, điều kiện học tập và yêu cầu hoàn thành học liệu.',
+                  'Nếu học viên đi đủ lộ trình theo cam kết nhưng không vượt vòng loại, Sata Robo hoàn 100% học phí gói Sata8 theo văn bản.'
                 ].map((item) => (
-                  <div key={item} className="flex items-start gap-2 rounded-2xl bg-white/85 px-3 py-2 text-sm text-text-dark">
+                  <div key={item} className="flex items-start gap-2 rounded-2xl bg-soft-purple/50 px-3 py-2 text-sm text-text-dark">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
                     <span>{item}</span>
                   </div>
@@ -113,8 +111,8 @@ export default function Commitment() {
                   document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
-                <Sparkles className="h-5 w-5" />
-                Đăng ký học thử miễn phí
+                <PenLine className="h-5 w-5" />
+                Tư vấn cam kết Sata8
               </a>
             </div>
           </div>
@@ -122,14 +120,14 @@ export default function Commitment() {
 
         <div className="mx-auto max-w-3xl rounded-2xl border-2 border-primary-purple/20 bg-white p-6 text-center shadow-md sm:p-8">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-green-50 px-4 py-2 text-sm font-bold text-success">
-            <FileCheck2 className="h-4 w-4" />
+            <ShieldCheck className="h-4 w-4" />
             Cam kết rõ ràng trước khi phụ huynh ra quyết định
           </div>
           <h3 className="mb-2 text-lg font-black text-text-dark sm:text-xl">
-            Học thử trước, nhìn kết quả thật, rồi mới chọn lộ trình phù hợp.
+            Lớp nhỏ, học cụ rõ ràng, tiến độ minh bạch.
           </h3>
           <p className="mb-5 text-sm text-text-muted sm:text-base">
-            Sata Robo ưu tiên sự minh bạch: lớp nhỏ, học thử miễn phí, quyền lợi học viên và các mốc thuyết trình đều được nói rõ ngay từ đầu.
+            Sata Robo ưu tiên sự minh bạch: quyền lợi học viên, các mốc thuyết trình và điều kiện cam kết đều được nói rõ ngay từ đầu.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <a
@@ -140,7 +138,7 @@ export default function Commitment() {
                 document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              Đăng ký học thử miễn phí
+              Đăng ký tư vấn miễn phí
             </a>
             <a href="https://zalo.me/0818823720" target="_blank" rel="noopener noreferrer" className="btn-outline">
               Hỏi thêm qua Zalo
