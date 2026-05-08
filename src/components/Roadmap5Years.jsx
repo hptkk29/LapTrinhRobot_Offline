@@ -124,7 +124,7 @@ function PriceLine({ label, value, muted = false }) {
 
 function ExamCourseCard({ item, course, isOpen, onToggle }) {
   return (
-    <article className="flex h-full flex-col rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6">
+    <article className="rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
           <span className="inline-flex rounded-full bg-soft-purple px-3 py-1 text-xs font-black text-primary-purple">
@@ -135,7 +135,7 @@ function ExamCourseCard({ item, course, isOpen, onToggle }) {
         </div>
       </div>
 
-      <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">{course.note || item.description}</p>
+      <p className="mb-4 text-sm leading-relaxed text-text-muted">{course.note || item.description}</p>
 
       <div className="mb-4 grid grid-cols-2 gap-2">
         {[
@@ -191,9 +191,8 @@ function ExamCourseCard({ item, course, isOpen, onToggle }) {
   );
 }
 
-function FocusCourseBox({ item, course, openFocusId, onToggle }) {
+function FocusCourseBox({ item, course, isOpen, onToggle }) {
   const isCombo = course.id === 'Combo';
-  const isOpen = openFocusId === course.id;
   const Icon = isCombo ? Trophy : ShieldCheck;
 
   return (
@@ -289,7 +288,6 @@ function FocusCourseBox({ item, course, openFocusId, onToggle }) {
 function FeaturedProjects({ productCode, onOpen, paused = false }) {
   const projects = useMemo(() => toProjects(productCode), [productCode]);
   const [active, setActive] = useState(0);
-  const [touchStart, setTouchStart] = useState(null);
 
   useEffect(() => {
     if (paused || !projects.length) return undefined;
@@ -309,87 +307,67 @@ function FeaturedProjects({ productCode, onOpen, paused = false }) {
     const next = (index + projects.length) % projects.length;
     setActive(next);
   };
-
-  const handleTouchEnd = (event) => {
-    if (touchStart === null) return;
-    const delta = event.changedTouches[0].clientX - touchStart;
-    if (Math.abs(delta) > 40) go(active + (delta < 0 ? 1 : -1));
-    setTouchStart(null);
-  };
+  const project = projects[active];
 
   return (
-    <div className="mb-5 rounded-3xl border border-primary-purple/15 bg-white/95 p-4 shadow-sm">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2 text-sm font-black text-text-dark">
-            <ImageIcon className="h-4 w-4 text-primary-orange" />
-            Dự án tiêu biểu trong khóa học
-          </div>
-          <p className="mt-1 text-xs text-text-muted">5 sản phẩm giúp phụ huynh hình dung con sẽ làm được gì.</p>
-        </div>
-        <div className="hidden gap-1 sm:flex">
-          {projects.map((project, index) => (
-            <button
-              key={project.title}
-              type="button"
-              onClick={() => go(index)}
-              className={`h-2.5 rounded-full transition-all ${index === active ? 'w-6 bg-primary-orange' : 'w-2.5 bg-gray-300'}`}
-              aria-label={`Xem dự án ${index + 1}`}
-            />
-          ))}
+    <div className="mt-3 rounded-2xl border border-primary-purple/20 bg-white p-3 shadow-sm">
+      <div className="mb-2 flex min-w-0 items-center gap-2">
+        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-soft-purple text-primary-purple">
+          <ImageIcon className="h-4 w-4" />
+        </span>
+        <div className="min-w-0">
+          <div className="line-clamp-1 text-xs font-black text-text-dark">Dự án tiêu biểu trong khóa học</div>
+          <div className="text-[11px] font-semibold text-text-muted">{active + 1}/5 sản phẩm</div>
         </div>
       </div>
 
-      <div
-        className="overflow-hidden rounded-2xl"
-        onTouchStart={(event) => setTouchStart(event.touches[0].clientX)}
-        onTouchEnd={handleTouchEnd}
+      <button
+        type="button"
+        onClick={() => onOpen(project)}
+        className="group relative w-full overflow-hidden rounded-2xl text-left"
+        aria-label={`Mở ảnh ${project.title}`}
       >
-        <div
-          className="flex transition-transform duration-500 ease-out"
-          style={{ transform: `translateX(-${active * 100}%)` }}
-        >
-          {projects.map((project, index) => (
-            <button
-              key={project.title}
-              type="button"
-              onClick={() => onOpen(project)}
-              className="min-w-full text-left"
-              aria-label={`Mở ảnh ${project.title}`}
-            >
-              <div className="grid gap-3 sm:grid-cols-[180px_1fr] sm:items-center">
-                <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-cream">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="h-full w-full object-cover transition duration-300 hover:scale-105"
-                  />
-                </div>
-                <div>
-                  <div className="mb-1 text-xs font-black uppercase text-primary-orange">Dự án {index + 1}/5</div>
-                  <h4 className="text-lg font-black text-text-dark">{project.title}</h4>
-                  <p className="mt-1 text-sm leading-relaxed text-text-muted">{project.caption}</p>
-                  <span className="mt-3 inline-flex rounded-xl border border-primary-purple/20 bg-soft-purple px-3 py-1.5 text-xs font-bold text-primary-purple">
-                    Xem chi tiết
-                  </span>
-                </div>
-              </div>
-            </button>
-          ))}
+        <div className="aspect-[16/10] overflow-hidden bg-gradient-cream">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+          />
         </div>
-      </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/35">
+          <span className="translate-y-2 rounded-full bg-white px-4 py-2 text-xs font-black text-primary-purple opacity-0 shadow-lg transition group-hover:translate-y-0 group-hover:opacity-100 sm:text-sm">
+            Xem chi tiết
+          </span>
+        </div>
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-3 text-white">
+          <div className="line-clamp-1 text-sm font-black">{project.title}</div>
+          <div className="line-clamp-1 text-[11px] text-white/85">{project.caption}</div>
+        </div>
+      </button>
 
-      <div className="mt-3 flex justify-center gap-1 sm:hidden">
-        {projects.map((project, index) => (
+      <div className="mt-2 grid grid-cols-5 gap-1.5">
+        {projects.map((item, index) => (
           <button
-            key={project.title}
+            key={item.title}
             type="button"
             onClick={() => go(index)}
-            className={`h-2.5 rounded-full transition-all ${index === active ? 'w-6 bg-primary-orange' : 'w-2.5 bg-gray-300'}`}
+            className={`aspect-square overflow-hidden rounded-lg border-2 transition ${
+              index === active ? 'border-primary-orange shadow-sm' : 'border-transparent opacity-70 hover:opacity-100'
+            }`}
             aria-label={`Xem dự án ${index + 1}`}
-          />
+          >
+            <img src={item.image} alt="" className="h-full w-full object-cover" />
+          </button>
         ))}
       </div>
+
+      <button
+        type="button"
+        onClick={() => onOpen(project)}
+        className="mt-2 inline-flex w-full items-center justify-center rounded-xl border border-primary-purple/25 bg-soft-purple px-3 py-2 text-xs font-black text-primary-purple transition hover:bg-primary-purple hover:text-white sm:hidden"
+      >
+        Xem chi tiết
+      </button>
     </div>
   );
 }
@@ -431,10 +409,15 @@ function ProjectLightbox({ project, onClose }) {
   );
 }
 
+const countModuleProjects = (module) => {
+  const count = module.sessionList.filter((session) => /dự án|demo/i.test(session.content)).length;
+  return count || 1;
+};
+
 export default function Roadmap5Years() {
   const [activeTrack, setActiveTrack] = useState('exam');
-  const [openExamId, setOpenExamId] = useState('');
-  const [openFocusId, setOpenFocusId] = useState('');
+  const [openExamIds, setOpenExamIds] = useState([]);
+  const [openFocusIds, setOpenFocusIds] = useState([]);
   const [yearIdx, setYearIdx] = useState(0);
   const [moduleIdx, setModuleIdx] = useState(0);
   const [lightboxProject, setLightboxProject] = useState(null);
@@ -473,8 +456,8 @@ export default function Roadmap5Years() {
 
       if (productCode && examRoadmap.some((course) => course.id === productCode)) {
         setActiveTrack('exam');
-        setOpenExamId('');
-        setOpenFocusId(productCode === 'Combo' || productCode === 'Sata8' ? productCode : '');
+        setOpenExamIds([]);
+        setOpenFocusIds(productCode === 'Combo' || productCode === 'Sata8' ? [productCode] : []);
       }
     };
 
@@ -499,6 +482,7 @@ export default function Roadmap5Years() {
   };
 
   const visibleSkills = currentYear.yearSkills.slice(0, 6);
+  const currentModuleProjects = countModuleProjects(currentModule);
 
   return (
     <section id="roadmap" className="section-padding bg-white">
@@ -549,26 +533,34 @@ export default function Roadmap5Years() {
               </p>
             </div>
 
-            <div className="mb-5 grid items-stretch gap-5 lg:grid-cols-2">
+            <div className="mb-5 grid items-start gap-5 lg:grid-cols-2">
               {shortItems.map((item) => (
                 <ExamCourseCard
                   key={item.id}
                   item={item}
                   course={item.course}
-                  isOpen={openExamId === item.id}
-                  onToggle={() => setOpenExamId((current) => current === item.id ? '' : item.id)}
+                  isOpen={openExamIds.includes(item.id)}
+                  onToggle={() =>
+                    setOpenExamIds((current) =>
+                      current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id]
+                    )
+                  }
                 />
               ))}
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-2">
+            <div className="grid items-start gap-5 lg:grid-cols-2">
               {focusItems.map((item) => (
                 <FocusCourseBox
                   key={item.id}
                   item={item}
                   course={item.course}
-                  openFocusId={openFocusId}
-                  onToggle={() => setOpenFocusId((current) => current === item.id ? '' : item.id)}
+                  isOpen={openFocusIds.includes(item.id)}
+                  onToggle={() =>
+                    setOpenFocusIds((current) =>
+                      current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id]
+                    )
+                  }
                 />
               ))}
             </div>
@@ -662,12 +654,6 @@ export default function Roadmap5Years() {
                     </div>
                   </div>
 
-                  <FeaturedProjects
-                    productCode={currentYear.productCode}
-                    onOpen={setLightboxProject}
-                    paused={Boolean(lightboxProject)}
-                  />
-
                   <button
                     type="button"
                     onClick={() => chooseCourse(currentYear.productCode, { yearIndex: yearIdx })}
@@ -689,6 +675,11 @@ export default function Roadmap5Years() {
                       <strong>{fmt(currentCourse?.installmentOutside)}/tháng</strong> cho Sata3-Sata7
                     </div>
                   </div>
+                  <FeaturedProjects
+                    productCode={currentYear.productCode}
+                    onOpen={setLightboxProject}
+                    paused={Boolean(lightboxProject)}
+                  />
                   {currentYear.note && (
                     <p className="mt-3 rounded-2xl border border-primary-orange/20 bg-soft-cream p-3 text-xs leading-relaxed text-text-muted">
                       {currentYear.note}
@@ -764,9 +755,9 @@ export default function Roadmap5Years() {
                       <div className="text-[11px] text-text-muted">Giờ học</div>
                     </div>
                     <div className="rounded-xl bg-yellow-50 p-3 text-center">
-                      <FlaskConical className="mx-auto mb-1 h-5 w-5 text-yellow-600" />
-                      <div className="text-base font-black text-text-dark sm:text-lg">1</div>
-                      <div className="text-[11px] text-text-muted">Sản phẩm</div>
+                      <Bot className="mx-auto mb-1 h-5 w-5 text-violet-600" />
+                      <div className="text-base font-black text-text-dark sm:text-lg">{currentModuleProjects}</div>
+                      <div className="text-[11px] text-text-muted">Dự án</div>
                     </div>
                   </div>
 

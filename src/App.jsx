@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       {/* ============ TOP BAR — countdown ưu đãi ============ */}
-      <div className="sticky top-0 z-50 isolate">
+      <div className="sticky top-0 z-[100] isolate">
         <div className="relative z-0">
           <TopCountdownBar />
         </div>

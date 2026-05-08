@@ -1,9 +1,7 @@
 import { commitments } from '../data/commitments';
 import {
   BadgeDollarSign,
-  CheckCircle2,
   FileText,
-  PenLine,
   Plane,
   Presentation,
   ShieldCheck,
@@ -26,8 +24,6 @@ const toneClasses = [
 ];
 
 export default function Commitment() {
-  const standardCommitments = commitments.filter((commitment) => commitment.id !== 6);
-
   return (
     <section id="commitment" className="section-padding bg-soft-cream">
       <div className="container-site">
@@ -44,8 +40,8 @@ export default function Commitment() {
           </p>
         </div>
 
-        <div className="mb-8 grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {standardCommitments.map((commitment, index) => {
+        <div className="mb-10 grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {commitments.map((commitment, index) => {
             const Icon = iconMap[commitment.icon] ?? ShieldCheck;
             const tone = toneClasses[index % toneClasses.length];
 
@@ -72,50 +68,6 @@ export default function Commitment() {
               </article>
             );
           })}
-        </div>
-
-        <div className="mx-auto mb-10 max-w-4xl rounded-3xl border-2 border-primary-purple/25 bg-white p-5 shadow-card sm:p-8">
-          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-soft-purple px-4 py-2 text-sm font-black text-primary-purple">
-                <FileText className="h-4 w-4" />
-                Cam kết số 6
-              </div>
-              <h3 className="mb-3 text-2xl font-black leading-tight text-text-dark sm:text-3xl">
-                Cam kết văn bản cho gói Sata8
-              </h3>
-              <p className="text-base font-semibold leading-relaxed text-text-dark">
-                Không chỉ nói miệng - quyền lợi của phụ huynh được ghi rõ bằng văn bản.
-              </p>
-            </div>
-
-            <div>
-              <div className="mb-5 grid gap-2">
-                {[
-                  'Áp dụng cho gói Sata8 - Vé Vàng Chung Kết.',
-                  'Có điều kiện cam kết rõ ràng trước khi đăng ký.',
-                  'Phụ huynh được tư vấn phạm vi hoàn tiền, điều kiện học tập và yêu cầu hoàn thành học liệu.',
-                  'Nếu học viên đi đủ lộ trình theo cam kết nhưng không vượt vòng loại, Sata Robo hoàn 100% học phí gói Sata8 theo văn bản.'
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-2 rounded-2xl bg-soft-purple/50 px-3 py-2 text-sm text-text-dark">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-              <a
-                href="#registration-form"
-                className="btn-primary w-full sm:w-auto"
-                onClick={(event) => {
-                  event.preventDefault();
-                  document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                <PenLine className="h-5 w-5" />
-                Tư vấn cam kết Sata8
-              </a>
-            </div>
-          </div>
         </div>
 
         <div className="mx-auto max-w-3xl rounded-2xl border-2 border-primary-purple/20 bg-white p-6 text-center shadow-md sm:p-8">

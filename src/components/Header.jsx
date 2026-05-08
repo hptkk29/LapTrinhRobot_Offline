@@ -14,7 +14,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-100 transition-all duration-300">
+    <header className="relative z-[60] border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur transition-all duration-300">
       <div className="container-site">
         <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo */}
