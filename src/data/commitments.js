@@ -8,7 +8,7 @@ export const commitments = [
     icon: 'ShieldCheck',
     title: 'Hoàn tiền 100% nếu không hài lòng',
     description:
-      'Buổi học thử đầu tiên 90 phút, nếu con không thích → hoàn tiền 100% học phí đã đóng, không câu hỏi. Hoàn lại sau 3 ngày làm việc.'
+      'Buổi học đầu tiên 90 phút, nếu con không thích → hoàn tiền 100% học phí đã đóng, không câu hỏi. Hoàn lại sau 3 ngày làm việc.'
   },
   {
     id: 2,

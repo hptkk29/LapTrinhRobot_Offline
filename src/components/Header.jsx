@@ -32,13 +32,13 @@ export default function Header() {
               onClick={() => scrollTo('roadmap')}
               className="text-sm font-semibold text-text-dark hover:text-primary-orange transition"
             >
-              Lộ trình 5 năm
+              Lộ trình 
             </button>
             <button
               onClick={() => scrollTo('locations')}
               className="text-sm font-semibold text-text-dark hover:text-primary-orange transition"
             >
-              4 cơ sở
+              Các cơ sở
             </button>
             <button
               onClick={() => scrollTo('commitment')}
