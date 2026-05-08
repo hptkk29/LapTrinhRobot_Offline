@@ -271,7 +271,7 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
       {isOpen && (
         <div className="mt-5 rounded-2xl border border-white/70 bg-white/85 p-4 animate-fade-in">
           {isCombo ? (
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid gap-2">
               {(item.highlights || []).map((text) => (
                 <div key={text} className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2 text-sm text-text-dark">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
