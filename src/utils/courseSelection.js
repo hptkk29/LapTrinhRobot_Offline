@@ -64,7 +64,11 @@ export const ageCourseOptions = [
   }
 ].map((option) => ({
   ...option,
-  courseValue: getCourseValue(option.productCode)
+  courseValue: getCourseValue(option.productCode),
+  durationSummary: (() => {
+    const course = getCourseById(option.productCode);
+    return course ? `${course.sessions} buổi · ${course.durationPerSession}/buổi · Tổng ${course.totalDuration}` : '';
+  })()
 }));
 
 export const isValidCourseSelection = (payload) =>

@@ -19,7 +19,7 @@ export const faqs = [
     id: 3,
     question: 'Lịch học như thế nào? Lớp học có đông không?',
     answer:
-      '1 buổi/tuần — 2 tiếng/buổi (1h30 lý thuyết + thực hành + 30 phút sản phẩm). Bố mẹ chọn lịch sáng hoặc chiều cuối tuần — phù hợp với con. Sĩ số tối đa 8 học viên/lớp — giảng viên theo sát từng con.'
+      '1 buổi/tuần — 90 phút/buổi. Sata1 và Sata2 có 16 buổi, tổng 24 giờ; Combo có 32 buổi, tổng 48 giờ; Sata8 có 5 buổi, tổng 7,5 giờ; Sata3–Sata7 có 48 buổi, tổng 72 giờ. Bố mẹ chọn lịch sáng hoặc chiều cuối tuần — phù hợp với con. Sĩ số tối đa 8 học viên/lớp — giảng viên theo sát từng con.'
   },
   {
     id: 4,

@@ -20,6 +20,8 @@ import { courseGroups } from '../data/courses-pricing';
 import { readStoredCourseSelection, selectCourse } from '../utils/courseSelection';
 
 const fmt = (n) => n ? `${n.toLocaleString('vi-VN')}đ` : '—';
+const durationSummary = (course) =>
+  `${course.sessions} buổi · ${course.durationPerSession ?? '90 phút'}/buổi · Tổng ${course.totalDuration}`;
 
 const allCourses = courseGroups.flatMap((group) => group.courses);
 const getCourse = (id) => allCourses.find((course) => course.id === id);
@@ -80,11 +82,16 @@ function ExamCourseCard({ item, course, isOpen, onToggle }) {
         <div className="rounded-xl bg-gray-50 p-3 text-center">
           <Clock className="mx-auto mb-1 h-4 w-4 text-primary-purple" />
           <div className="text-xs font-bold text-text-dark">{course.sessions} buổi</div>
+          <div className="text-[10px] font-semibold text-text-muted">{course.durationPerSession}/buổi</div>
         </div>
         <div className="rounded-xl bg-gray-50 p-3 text-center">
           <FlaskConical className="mx-auto mb-1 h-4 w-4 text-success" />
           <div className="text-xs font-bold text-text-dark line-clamp-2">{course.device}</div>
         </div>
+      </div>
+
+      <div className="mb-4 rounded-xl border border-primary-orange/15 bg-soft-cream px-3 py-2 text-center text-xs font-black text-primary-orange">
+        {durationSummary(course)}
       </div>
 
       <p className="mb-4 text-sm leading-relaxed text-text-muted">{item.description}</p>
@@ -265,7 +272,7 @@ export default function Roadmap5Years() {
             <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
                 ['Sata1–Sata2', 'Luyện thi ngắn hạn'],
-                ['Combo', '32 buổi trọn lộ trình'],
+                ['Combo', '32 buổi · 48 giờ'],
                 ['Sata8', 'Cam kết hoàn tiền 100%'],
                 ['31/05/2026', 'Hạn Early Bird']
               ].map(([value, label]) => (
@@ -294,9 +301,9 @@ export default function Roadmap5Years() {
           <div className="animate-fade-in">
             <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
               {[
-                { icon: BookOpen, value: '48 buổi', label: 'mỗi khóa chuyên sâu' },
+                { icon: BookOpen, value: '48 buổi', label: '90 phút/buổi' },
                 { icon: Layers, value: '4 học phần', label: '12 buổi/học phần' },
-                { icon: Trophy, value: '5 năm', label: 'Sata3 đến Sata7' },
+                { icon: Trophy, value: '72 giờ', label: 'tổng thời lượng/khóa' },
                 { icon: Sparkles, value: '0%', label: 'trả góp Sata3–Sata7' }
               ].map(({ icon: Icon, value, label }) => (
                 <div key={value} className="rounded-2xl border border-primary-purple/10 bg-soft-purple/60 p-4 text-center">
@@ -357,6 +364,9 @@ export default function Roadmap5Years() {
                   <h3 className="mb-3 text-2xl font-black leading-tight text-text-dark sm:text-3xl">
                     {currentYear.productName}
                   </h3>
+                  <div className="mb-4 inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-black text-primary-orange shadow-sm">
+                    {currentYear.totalSessions} buổi · {currentYear.durationPerSession}/buổi · Tổng {currentYear.totalDuration}
+                  </div>
                   <p className="mb-5 text-sm leading-relaxed text-text-dark/80 sm:text-base">{currentYear.description}</p>
 
                   <div className="mb-5 grid gap-3 sm:grid-cols-2">
@@ -459,7 +469,7 @@ export default function Roadmap5Years() {
                   >
                     <div className="mb-2 flex items-center justify-between">
                       <span className="badge-orange text-xs">HP {idx + 1}</span>
-                      <span className="text-xs font-semibold text-text-muted">{mod.sessions} buổi</span>
+                      <span className="text-xs font-semibold text-text-muted">{mod.sessions} buổi · {mod.durationPerSession}/buổi</span>
                     </div>
                     <h4 className="mb-2 font-black leading-tight text-text-dark">{mod.name}</h4>
                     <p className="line-clamp-2 text-xs text-text-muted">{mod.description}</p>

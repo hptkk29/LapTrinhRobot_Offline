@@ -166,6 +166,8 @@ export default function RegistrationForm() {
     if (course.fixedPrice) return course.fixedPrice;
     return course.earlyBirdSataMath;
   };
+  const getDurationSummary = (course) =>
+    `${course.sessions} buổi · ${course.durationPerSession ?? '90 phút'}/buổi · Tổng ${course.totalDuration}`;
 
   // ============ RENDER SUCCESS POPUP ============
   if (isSuccess) {
@@ -391,7 +393,7 @@ export default function RegistrationForm() {
                       <option key={c.id} value={c.value}>
                         {c.shortName}
                         {c.grade ? ` | ${c.grade}` : ''}
-                        {` | ${c.sessions} buổi`}
+                        {` | ${c.sessions} buổi | ${c.durationPerSession}/buổi | Tổng ${c.totalDuration}`}
                         {` | ${c.comboPrice || c.fixedPrice ? '' : 'từ '}${getOptionPrice(c).toLocaleString('vi-VN')}đ`}
                       </option>
                     ))}
@@ -422,7 +424,7 @@ export default function RegistrationForm() {
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-muted">
                     {selectedCourseObj.grade && <span>🏫 {selectedCourseObj.grade}</span>}
-                    <span>📚 {selectedCourseObj.sessions} buổi</span>
+                    <span>📚 {getDurationSummary(selectedCourseObj)}</span>
                     {selectedCourseObj.device && <span>🔧 {selectedCourseObj.device}</span>}
                   </div>
 

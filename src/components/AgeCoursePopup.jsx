@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Bot, CheckCircle2, X } from 'lucide-react';
-import { ageCourseOptions, selectCourse } from '../utils/courseSelection';
+import { ageCourseOptions, getCourseById, selectCourse } from '../utils/courseSelection';
 
 const POPUP_SHOWN_KEY = 'sata-age-popup-shown';
 const SELECTED_COURSE_KEY = 'sata-selected-age-course';
@@ -29,6 +29,12 @@ const examGoalOptions = [
     productCode: 'Sata8'
   }
 ];
+
+const durationSummary = (productCode) => {
+  const course = getCourseById(productCode);
+  if (!course) return '';
+  return `${course.sessions} buổi · ${course.durationPerSession}/buổi · Tổng ${course.totalDuration}`;
+};
 
 export default function AgeCoursePopup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -217,6 +223,9 @@ export default function AgeCoursePopup() {
                 <div className="font-black text-text-dark text-base mb-1">{option.label}</div>
                 {option.grade && <div className="text-xs font-bold text-primary-purple mb-2">{option.grade}</div>}
                 <div className="text-xs text-text-muted leading-relaxed">{option.courseName}</div>
+                <div className="mt-2 text-[11px] font-bold text-primary-orange">
+                  {option.durationSummary ?? durationSummary(option.productCode)}
+                </div>
               </button>
             );
           })}

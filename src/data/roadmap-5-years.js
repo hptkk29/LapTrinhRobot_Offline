@@ -1,626 +1,202 @@
 // =============================================
 // LỘ TRÌNH ĐÀO TẠO 5 NĂM — SATA ROBO
-// 5 năm × 4 học phần/năm × 12 buổi/HP = 240 buổi tổng
+// 5 năm × 4 học phần/năm × 12 buổi/học phần = 240 buổi
+// Mỗi buổi 90 phút.
 // =============================================
 
+const durationFields = {
+  totalSessions: 48,
+  durationPerSession: '90 phút',
+  totalHours: 72,
+  totalDuration: '72 giờ'
+};
+
+const moduleTypes = (isFinalCourse = false) => [
+  'Dự án',
+  'Dự án',
+  'Dự án',
+  'Dự án',
+  'Ôn tập',
+  'Dự án',
+  'Dự án',
+  'Dự án',
+  'Dự án',
+  isFinalCourse ? 'Dự án cuối khóa' : 'Dự án cuối học phần',
+  isFinalCourse ? 'Demo cuối khóa' : 'Demo cuối học phần',
+  isFinalCourse ? 'Báo cáo cuối khóa' : 'Báo cáo cuối học phần'
+];
+
+const makeModule = (id, name, lessons, description, skills, achievement, isFinalCourse = false) => ({
+  id,
+  name,
+  sessions: 12,
+  durationPerSession: '90 phút',
+  hours: 18,
+  totalDuration: '18 giờ',
+  description,
+  skills,
+  sessionList: lessons.map((content, index) => ({
+    num: index + 1,
+    content,
+    type: moduleTypes(isFinalCourse)[index]
+  })),
+  achievement
+});
+
+const makeCourse = (course) => ({
+  ...durationFields,
+  ...course,
+  tags: [...(course.tags ?? []), '48 buổi', '90 phút/buổi', 'Tổng 72 giờ', '4 học phần']
+});
+
 export const roadmap5Years = [
-  // ============== NĂM 1 — ƯƠM MẦM TÀI NĂNG (ROBOTICS VẬT LÝ) ==============
-  {
+  makeCourse({
     year: 1,
     productCode: 'Sata3',
-    productEmoji: '🌱',
     productName: 'Ươm Mầm Tài Năng',
     name: 'Ươm Mầm Tài Năng',
-    ageRange: '6 – 7 tuổi',
-    grade: 'Lớp 1 – 2',
-    description:
-      'Giai đoạn khởi đầu giúp trẻ 6–7 tuổi làm quen với Robotics thông qua lắp ráp mô hình, lập trình thẻ vật lý và học theo dự án. Trẻ được tiếp xúc với robot thật, cơ cấu truyền động, động cơ, bánh răng, trục, bánh xe và cảm biến siêu âm trong môi trường học tập trực quan, an toàn, hạn chế tiếp xúc màn hình.',
-    mission:
-      'Đây là giai đoạn vàng trong quá trình phát triển của trẻ. Bộ ZMRobo Alpha Series giúp con làm quen với cơ khí, lập trình vật lý và tư duy logic mà không cần màn hình — an toàn, trực quan và đầy thú vị.',
-    totalSessions: 48,
-    totalHours: 96,
+    academicName: 'Robotics Ươm Mầm Tài Năng',
+    ageRange: '6–7 tuổi',
+    grade: 'Lớp 1–2',
+    device: 'Hệ sinh thái Alpha A + C & Cảm biến siêu âm',
+    structure: '4 học phần × 12 buổi',
     color: 'primary-orange',
-    device: 'ZMRobo Alpha Series / Alpha A + C / Cảm biến siêu âm / Thẻ lập trình vật lý Physic Coding',
-    tags: ['Alpha Series', 'Physic Coding', 'Cảm biến siêu âm', '48 buổi', '4 học phần'],
-    note: 'Năm 1 tập trung gieo niềm yêu thích công nghệ, rèn tư duy logic, khả năng quan sát, sự tỉ mỉ và kỹ năng thuyết trình dự án mini sau mỗi học phần.',
-    yearSkills: ['Tư duy logic nền tảng', 'Lắp ráp tỉ mỉ', 'Quan sát và thử nghiệm', 'Kiên nhẫn sửa lỗi', 'Tự tin thuyết trình'],
+    description:
+      'Robotics Ươm Mầm Tài Năng giúp học sinh lớp 1–2 làm quen với cơ khí, bản vẽ, lập trình thẻ screen-free và tư duy hệ thống thông qua các dự án robot trực quan.',
+    mission:
+      'Giai đoạn nền tảng giúp con phát triển vận động tinh, sự tò mò khoa học, tính kiên định và khả năng phân tích sự cố vật lý trong môi trường học tập an toàn, giàu thực hành.',
+    note: 'Phương pháp đào tạo: Chu kỳ 5E, Project-Based Learning, hands-on 80% thời lượng, học sinh đóng vai “Kỹ sư nhí”.',
+    yearSkills: ['Tư duy hệ thống sơ đồ', 'Cơ sở cơ giới hóa', 'Logic lập trình thẻ screen-free', 'Vận động tinh', 'Phân tích bản vẽ', 'Xử lý sự cố vật lý', 'Tính kiên định', 'Sự tò mò khoa học'],
     modules: [
-      {
-        id: 'HP1',
-        name: 'Cơ Bản',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Con làm quen với bộ công cụ Alpha, hiểu cơ chế truyền động cơ bản, lắp ráp các mô hình đầu tiên và bắt đầu dùng thẻ lệnh vật lý để điều khiển robot.',
-        skills: [
-          'Nhận biết linh kiện Alpha',
-          'Lắp ráp cơ khí cơ bản',
-          'Hiểu bánh răng, trục, bánh xe',
-          'Điều khiển động cơ tiến/lùi',
-          'Làm việc nhóm',
-          'Thuyết trình mô hình đơn giản'
-        ],
-        sessionList: [
-          { num: 1,  content: 'Bàn Tay Ma Thuật', type: 'Dự án' },
-          { num: 2,  content: 'Đấu Trường Con Quay', type: 'Dự án' },
-          { num: 3,  content: 'Siêu Xe Bứt Phá', type: 'Dự án' },
-          { num: 4,  content: 'Chiến Xa Tốc Độ', type: 'Dự án' },
-          { num: 5,  content: 'Ôn tập kiến thức', type: 'Ôn tập' },
-          { num: 6,  content: 'Vũ Công Robot', type: 'Dự án' },
-          { num: 7,  content: 'Trở Về Tuổi Thơ', type: 'Dự án' },
-          { num: 8,  content: 'Kỹ Sĩ Làm Mát', type: 'Dự án' },
-          { num: 9,  content: 'Thủy Thủ Tài Ba', type: 'Dự án' },
-          { num: 10, content: 'Ý tưởng cuối học phần', type: 'Ý tưởng' },
-          { num: 11, content: 'Demo cuối học phần', type: 'Demo' },
-          { num: 12, content: 'Thuyết trình cuối học phần', type: 'Thuyết trình' }
-        ],
-        achievement:
-          'Con hoàn thành một mô hình robot cơ bản, biết giải thích nguyên lý chuyển động và tự tin trình bày trước phụ huynh.'
-      },
-      {
-        id: 'HP2',
-        name: 'Nâng Cao',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Con bước sang các cơ cấu chuyển động phức hợp hơn: nhiều chân, nâng hạ, vẽ tự động, mô phỏng sinh vật biển và sáng tạo sinh vật giả tưởng.',
-        skills: [
-          'Cơ cấu nhiều chân',
-          'Cơ chế nâng hạ',
-          'Giữ bút và vẽ hình học',
-          'Phối hợp chuyển động liên hoàn',
-          'Debug cơ khí',
-          'Phản biện kỹ thuật cơ bản'
-        ],
-        sessionList: [
-          { num: 1,  content: 'Chiến Binh Cua Biển', type: 'Dự án' },
-          { num: 2,  content: 'Cỗ Máy Xúc Cát', type: 'Dự án' },
-          { num: 3,  content: 'Họa Sĩ Robot', type: 'Dự án' },
-          { num: 4,  content: 'Chinh Phục Đại Dương', type: 'Dự án' },
-          { num: 5,  content: 'Ôn tập kiến thức', type: 'Ôn tập' },
-          { num: 6,  content: 'Chiếc Hộp Giai Điệu', type: 'Dự án' },
-          { num: 7,  content: 'Vận Động Viên Đạp Xe', type: 'Dự án' },
-          { num: 8,  content: 'Công Viên Kỷ Jura', type: 'Dự án' },
-          { num: 9,  content: 'Sinh Vật Đột Biến', type: 'Dự án' },
-          { num: 10, content: 'Ý tưởng cuối học phần', type: 'Ý tưởng' },
-          { num: 11, content: 'Demo cuối học phần', type: 'Demo' },
-          { num: 12, content: 'Thuyết trình cuối học phần', type: 'Thuyết trình' }
-        ],
-        achievement:
-          'Con tạo được một mô hình chuyển động phức hợp, biết phân tích lỗi cơ khí và cải tiến mô hình.'
-      },
-      {
-        id: 'HP3',
-        name: 'Chuyên Sâu',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Con phát triển tư duy kỹ thuật sâu hơn thông qua ròng rọc, đối trọng, chuyển động đa khớp, cánh tay robot, robot đối kháng và xe đua tốc độ.',
-        skills: [
-          'Ròng rọc và đối trọng',
-          'Chuyển động đa khớp',
-          'Cánh tay robot',
-          'Robot đối kháng',
-          'Lực đàn hồi và ma sát',
-          'Kể chuyện bằng mô hình'
-        ],
-        sessionList: [
-          { num: 1,  content: 'Lực Sĩ Robot', type: 'Dự án' },
-          { num: 2,  content: 'Hoạt Náo Viên Sôi Động', type: 'Dự án' },
-          { num: 3,  content: 'Kình Ngư Vượt Sóng', type: 'Dự án' },
-          { num: 4,  content: 'Đầu Bếp Tài Ba', type: 'Dự án' },
-          { num: 5,  content: 'Ôn tập kiến thức', type: 'Ôn tập' },
-          { num: 6,  content: 'Thần Long Trỗi Dậy', type: 'Dự án' },
-          { num: 7,  content: 'Đấu Sĩ Dũng Mãnh', type: 'Dự án' },
-          { num: 8,  content: 'Bước Nhảy Kỉ Lục', type: 'Dự án' },
-          { num: 9,  content: 'Đường Đua Rực Lửa', type: 'Dự án' },
-          { num: 10, content: 'Ý tưởng cuối học phần', type: 'Ý tưởng' },
-          { num: 11, content: 'Demo cuối học phần', type: 'Demo' },
-          { num: 12, content: 'Thuyết trình cuối học phần', type: 'Thuyết trình' }
-        ],
-        achievement:
-          'Con hoàn thành một robot có câu chuyện, có cơ chế chuyển động rõ ràng và biết trình bày giải pháp kỹ thuật theo nhóm.'
-      },
-      {
-        id: 'HP4',
-        name: 'Chuyên Gia',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Con tích hợp toàn diện cơ khí, cảm biến siêu âm và thẻ lệnh để xây dựng mô hình tự động nâng cao, hướng đến sản phẩm tốt nghiệp cuối năm.',
-        skills: [
-          'Cảm biến siêu âm',
-          'Điều kiện Nếu…Thì…',
-          'Truyền động góc vuông',
-          'Ròng rọc và cáp treo',
-          'Băng chuyền tự động',
-          'Tích hợp cơ khí, cảm biến và lập trình'
-        ],
-        sessionList: [
-          { num: 1,  content: 'Siêu Xe Chuyên Dụng', type: 'Dự án' },
-          { num: 2,  content: 'Trực Thăng Lốc Xoáy', type: 'Dự án' },
-          { num: 3,  content: 'Kỹ Sĩ Cáp Treo', type: 'Dự án' },
-          { num: 4,  content: 'Máy Bắn Đá', type: 'Dự án' },
-          { num: 5,  content: 'Ôn tập kiến thức', type: 'Ôn tập' },
-          { num: 6,  content: 'Chinh Phục Bầu Trời', type: 'Dự án' },
-          { num: 7,  content: 'Xưởng Cơ Khí', type: 'Dự án' },
-          { num: 8,  content: 'Cỗ Máy Thời Gian', type: 'Dự án' },
-          { num: 9,  content: 'Chiến Binh Bọc Thép', type: 'Dự án' },
-          { num: 10, content: 'Ý tưởng cuối khoá', type: 'Ý tưởng' },
-          { num: 11, content: 'Demo cuối khoá', type: 'Demo' },
-          { num: 12, content: 'Thuyết trình tốt nghiệp', type: 'Thuyết trình' }
-        ],
-        achievement:
-          'Con tốt nghiệp Năm 1 với một siêu dự án Robotics vật lý, biết lắp ráp, điều khiển bằng thẻ lệnh, dùng cảm biến cơ bản và tự tin trình bày trước phụ huynh.'
-      }
+      makeModule(
+        'HP1',
+        'Học phần 1',
+        ['Bàn Tay Ma Thuật', 'Đấu Trường Con Quay', 'Siêu Xe Bứt Phá', 'Chiến Xa Tốc Độ', 'Ôn tập kiến thức', 'Vũ Công Robot', 'Trở Về Tuổi Thơ', 'Kỹ Sư Làm Mát', 'Thủy Thủ Tài Ba', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'],
+        'Con làm quen cơ cấu truyền động, lắp ráp theo sơ đồ và điều khiển mô hình Alpha đầu tiên.',
+        ['Nhận biết linh kiện', 'Đọc bản vẽ', 'Lắp ráp cơ khí', 'Trình bày mô hình'],
+        'Con hoàn thành dự án robot cơ bản và trình bày được nguyên lý chuyển động.'
+      ),
+      makeModule(
+        'HP2',
+        'Học phần 2',
+        ['Chiến Binh Cua Biển', 'Cỗ Máy Xúc Cát', 'Họa Sĩ Robot', 'Chinh Phục Đại Dương', 'Ôn tập kiến thức', 'Chiếc Hộp Giai Điệu', 'Vận động viên đạp xe', 'Công Viên Kỷ Jura', 'Sinh Vật Đột Biến', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'],
+        'Con mở rộng sang cơ cấu nhiều chân, nâng hạ, vẽ tự động và mô phỏng sinh vật.',
+        ['Cơ cấu phức hợp', 'Quan sát chuyển động', 'Debug cơ khí', 'Làm việc nhóm'],
+        'Con biết phân tích lỗi vật lý và cải tiến mô hình sau thử nghiệm.'
+      ),
+      makeModule(
+        'HP3',
+        'Học phần 3',
+        ['Lực Sĩ Robot', 'Hoạt Náo Viên Sôi Động', 'Kình Ngư Vượt Sóng', 'Đầu Bếp Tài Ba', 'Ôn tập kiến thức', 'Thần Long Trỗi Dậy', 'Đấu Sĩ Dũng Mãnh', 'Bước Nhảy Kỉ Lục', 'Đường Đua Rực Lửa', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'],
+        'Con phát triển tư duy kỹ thuật thông qua dự án có lực, nhịp chuyển động và cơ cấu đối kháng.',
+        ['Ròng rọc', 'Đòn bẩy', 'Cơ cấu nhiều khớp', 'Tối ưu chuyển động'],
+        'Con tạo được mô hình có câu chuyện, có cơ chế rõ ràng và biết giải thích giải pháp.'
+      ),
+      makeModule(
+        'HP4',
+        'Học phần 4',
+        ['Siêu Xe Chuyên Dụng', 'Trực Thăng Lốc Xoáy', 'Kỹ Sư Cáp Treo', 'Máy Bắn Đá', 'Ôn tập kiến thức', 'Chinh Phục Bầu Trời', 'Xưởng Cơ Khí', 'Cỗ Máy Thời Gian', 'Chiến binh bọc thép', 'Dự án cuối khóa', 'Demo cuối khóa', 'Báo cáo cuối khoá'],
+        'Con tích hợp cơ khí, cảm biến siêu âm và lập trình thẻ để hoàn thiện dự án cuối năm.',
+        ['Tích hợp cảm biến', 'Truyền động góc', 'Cáp treo', 'Bảo vệ dự án'],
+        'Con tốt nghiệp Năm 1 với một dự án Robotics vật lý hoàn chỉnh.',
+        true
+      )
     ]
-  },
-
-  // ============== NĂM 2 — BỨT PHÁ GIỚI HẠN ==============
-  {
+  }),
+  makeCourse({
     year: 2,
     productCode: 'Sata4',
-    productEmoji: '🚀',
     productName: 'Bứt Phá Giới Hạn',
     name: 'Bứt Phá Giới Hạn',
-    ageRange: '8 – 9 tuổi',
-    grade: 'Lớp 3 – 4',
-    device: 'Robosim + Robot Beta thật',
-    description:
-      'Con bước vào thế giới robot thực tế — lắp ráp, lập trình và điều khiển robot vật lý. Bắt đầu được tham gia thi đấu Bảng R1.',
-    mission:
-      'Lớp 3–4 là giai đoạn con bắt đầu hình thành tư duy hệ thống. Robosim kết hợp với robot Beta thật giúp con chuyển từ lý thuyết sang lập trình thực tế và thi đấu Robotics đầu tiên.',
-    totalSessions: 48,
-    totalHours: 96,
+    academicName: 'Robotics Bứt Phá Giới Hạn',
+    ageRange: '8–9 tuổi',
+    grade: 'Lớp 3–4',
+    device: 'RoboSim + Beta Set + Saban',
+    structure: '4 học phần × 12 buổi',
     color: 'primary-purple',
-    note: 'Chặng này con đủ tuổi để dự thi vòng loại Robotics Bảng R1.',
-    yearSkills: ['Tư duy hệ thống', 'Đọc sơ đồ kỹ thuật', 'Lập trình robot cơ bản', 'Giải quyết vấn đề thực tế', 'Làm việc nhóm hiệu quả'],
+    description:
+      'Robotics Bứt Phá Giới Hạn giúp học sinh lớp 3–4 làm chủ RoboSim, chuyển đổi từ mô phỏng sang robot Beta thực tế và bắt đầu tư duy thi đấu.',
+    mission:
+      'Con học lập trình tự hành, rẽ nhánh, xử lý cảm biến, đồng bộ virtual-to-physical và rèn bản lĩnh qua mini-games tính điểm.',
+    note: 'Phương pháp đào tạo: Virtual-to-Physical, Competition Coaching, mini-games tính điểm, chuyển đổi từ mô phỏng RoboSim sang robot Beta thực tế.',
+    yearSkills: ['Lập trình tự hành', 'Cấu trúc rẽ nhánh phức hợp', 'Xử lý dữ liệu cảm biến', 'Làm chủ RoboSim', 'Cấu trúc cơ khí thi đấu', 'Kỹ năng đồng bộ V2P', 'Tư duy gỡ lỗi', 'Bản lĩnh đấu trường'],
     modules: [
-      {
-        id: 'HP1',
-        name: 'Lắp Ráp Robot Đầu Tiên',
-        sessions: 12,
-        hours: 24,
-        description: 'Con làm quen bộ kit robot vật lý — lắp ráp, hiểu các bộ phận và chức năng.',
-        skills: ['Cơ khí cơ bản', 'Đọc sơ đồ lắp ráp', 'Hiểu cảm biến', 'Động cơ & bánh xe', 'Kiên nhẫn'],
-        sessionList: [
-          { num: 1,  content: 'Mở hộp & tham quan kit robot', type: 'Lý thuyết' },
-          { num: 2,  content: 'Khung sườn robot — bước 1', type: 'Thực hành' },
-          { num: 3,  content: 'Lắp động cơ & bánh xe', type: 'Thực hành' },
-          { num: 4,  content: 'Cảm biến — mắt và tai của robot', type: 'Thực hành' },
-          { num: 5,  content: 'Đèn LED & loa robot', type: 'Thực hành' },
-          { num: 6,  content: 'Lắp hoàn chỉnh robot đầu tiên', type: 'Dự án' },
-          { num: 7,  content: 'Kiểm tra & test phần cứng', type: 'Thực hành' },
-          { num: 8,  content: 'Cá nhân hoá robot — sticker, tên', type: 'Dự án' },
-          { num: 9,  content: 'Phân biệt 5 loại cảm biến', type: 'Thực hành' },
-          { num: 10, content: 'Robot di chuyển cơ bản', type: 'Thực hành' },
-          { num: 11, content: 'Chinh phục thử thách lắp ráp', type: 'Dự án' },
-          { num: 12, content: 'Trình diễn robot cá nhân', type: 'Thi đấu' }
-        ],
-        achievement: 'Con sở hữu 1 robot vật lý đã lắp ráp hoàn chỉnh — robot đầu tiên trong đời.'
-      },
-      {
-        id: 'HP2',
-        name: 'Lập Trình Robot Di Chuyển',
-        sessions: 12,
-        hours: 24,
-        description: 'Học cách điều khiển robot bằng code — robot tiến lùi, rẽ trái phải, tránh vật cản.',
-        skills: ['Block-based coding', 'Điều khiển động cơ', 'Cảm biến khoảng cách', 'Vòng lặp robot', 'Logic điều kiện'],
-        sessionList: [
-          { num: 1,  content: 'Phần mềm lập trình robot', type: 'Lý thuyết' },
-          { num: 2,  content: 'Robot tiến & lùi', type: 'Thực hành' },
-          { num: 3,  content: 'Rẽ trái & phải, đo góc', type: 'Thực hành' },
-          { num: 4,  content: 'Robot vẽ hình vuông', type: 'Thực hành' },
-          { num: 5,  content: 'Robot vẽ đa giác', type: 'Thực hành' },
-          { num: 6,  content: 'Cảm biến khoảng cách', type: 'Dự án' },
-          { num: 7,  content: 'Robot tránh vật cản', type: 'Thực hành' },
-          { num: 8,  content: 'Robot tự đỗ xe', type: 'Dự án' },
-          { num: 9,  content: 'Mê cung robot tự thoát', type: 'Thực hành' },
-          { num: 10, content: 'Lập trình theo chuỗi nhiệm vụ', type: 'Thực hành' },
-          { num: 11, content: 'Hoàn thiện robot tự lái', type: 'Dự án' },
-          { num: 12, content: 'Đua robot mini nội bộ', type: 'Thi đấu' }
-        ],
-        achievement: 'Robot di chuyển tự động vượt qua mê cung do giảng viên thiết kế.'
-      },
-      {
-        id: 'HP3',
-        name: 'Sa Hình Thi Đấu R1 — Cấp Độ Cơ Bản',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Con làm quen với sa hình thi đấu Robotics chuẩn quốc tế — luyện kỹ năng giải nhiệm vụ trên thời gian thực.',
-        skills: ['Đọc sa hình', 'Lên chiến lược', 'Quản lý thời gian', 'Sửa lỗi nhanh', 'Tinh thần thi đấu'],
-        sessionList: [
-          { num: 1,  content: 'Giới thiệu cuộc thi Robotics R1', type: 'Lý thuyết' },
-          { num: 2,  content: 'Đọc & phân tích sa hình', type: 'Thực hành' },
-          { num: 3,  content: 'Nhiệm vụ 1 — gắp vật', type: 'Thực hành' },
-          { num: 4,  content: 'Nhiệm vụ 2 — đẩy vật về đích', type: 'Thực hành' },
-          { num: 5,  content: 'Nhiệm vụ 3 — cảm biến màu', type: 'Thực hành' },
-          { num: 6,  content: 'Kết hợp 3 nhiệm vụ liên tiếp', type: 'Dự án' },
-          { num: 7,  content: 'Tối ưu thời gian chạy', type: 'Thực hành' },
-          { num: 8,  content: 'Backup plan khi thi đấu', type: 'Dự án' },
-          { num: 9,  content: 'Mock test 1', type: 'Thực hành' },
-          { num: 10, content: 'Phân tích lỗi & cải thiện', type: 'Thực hành' },
-          { num: 11, content: 'Mock test 2 — hoàn chỉnh', type: 'Dự án' },
-          { num: 12, content: 'Vòng loại nội bộ Sata Robo R1', type: 'Thi đấu' }
-        ],
-        achievement: 'Con đủ năng lực dự thi Bảng R1 cấp Đà Nẵng và Quốc Gia.'
-      },
-      {
-        id: 'HP4',
-        name: 'Sáng Tạo Dự Án Robot Cá Nhân',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Con tự nghĩ ra 1 dự án robot giải quyết vấn đề thực tế — robot hữu ích cho gia đình hoặc cộng đồng.',
-        skills: ['Tư duy thiết kế', 'Giải quyết vấn đề thực tế', 'Pitch ý tưởng', 'Thử nghiệm', 'Báo cáo'],
-        sessionList: [
-          { num: 1,  content: 'Robot trong cuộc sống — case study', type: 'Lý thuyết' },
-          { num: 2,  content: 'Brainstorm vấn đề cần giải quyết', type: 'Thực hành' },
-          { num: 3,  content: 'Phác hoạ robot ý tưởng', type: 'Thực hành' },
-          { num: 4,  content: 'Lập kế hoạch xây dựng', type: 'Thực hành' },
-          { num: 5,  content: 'Lắp ráp prototype', type: 'Thực hành' },
-          { num: 6,  content: 'Lập trình logic chính', type: 'Dự án' },
-          { num: 7,  content: 'Test & ghi nhận kết quả', type: 'Thực hành' },
-          { num: 8,  content: 'Cải tiến phiên bản 2', type: 'Dự án' },
-          { num: 9,  content: 'Hoàn thiện thẩm mỹ', type: 'Thực hành' },
-          { num: 10, content: 'Chuẩn bị bài thuyết trình', type: 'Thực hành' },
-          { num: 11, content: 'Tổng duyệt & quay video demo', type: 'Dự án' },
-          { num: 12, content: 'Hội nghị Sáng Tạo Sata Robo Năm 2', type: 'Thi đấu' }
-        ],
-        achievement: 'Con có 1 dự án robot cá nhân — sẵn sàng dự các cuộc thi sáng tạo cấp quốc gia.'
-      }
+      makeModule('HP1', 'Học phần 1', ['Bước vào thế giới ảo', 'Xe robot di chuyển', 'Đèn tín hiệu giao thông', 'Dừng tại vạch kẻ đường', 'Ôn tập kiến thức', 'Tránh chướng ngại vật', 'Nhận diện màu sắc', 'Cảm biến dò line', 'Xe robot tự hành', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con làm quen RoboSim, cảm biến và các thuật toán điều khiển cơ bản.', ['RoboSim', 'Cảm biến màu', 'Dò line', 'Robot tự hành'], 'Con hoàn thành xe robot tự hành trong môi trường mô phỏng.'),
+      makeModule('HP2', 'Học phần 2', ['Giới thiệu cuộc thi Robo', 'Phân tích thể lệ thi đấu', 'Thiết kế lắp ráp robot', 'Lập trình nhiệm vụ 1', 'Lập trình nhiệm vụ 2', 'Lập trình nhiệm vụ 3', 'Chạy tổng hợp nhiệm vụ', 'Tối ưu chương trình', 'Kiểm tra lắp ráp robot', 'Kiểm tra lập trình', 'Demo thi đấu', 'Thi đấu nội bộ'], 'Con phân tích thể lệ, thiết kế robot và luyện nhiệm vụ thi đấu.', ['Đọc luật thi', 'Thiết kế robot', 'Tối ưu chương trình', 'Thi đấu nội bộ'], 'Con có robot sẵn sàng chạy nhiệm vụ theo sa bàn.'),
+      makeModule('HP3', 'Học phần 3', ['Robot xin chào', 'Quạt mát', 'Điều khiển từ xa', 'Xe tuần tra', 'Ôn tập kiến thức', 'Đèn thông minh', 'Dò line cơ bản', 'Dò line nâng cao', 'Dò line chuyên sâu', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con chuyển sang robot Beta thực tế, điều khiển từ xa và dò line nhiều cấp độ.', ['Robot Beta', 'Điều khiển từ xa', 'Dò line nâng cao', 'Debug'], 'Con vận hành được robot vật lý với nhiệm vụ dò line.'),
+      makeModule('HP4', 'Học phần 4', ['Giới thiệu cuộc thi Robo', 'Phân tích thể lệ thi đấu', 'Thiết kế lắp ráp robot', 'Lập trình nhiệm vụ 1', 'Lập trình nhiệm vụ 2', 'Lập trình nhiệm vụ 3', 'Chạy tổng hợp nhiệm vụ', 'Tối ưu chương trình', 'Kiểm tra lắp ráp robot', 'Kiểm tra lập trình', 'Demo thi đấu', 'Thi đấu nội bộ'], 'Con tổng duyệt chu kỳ thi đấu từ phân tích luật đến demo nội bộ.', ['Chiến thuật', 'Tối ưu hành trình', 'Kiểm tra robot', 'Bản lĩnh sân đấu'], 'Con hoàn thành bài thi nội bộ với quy trình kỹ thuật rõ ràng.', true)
     ]
-  },
-
-  // ============== NĂM 3 — KHƠI NGUỒN SÁNG TẠO ==============
-  {
+  }),
+  makeCourse({
     year: 3,
     productCode: 'Sata5',
-    productEmoji: '⚡',
     productName: 'Khơi Nguồn Sáng Tạo',
     name: 'Khơi Nguồn Sáng Tạo',
+    academicName: 'Robotics Khơi Nguồn Sáng Tạo',
     ageRange: '10 tuổi',
     grade: 'Lớp 5',
-    device: 'Bộ Storm cao cấp',
-    description:
-      'Năm chuyển giao — con củng cố nền tảng vững vàng trước khi bước vào THCS. Hoàn thiện kỹ năng Bảng R1, chuẩn bị nâng lên R2.',
-    mission:
-      'Thiết bị Storm cao cấp mở ra thế giới lập trình Python thực chiến và AI cho trẻ. Đây là năm bản lề trước THCS — con củng cố R1 và chuẩn bị bước vào đấu trường R2.',
-    totalSessions: 48,
-    totalHours: 96,
+    device: 'Hệ thống chuyên gia Storm',
+    structure: '4 học phần × 12 buổi',
     color: 'primary-orange',
-    note: 'Năm bản lề — nền tảng vững để bước vào đấu trường R2.',
-    yearSkills: ['Sáng tạo giải pháp', 'Tư duy thuật toán', 'Thiết kế dự án cá nhân', 'Phân tích và cải tiến', 'Trình bày portfolio'],
+    description:
+      'Robotics Khơi Nguồn Sáng Tạo đưa học sinh lớp 5 vào cơ khí động lực học, truyền động, smart-home và mô hình hóa giải pháp thực tiễn.',
+    mission:
+      'Con học theo quy trình thiết kế kỹ thuật, kiểm thử, cải tiến sản phẩm và phát triển tư duy thiết kế bền vững.',
+    note: 'Phương pháp đào tạo: Engineering Design Process, học tập dựa trên dự án Smart-Logistics, kiểm thử và cải tiến sản phẩm.',
+    yearSkills: ['Cơ khí động lực học', 'Làm chủ cơ cấu truyền động', 'Vật lý kỹ thuật', 'Tự động hóa và smart-home', 'Tích hợp đa hệ thống', 'Giao tiếp tín hiệu', 'Mô hình hóa thực tiễn', 'Tư duy thiết kế bền vững'],
     modules: [
-      {
-        id: 'HP1',
-        name: 'Lập Trình Python Cơ Bản',
-        sessions: 12,
-        hours: 24,
-        description: 'Con chuyển từ Block sang gõ code thật — học Python cơ bản qua dự án thú vị.',
-        skills: ['Cú pháp Python', 'Biến & kiểu dữ liệu', 'Vòng lặp & điều kiện', 'Hàm cơ bản', 'Debug code'],
-        sessionList: [
-          { num: 1,  content: 'Hello World — Python đầu tiên', type: 'Lý thuyết' },
-          { num: 2,  content: 'Biến số & in ra màn hình', type: 'Thực hành' },
-          { num: 3,  content: 'Phép tính & toán tử', type: 'Thực hành' },
-          { num: 4,  content: 'Câu lệnh điều kiện if-else', type: 'Thực hành' },
-          { num: 5,  content: 'Vòng lặp for & while', type: 'Thực hành' },
-          { num: 6,  content: 'Mini game đoán số', type: 'Dự án' },
-          { num: 7,  content: 'Danh sách & tuple', type: 'Thực hành' },
-          { num: 8,  content: 'Hàm — viết code tái sử dụng', type: 'Dự án' },
-          { num: 9,  content: 'Thư viện turtle — vẽ hình', type: 'Thực hành' },
-          { num: 10, content: 'Game tic-tac-toe Python', type: 'Thực hành' },
-          { num: 11, content: 'Tổng hợp dự án Python HP1', type: 'Dự án' },
-          { num: 12, content: 'Đánh giá & nhận chứng nhận', type: 'Thi đấu' }
-        ],
-        achievement: 'Con thành thạo Python cơ bản — đọc và viết được code Python ngắn.'
-      },
-      {
-        id: 'HP2',
-        name: 'Robot Nâng Cao R1',
-        sessions: 12,
-        hours: 24,
-        description: 'Hoàn thiện kỹ năng thi đấu Bảng R1 — chuẩn bị tham gia các kỳ thi cấp quốc gia.',
-        skills: ['Sa hình R1 nâng cao', 'Tối ưu code', 'Đa nhiệm vụ', 'Chiến thuật thi đấu', 'Sửa lỗi áp lực'],
-        sessionList: [
-          { num: 1,  content: 'Phân tích đề thi R1 năm trước', type: 'Lý thuyết' },
-          { num: 2,  content: 'Sa hình R1 nâng cao — bước 1', type: 'Thực hành' },
-          { num: 3,  content: 'Sa hình R1 nâng cao — bước 2', type: 'Thực hành' },
-          { num: 4,  content: 'Lập trình robot đa nhiệm', type: 'Thực hành' },
-          { num: 5,  content: 'Cảm biến nâng cao — kết hợp', type: 'Thực hành' },
-          { num: 6,  content: 'Quản lý pin & rủi ro', type: 'Dự án' },
-          { num: 7,  content: 'Chiến thuật rút thời gian', type: 'Thực hành' },
-          { num: 8,  content: 'Mock test áp lực thật', type: 'Dự án' },
-          { num: 9,  content: 'Phân tích đối thủ', type: 'Thực hành' },
-          { num: 10, content: 'Tinh thần thi đấu', type: 'Thực hành' },
-          { num: 11, content: 'Tổng duyệt R1 cuối', type: 'Dự án' },
-          { num: 12, content: 'Sata Robo R1 Championship', type: 'Thi đấu' }
-        ],
-        achievement: 'Con có khả năng dự thi giải R1 cấp Quốc Gia (RBT, X-Robotics, VEX IQ).'
-      },
-      {
-        id: 'HP3',
-        name: 'Khám Phá AI Cho Trẻ Em',
-        sessions: 12,
-        hours: 24,
-        description: 'Giới thiệu AI một cách thân thiện — con học cách máy nhận diện hình ảnh, giọng nói.',
-        skills: ['AI căn bản', 'Computer Vision', 'Speech Recognition', 'Đạo đức AI', 'Tư duy phản biện'],
-        sessionList: [
-          { num: 1,  content: 'AI là gì? Câu chuyện thực tế', type: 'Lý thuyết' },
-          { num: 2,  content: 'Teachable Machine — dạy AI', type: 'Thực hành' },
-          { num: 3,  content: 'AI nhận diện hình ảnh', type: 'Thực hành' },
-          { num: 4,  content: 'AI nhận diện giọng nói', type: 'Thực hành' },
-          { num: 5,  content: 'AI nhận diện cử chỉ', type: 'Thực hành' },
-          { num: 6,  content: 'Robot + AI — kết hợp', type: 'Dự án' },
-          { num: 7,  content: 'AI sáng tạo hình ảnh', type: 'Thực hành' },
-          { num: 8,  content: 'AI sáng tạo âm nhạc', type: 'Dự án' },
-          { num: 9,  content: 'AI có thể sai — nhìn ra giới hạn', type: 'Thực hành' },
-          { num: 10, content: 'Đạo đức khi dùng AI', type: 'Thực hành' },
-          { num: 11, content: 'Dự án AI giải quyết vấn đề', type: 'Dự án' },
-          { num: 12, content: 'Triển lãm AI Sata Robo', type: 'Thi đấu' }
-        ],
-        achievement: 'Con tự huấn luyện được 1 mô hình AI nhỏ giải quyết bài toán cụ thể.'
-      },
-      {
-        id: 'HP4',
-        name: 'Dự Án Khoa Học Liên Môn',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Tích hợp Robotics + AI + Khoa học để giải quyết 1 bài toán thực — chuẩn bị portfolio cho năm 4.',
-        skills: ['Tư duy liên môn', 'Phương pháp khoa học', 'Tham luận', 'Quản lý dự án', 'Trình bày học thuật'],
-        sessionList: [
-          { num: 1,  content: 'Phương pháp khoa học STEM', type: 'Lý thuyết' },
-          { num: 2,  content: 'Chọn vấn đề & giả thuyết', type: 'Thực hành' },
-          { num: 3,  content: 'Nghiên cứu & thu thập', type: 'Thực hành' },
-          { num: 4,  content: 'Thiết kế giải pháp', type: 'Thực hành' },
-          { num: 5,  content: 'Lắp ráp prototype', type: 'Thực hành' },
-          { num: 6,  content: 'Lập trình điều khiển', type: 'Dự án' },
-          { num: 7,  content: 'Thí nghiệm & ghi nhận', type: 'Thực hành' },
-          { num: 8,  content: 'Phân tích kết quả', type: 'Dự án' },
-          { num: 9,  content: 'Cải tiến lần 2', type: 'Thực hành' },
-          { num: 10, content: 'Viết báo cáo khoa học', type: 'Thực hành' },
-          { num: 11, content: 'Chuẩn bị poster & demo', type: 'Dự án' },
-          { num: 12, content: 'Hội nghị STEM Sata Robo Năm 3', type: 'Thi đấu' }
-        ],
-        achievement: 'Con có 1 dự án nghiên cứu khoa học hoàn chỉnh — đủ chuẩn nộp các cuộc thi sáng tạo trẻ.'
-      }
+      makeModule('HP1', 'Học phần 1', ['Máy đập bóng cơ', 'Xích đu dao động', 'Máy chạy bộ cơ', 'Cỗ máy chống đẩy', 'Ôn tập kiến thức', 'Xe đạp quán tính', 'Chiếc xe ba bánh', 'Cánh tay kẹp vật', 'Cỗ máy vung rìu', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con khám phá cơ khí động lực học qua các mô hình chuyển động.', ['Dao động', 'Quán tính', 'Tay kẹp', 'Cơ cấu lực'], 'Con thiết kế được mô hình cơ khí có chuyển động ổn định.'),
+      makeModule('HP2', 'Học phần 2', ['Máy ném bóng xa', 'Xe đo khoảng cách', 'Trạm lưu trữ điện', 'Siêu xe đua F1', 'Ôn tập kiến thức', 'Hệ thống giảm xóc', 'Cỗ máy bốn chân', 'Cổng quét an ninh', 'Máy truyền điện báo', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con làm việc với đo lường, năng lượng, giảm xóc và hệ thống tín hiệu.', ['Đo khoảng cách', 'Lưu trữ điện', 'Giảm xóc', 'Tín hiệu'], 'Con biết kiểm thử và cải tiến mô hình theo dữ liệu quan sát.'),
+      makeModule('HP3', 'Học phần 3', ['Bọ cạp phản xạ', 'Siêu xe điện đụng', 'Xe nhận lệnh âm', 'Ốc sên nghe lệnh', 'Ôn tập kiến thức', 'Cửa nhà thông minh', 'Máy phát nhạc số', 'Rèm cửa tự động', 'Xe bám mục tiêu', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con tích hợp cảm biến, tín hiệu âm thanh và tự động hóa smart-home.', ['Phản xạ cảm biến', 'Âm thanh', 'Smart-home', 'Bám mục tiêu'], 'Con hoàn thiện một mô hình tự động hóa thông minh.'),
+      makeModule('HP4', 'Học phần 4', ['Xe tránh chướng ngại', 'Trạm radar', 'Đấu sĩ bò tót', 'Máy đọc thẻ từ', 'Ôn tập kiến thức', 'Bọ tìm ánh sáng', 'Xe bám quỹ đạo', 'Hướng dương tìm sáng', 'Hệ thống phân loại', 'Dự án cuối khóa', 'Demo cuối khóa', 'Báo cáo cuối khoá'], 'Con xây dựng giải pháp tự hành, radar, nhận diện và phân loại.', ['Tránh vật cản', 'Radar', 'RFID', 'Phân loại'], 'Con bảo vệ dự án cuối khóa theo tư duy thiết kế kỹ thuật.', true)
     ]
-  },
-
-  // ============== NĂM 4 — CHINH PHỤC ĐẤU TRƯỜNG ==============
-  {
+  }),
+  makeCourse({
     year: 4,
     productCode: 'Sata6',
-    productEmoji: '🏆',
     productName: 'Chinh Phục Đấu Trường',
     name: 'Chinh Phục Đấu Trường',
-    ageRange: '11 – 12 tuổi',
-    grade: 'Lớp 6 – 7',
-    device: 'Robosim Elite + Beta cao cấp',
-    description:
-      'Con bước vào THCS — chính thức thi đấu Bảng R2 cấp quốc gia. Đào tạo cường độ cao, hướng đến huy chương.',
-    mission:
-      'Khoá học của những học sinh nghiêm túc hướng đến huy chương Quốc Gia. Robot R2 phức tạp hơn, sa hình khó hơn, áp lực thi đấu cao hơn — và con sẽ vượt qua tất cả.',
-    totalSessions: 48,
-    totalHours: 96,
+    academicName: 'Robotics Chinh Phục Đấu Trường',
+    ageRange: '11–12 tuổi',
+    grade: 'Lớp 6–7',
+    device: 'RoboSim + Beta Set + Saban Competition Standard',
+    structure: '4 học phần × 12 buổi',
     color: 'primary-purple',
-    note: 'Năm thi đấu chính — hướng đến giải Quốc Gia và Quốc Tế.',
-    yearSkills: ['Chiến thuật thi đấu', 'Tối ưu robot nâng cao', 'Quản lý áp lực', 'Phân tích đối thủ', 'Bản lĩnh sân đấu'],
+    description:
+      'Robotics Chinh Phục Đấu Trường huấn luyện học sinh lớp 6–7 về thuật toán PID, tối ưu hành trình, cơ khí đối kháng và xử lý áp lực thi đấu.',
+    mission:
+      'Con học theo mô hình huấn luyện đấu trường, chế tạo nhanh, thử nghiệm sớm, sửa lỗi tức thì và phân tích dữ liệu hiệu suất.',
+    note: 'Phương pháp đào tạo: Mô hình Huấn luyện Đấu trường, Agile chế tạo nhanh - thử nghiệm sớm - sửa chữa tức thì, phân tích video và dữ liệu hiệu suất.',
+    yearSkills: ['Thuật toán PID', 'Kiểm soát sai số cảm biến', 'Xử lý đa luồng', 'Tối ưu hóa hành trình', 'Thiết kế cơ khí đối kháng', 'Gỡ lỗi áp lực', 'Tư duy chuyên gia', 'Bản lĩnh thi đấu'],
     modules: [
-      {
-        id: 'HP1',
-        name: 'Robot R2 — Nền Tảng',
-        sessions: 12,
-        hours: 24,
-        description: 'Tiếp cận sa hình R2 với độ phức tạp cao — robot lớn hơn, nhiệm vụ khó hơn.',
-        skills: ['Cấu trúc robot R2', 'Hệ truyền động phức tạp', 'Cảm biến đa kênh', 'Code Python sâu', 'Tinh thần thi đấu'],
-        sessionList: [
-          { num: 1,  content: 'Khác biệt R1 vs R2', type: 'Lý thuyết' },
-          { num: 2,  content: 'Lắp ráp robot R2 chuẩn', type: 'Thực hành' },
-          { num: 3,  content: 'Hệ truyền động đa bánh', type: 'Thực hành' },
-          { num: 4,  content: 'Cảm biến đa kênh đồng bộ', type: 'Thực hành' },
-          { num: 5,  content: 'Lập trình PID đơn giản', type: 'Thực hành' },
-          { num: 6,  content: 'Robot tự cân bằng', type: 'Dự án' },
-          { num: 7,  content: 'Cánh tay robot', type: 'Thực hành' },
-          { num: 8,  content: 'Robot phân loại vật thể', type: 'Dự án' },
-          { num: 9,  content: 'Tích hợp Bluetooth', type: 'Thực hành' },
-          { num: 10, content: 'Điều khiển từ xa', type: 'Thực hành' },
-          { num: 11, content: 'Tổng hợp robot R2 hoàn chỉnh', type: 'Dự án' },
-          { num: 12, content: 'Demo & đánh giá robot R2', type: 'Thi đấu' }
-        ],
-        achievement: 'Con có robot R2 chuẩn thi đấu — sẵn sàng cho mọi giải đấu.'
-      },
-      {
-        id: 'HP2',
-        name: 'Chiến Thuật Thi Đấu R2',
-        sessions: 12,
-        hours: 24,
-        description: 'Học cách lập kế hoạch thi đấu, phân tích đối thủ và backup plan dưới áp lực.',
-        skills: ['Game theory', 'Phân tích đối thủ', 'Backup plans', 'Quản lý áp lực', 'Teamwork thi đấu'],
-        sessionList: [
-          { num: 1,  content: 'Phân tích đề thi quốc gia 2024', type: 'Lý thuyết' },
-          { num: 2,  content: 'Lập kế hoạch tổng thể', type: 'Thực hành' },
-          { num: 3,  content: 'Phân tích nhiệm vụ điểm cao', type: 'Thực hành' },
-          { num: 4,  content: 'Chiến lược ưu tiên', type: 'Thực hành' },
-          { num: 5,  content: 'Backup plan A-B-C', type: 'Thực hành' },
-          { num: 6,  content: 'Mock match 1 — không áp lực', type: 'Dự án' },
-          { num: 7,  content: 'Phân tích trận thua', type: 'Thực hành' },
-          { num: 8,  content: 'Mock match 2 — áp lực thật', type: 'Dự án' },
-          { num: 9,  content: 'Tâm lý vững khi thi', type: 'Thực hành' },
-          { num: 10, content: 'Teamwork đôi/tổ', type: 'Thực hành' },
-          { num: 11, content: 'Mock match cuối cùng', type: 'Dự án' },
-          { num: 12, content: 'Sata Robo R2 Cup Nội Bộ', type: 'Thi đấu' }
-        ],
-        achievement: 'Con đủ năng lực và bản lĩnh dự giải Robotics Quốc Gia (RBT, VEX, WRO).'
-      },
-      {
-        id: 'HP3',
-        name: 'AI Ứng Dụng Trong Robot',
-        sessions: 12,
-        hours: 24,
-        description: 'Tích hợp Computer Vision và Machine Learning vào robot vật lý — đỉnh cao kỹ thuật.',
-        skills: ['OpenCV cơ bản', 'TensorFlow Lite', 'Robot tự nhận diện', 'Edge AI', 'Tích hợp hardware-software'],
-        sessionList: [
-          { num: 1,  content: 'AI + Robot — case study WRC', type: 'Lý thuyết' },
-          { num: 2,  content: 'OpenCV — xử lý ảnh cơ bản', type: 'Thực hành' },
-          { num: 3,  content: 'Robot nhận diện màu sắc', type: 'Thực hành' },
-          { num: 4,  content: 'Robot nhận diện hình dáng', type: 'Thực hành' },
-          { num: 5,  content: 'Robot nhận diện vật thể', type: 'Thực hành' },
-          { num: 6,  content: 'Train mô hình ML đơn giản', type: 'Dự án' },
-          { num: 7,  content: 'Triển khai mô hình lên robot', type: 'Thực hành' },
-          { num: 8,  content: 'Robot phân loại rác thông minh', type: 'Dự án' },
-          { num: 9,  content: 'Robot theo dõi đối tượng', type: 'Thực hành' },
-          { num: 10, content: 'Robot trợ lý gia đình mini', type: 'Thực hành' },
-          { num: 11, content: 'Hoàn thiện robot AI', type: 'Dự án' },
-          { num: 12, content: 'Triển lãm Robot AI', type: 'Thi đấu' }
-        ],
-        achievement: 'Con sở hữu 1 robot tích hợp AI — đủ chuẩn dự các cuộc thi WRC, FIRST LEGO League.'
-      },
-      {
-        id: 'HP4',
-        name: 'Đỉnh Cao Cuộc Thi',
-        sessions: 12,
-        hours: 24,
-        description: 'Tổng duyệt cường độ cao trước mùa thi — luyện như VĐV chuyên nghiệp.',
-        skills: ['Peak performance', 'Stress management', 'Live problem solving', 'Pitch trước BGK', 'Thi đấu thực tế'],
-        sessionList: [
-          { num: 1,  content: 'Lịch trình thi đấu năm 2026', type: 'Lý thuyết' },
-          { num: 2,  content: 'Tổng duyệt R2 lần 1', type: 'Thực hành' },
-          { num: 3,  content: 'Phân tích lỗi & sửa', type: 'Thực hành' },
-          { num: 4,  content: 'Tổng duyệt R2 lần 2', type: 'Thực hành' },
-          { num: 5,  content: 'Sửa lỗi áp lực', type: 'Thực hành' },
-          { num: 6,  content: 'Tổng duyệt cuối kỳ', type: 'Dự án' },
-          { num: 7,  content: 'Kỹ năng pitch trước BGK', type: 'Thực hành' },
-          { num: 8,  content: 'Q&A áp lực', type: 'Dự án' },
-          { num: 9,  content: 'Thi đấu giao hữu liên trung tâm', type: 'Thực hành' },
-          { num: 10, content: 'Phục hồi & tâm lý', type: 'Thực hành' },
-          { num: 11, content: 'Tổng kết hành trình R2', type: 'Dự án' },
-          { num: 12, content: 'Sata Robo Grand Final Năm 4', type: 'Thi đấu' }
-        ],
-        achievement:
-          'Con tham gia ít nhất 1 giải Quốc Gia chính thức trong năm — có cơ hội cao đạt huy chương.'
-      }
+      makeModule('HP1', 'Học phần 1', ['Bước vào thế giới ảo', 'Đèn tín hiệu giao thông', 'Đèn thông minh', 'Lựa chọn ngẫu nhiên', 'Ôn tập kiến thức', 'Xe robot di chuyển', 'Truyền động bánh răng', 'Cảm biến dò line', 'Xe robot tự hành', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con củng cố nền tảng RoboSim, cảm biến, truyền động và tự hành.', ['RoboSim', 'Bánh răng', 'Dò line', 'Tự hành'], 'Con hoàn thành robot tự hành có khả năng phản ứng theo cảm biến.'),
+      makeModule('HP2', 'Học phần 2', ['Giới thiệu cuộc thi Robo', 'Phân tích thể lệ thi đấu', 'Thiết kế lắp ráp robot', 'Lập trình nhiệm vụ 1', 'Lập trình nhiệm vụ 2', 'Lập trình nhiệm vụ 3', 'Chạy tổng hợp nhiệm vụ', 'Tối ưu chương trình', 'Kiểm tra lắp ráp robot', 'Kiểm tra lập trình', 'Demo thi đấu', 'Thi đấu nội bộ'], 'Con luyện chu kỳ thi đấu chuẩn với nhiệm vụ tích hợp và tối ưu chương trình.', ['Phân tích luật', 'Lập trình nhiệm vụ', 'Tối ưu', 'Demo thi đấu'], 'Con chạy được bài thi tổng hợp trong điều kiện nội bộ.'),
+      makeModule('HP3', 'Học phần 3', ['Robot xin chào', 'Động cơ xích đu', 'Còi báo động nguy hiểm', 'Đèn thông minh', 'Ôn tập kiến thức', 'Máy phát nhạc', 'Dò line cơ bản', 'Dò line nâng cao', 'Dò line chuyên sâu (PID)', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con học điều khiển nâng cao, cảnh báo, nhạc và dò line chuyên sâu bằng PID.', ['PID', 'Cảnh báo', 'Điều khiển nâng cao', 'Gỡ lỗi'], 'Con hiểu cách giảm sai số và ổn định hành trình robot.'),
+      makeModule('HP4', 'Học phần 4', ['Giới thiệu cuộc thi Robo', 'Phân tích thể lệ thi đấu', 'Thiết kế lắp ráp robot', 'Lập trình nhiệm vụ 1', 'Lập trình nhiệm vụ 2', 'Lập trình nhiệm vụ 3', 'Chạy tổng hợp nhiệm vụ', 'Tối ưu chương trình', 'Kiểm tra lắp ráp robot', 'Kiểm tra lập trình', 'Demo thi đấu', 'Thi đấu nội bộ'], 'Con tổng duyệt thi đấu với áp lực thời gian, lỗi thực chiến và chiến thuật dự phòng.', ['Áp lực thi đấu', 'Backup plan', 'Video review', 'Tối ưu hành trình'], 'Con sẵn sàng tham gia các vòng thi Robotics với bản lĩnh kỹ thuật.', true)
     ]
-  },
-
-  // ============== NĂM 5 — KIẾN TẠO TƯƠNG LAI ==============
-  {
+  }),
+  makeCourse({
     year: 5,
     productCode: 'Sata7',
-    productEmoji: '🤖',
     productName: 'Kiến Tạo Tương Lai',
     name: 'Kiến Tạo Tương Lai',
+    academicName: 'Robotics Chắp Cánh Tương Lai',
     ageRange: '13 tuổi',
     grade: 'Lớp 8',
-    device: 'Storm AI + Cảm biến thông minh',
-    description:
-      'Đỉnh cao của hành trình — con xây portfolio, chuẩn bị du học STEM, định hướng nghề nghiệp công nghệ tương lai.',
-    mission:
-      'Thiết bị Storm AI kết hợp cảm biến thực chiến giúp con xây dựng sản phẩm công nghệ hoàn chỉnh. Năm 5 là đỉnh cao — portfolio, khởi nghiệp, định hướng STEM và lễ tốt nghiệp.',
-    totalSessions: 48,
-    totalHours: 96,
+    device: 'Storm + AI (Computer Vision Modules)',
+    structure: '4 học phần × 12 buổi',
     color: 'primary-orange',
-    note: 'Định hướng nghề nghiệp & chuẩn bị du học STEM.',
-    yearSkills: ['Tư duy công nghệ AI', 'Thiết kế sản phẩm số', 'Nghiên cứu người dùng', 'Lãnh đạo dự án', 'Định hướng nghề nghiệp STEM'],
+    description:
+      'Robotics Kiến Tạo Tương Lai cập nhật nội dung học thuật Chắp Cánh Tương Lai, tập trung vào AI, thị giác máy tính, logistics, AGV và capstone project.',
+    mission:
+      'Con đi qua quy trình AI đầy đủ: thu thập dữ liệu, training, triển khai, tinh chỉnh và bảo vệ giải pháp công nghệ trước hội đồng chuyên môn.',
+    note: 'Phương pháp đào tạo: AI Workflow, Thu thập dữ liệu → Training → Triển khai → Tinh chỉnh, Capstone Project, bảo vệ giải pháp công nghệ trước hội đồng chuyên môn.',
+    yearSkills: ['Trí tuệ nhân tạo', 'Thị giác máy tính', 'Nhận diện thông minh', 'Học máy cơ bản', 'Object Tracking', 'Logistics & AGV', 'Giải pháp đô thị 4.0', 'Capstone Project'],
     modules: [
-      {
-        id: 'HP1',
-        name: 'Portfolio Cá Nhân Số',
-        sessions: 12,
-        hours: 24,
-        description: 'Xây dựng website portfolio cá nhân — showcase tất cả dự án 4 năm qua.',
-        skills: ['HTML & CSS', 'Web design cơ bản', 'Storytelling kỹ thuật', 'Thiết kế UX', 'Cá nhân hoá thương hiệu'],
-        sessionList: [
-          { num: 1,  content: 'Portfolio là gì? Vì sao cần?', type: 'Lý thuyết' },
-          { num: 2,  content: 'HTML cơ bản', type: 'Thực hành' },
-          { num: 3,  content: 'CSS — làm đẹp trang', type: 'Thực hành' },
-          { num: 4,  content: 'Thiết kế trang chủ', type: 'Thực hành' },
-          { num: 5,  content: 'Trang dự án cá nhân', type: 'Thực hành' },
-          { num: 6,  content: 'Trang giới thiệu bản thân', type: 'Dự án' },
-          { num: 7,  content: 'Tích hợp video demo', type: 'Thực hành' },
-          { num: 8,  content: 'Liên kết GitHub & social', type: 'Dự án' },
-          { num: 9,  content: 'Responsive design', type: 'Thực hành' },
-          { num: 10, content: 'Test & sửa', type: 'Thực hành' },
-          { num: 11, content: 'Deploy lên hosting miễn phí', type: 'Dự án' },
-          { num: 12, content: 'Ra mắt portfolio public', type: 'Thi đấu' }
-        ],
-        achievement: 'Con có 1 website portfolio public — sẵn sàng đính kèm hồ sơ học bổng.'
-      },
-      {
-        id: 'HP2',
-        name: 'Dự Án Khởi Nghiệp Trẻ',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Con học tư duy khởi nghiệp — biến 1 ý tưởng tech thành dự án có giá trị thực, với người dùng thật.',
-        skills: ['Tư duy khởi nghiệp', 'User research', 'MVP', 'Pitch deck', 'Đo lường thành công'],
-        sessionList: [
-          { num: 1,  content: 'Khởi nghiệp tech là gì?', type: 'Lý thuyết' },
-          { num: 2,  content: 'Tìm vấn đề trong cuộc sống', type: 'Thực hành' },
-          { num: 3,  content: 'Phỏng vấn user thực', type: 'Thực hành' },
-          { num: 4,  content: 'Phác hoạ giải pháp MVP', type: 'Thực hành' },
-          { num: 5,  content: 'Xây dựng MVP', type: 'Thực hành' },
-          { num: 6,  content: 'Test MVP với user thật', type: 'Dự án' },
-          { num: 7,  content: 'Đo lường feedback', type: 'Thực hành' },
-          { num: 8,  content: 'Iterate sản phẩm', type: 'Dự án' },
-          { num: 9,  content: 'Marketing cơ bản', type: 'Thực hành' },
-          { num: 10, content: 'Pitch deck startup', type: 'Thực hành' },
-          { num: 11, content: 'Demo Day chuẩn bị', type: 'Dự án' },
-          { num: 12, content: 'Sata Robo Demo Day', type: 'Thi đấu' }
-        ],
-        achievement: 'Con có 1 dự án MVP đang hoạt động với user thực — bằng chứng năng lực khởi nghiệp.'
-      },
-      {
-        id: 'HP3',
-        name: 'Chuẩn Bị Du Học STEM',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Hỗ trợ định hướng nghề nghiệp + chuẩn bị hồ sơ học bổng STEM nước ngoài (Singapore, Mỹ, Châu Âu).',
-        skills: ['Tiếng Anh kỹ thuật', 'Viết essay STEM', 'Giới thiệu thành tích', 'Chuẩn bị thi quốc tế', 'Mentor 1-1'],
-        sessionList: [
-          { num: 1,  content: 'Bản đồ học bổng STEM 2030', type: 'Lý thuyết' },
-          { num: 2,  content: 'Tiếng Anh kỹ thuật', type: 'Thực hành' },
-          { num: 3,  content: 'Tự thuật bản thân', type: 'Thực hành' },
-          { num: 4,  content: 'Essay học bổng (bước 1)', type: 'Thực hành' },
-          { num: 5,  content: 'Essay học bổng (bước 2)', type: 'Thực hành' },
-          { num: 6,  content: 'Phỏng vấn mock', type: 'Dự án' },
-          { num: 7,  content: 'Giới thiệu thành tích', type: 'Thực hành' },
-          { num: 8,  content: 'Recommendation letter', type: 'Dự án' },
-          { num: 9,  content: 'Tài chính du học', type: 'Thực hành' },
-          { num: 10, content: 'Q&A với cựu du học sinh', type: 'Thực hành' },
-          { num: 11, content: 'Hoàn thiện hồ sơ mẫu', type: 'Dự án' },
-          { num: 12, content: 'Hội thảo Định Hướng Du Học', type: 'Thi đấu' }
-        ],
-        achievement: 'Con có hồ sơ mẫu hoàn chỉnh + roadmap du học rõ ràng đến lớp 12.'
-      },
-      {
-        id: 'HP4',
-        name: 'Tổng Kết Hành Trình 5 Năm',
-        sessions: 12,
-        hours: 24,
-        description:
-          'Năm cuối — con tổng hợp tất cả kiến thức 5 năm, làm dự án Capstone đỉnh cao và lễ tốt nghiệp đặc biệt.',
-        skills: ['Capstone project', 'Mentor cho khối nhỏ', 'Lãnh đạo dự án', 'Trình bày trước cộng đồng', 'Đánh giá đồng nghiệp'],
-        sessionList: [
-          { num: 1,  content: 'Lập kế hoạch Capstone', type: 'Lý thuyết' },
-          { num: 2,  content: 'Phân tích yêu cầu', type: 'Thực hành' },
-          { num: 3,  content: 'Thiết kế kiến trúc', type: 'Thực hành' },
-          { num: 4,  content: 'Lắp ráp phần cứng', type: 'Thực hành' },
-          { num: 5,  content: 'Phát triển phần mềm', type: 'Thực hành' },
-          { num: 6,  content: 'Tích hợp AI/Cloud', type: 'Dự án' },
-          { num: 7,  content: 'Test & QA toàn diện', type: 'Thực hành' },
-          { num: 8,  content: 'Mentor cho học viên Năm 1', type: 'Dự án' },
-          { num: 9,  content: 'Hoàn thiện capstone', type: 'Thực hành' },
-          { num: 10, content: 'Tổng duyệt thuyết trình', type: 'Thực hành' },
-          { num: 11, content: 'Quay video documentary', type: 'Dự án' },
-          { num: 12, content: '🎓 LỄ TỐT NGHIỆP SATA ROBO 5 NĂM', type: 'Thi đấu' }
-        ],
-        achievement:
-          '🏆 Con tốt nghiệp với 1 capstone đỉnh cao + portfolio 5 năm + chứng nhận Sata Robo Honors — sẵn sàng cho hành trình chuyên nghiệp tiếp theo.'
-      }
+      makeModule('HP1', 'Học phần 1', ['Đèn giao thông số', 'Máy cưa tự động', 'Robot hút bụi', 'Cối xay gió xoay', 'Ôn tập kiến thức', 'Hệ thống đỗ xe', 'Nhận diện giảm tốc', 'Tự hành góc vuông', 'Xe cảnh sát tuần', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con làm việc với tự động hóa đô thị, đỗ xe, nhận diện và tự hành cơ bản.', ['Đô thị thông minh', 'Tự động hóa', 'Nhận diện', 'Tự hành'], 'Con hoàn thành mô hình đô thị thông minh có robot tự hành.'),
+      makeModule('HP2', 'Học phần 2', ['Máy bay chiến đấu', 'Hệ thống đóng gói', 'Phân loại sản phẩm', 'Xe nâng hàng hóa', 'Ôn tập kiến thức', 'Tự hành chở hàng', 'Tàu chở hàng hóa', 'Máy bán hàng số', 'Siêu thị thông minh', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con mô phỏng logistics, AGV, phân loại sản phẩm và vận hành hệ thống bán hàng.', ['Logistics', 'AGV', 'Phân loại', 'Siêu thị thông minh'], 'Con tạo được chuỗi vận hành logistics tự động ở quy mô mô hình.'),
+      makeModule('HP3', 'Học phần 3', ['Bám line kép chuẩn', 'Hiệu chuẩn dữ liệu', 'Căn chỉnh góc xoay', 'Định vị khoảng cách', 'Ôn tập kiến thức', 'Kiểm soát gia tốc', 'Chống trôi quỹ đạo', 'Tự hành đường thẳng', 'Chống kẹt động cơ', 'Dự án cuối học phần', 'Demo cuối học phần', 'Báo cáo cuối học phần'], 'Con tối ưu thuật toán tự hành qua hiệu chuẩn dữ liệu, định vị và kiểm soát gia tốc.', ['Hiệu chuẩn', 'Định vị', 'Kiểm soát gia tốc', 'Chống trôi'], 'Con biết tinh chỉnh robot để chạy ổn định trong điều kiện sai số thực tế.'),
+      makeModule('HP4', 'Học phần 4', ['AI ra lệnh robot', 'AI nhận diện màu', 'AI robot tự hành', 'AI cử chỉ tay', 'Ôn tập kiến thức', 'AI đọc biển báo', 'AI quét mã QR', 'AI nhận diện mặt', 'AI nhận diện bóng', 'Dự án cuối khoá', 'Demo cuối khoá', 'Báo cáo cuối khoá'], 'Con triển khai AI thị giác máy tính vào robot và bảo vệ capstone cuối khóa.', ['Computer Vision', 'QR', 'Face detection', 'Object tracking'], 'Con bảo vệ capstone AI Robotics trước hội đồng chuyên môn.', true)
     ]
-  }
+  })
 ];
