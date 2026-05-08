@@ -6,15 +6,15 @@ function AnswerBlock({ answer }) {
   const blocks = Array.isArray(answer) ? answer : String(answer).split('\n').filter(Boolean);
 
   return (
-    <div className="space-y-2 text-sm leading-relaxed text-text-muted sm:text-base">
+    <div className="space-y-3 text-sm leading-7 text-text-muted sm:text-base sm:leading-8">
       {blocks.map((block, index) => {
         if (typeof block === 'object' && block?.type === 'list') {
           return (
-            <ul key={`list-${index}`} className="space-y-1.5">
+            <ul key={`list-${index}`} className="space-y-2 rounded-2xl bg-white/70 p-3 sm:p-4">
               {block.items.map((item) => (
-                <li key={item} className="grid grid-cols-[1rem_1fr] gap-2">
-                  <CheckCircle2 className="mt-1 h-3.5 w-3.5 text-success" />
-                  <span>{item}</span>
+                <li key={item} className="grid grid-cols-[1.1rem_1fr] gap-2.5">
+                  <CheckCircle2 className="mt-1.5 h-3.5 w-3.5 text-success" />
+                  <span className="min-w-0">{item}</span>
                 </li>
               ))}
             </ul>
@@ -59,9 +59,9 @@ export default function FAQ() {
             return (
               <div
                 key={faq.id}
-                className={`card-base overflow-hidden transition-all ${
+              className={`card-base overflow-hidden transition-all ${
                   isOpen ? 'shadow-lg ring-2 ring-primary-orange/30' : ''
-                } ${index >= 6 ? 'hidden sm:block' : ''}`}
+                }`}
               >
                 <button
                   onClick={() => toggle(faq.id)}
@@ -90,7 +90,7 @@ export default function FAQ() {
                 >
                   <div className="overflow-hidden">
                     <div className="px-4 pb-4 pt-1 sm:px-5 sm:pb-5">
-                      <div className="border-l-2 border-primary-orange/30 pl-7">
+                      <div className="rounded-2xl border border-primary-orange/15 bg-soft-cream/55 px-4 py-4 sm:px-5">
                         <AnswerBlock answer={faq.answer} />
                       </div>
                     </div>
