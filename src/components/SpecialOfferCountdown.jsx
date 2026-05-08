@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import useCountdown from '../hooks/useCountdown';
 import { formatDeadline } from '../utils/deadlines';
 import { promotions } from '../data/promotions';
 import {
   ArrowRight,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Clock3,
   CreditCard,
   Flame,
@@ -13,14 +16,63 @@ import {
   Users
 } from 'lucide-react';
 
-const iconMap = {
-  CreditCard,
-  Flame,
-  Gift,
-  Sparkles,
-  Trophy,
-  Users
-};
+const iconMap = { CreditCard, Flame, Gift, Sparkles, Trophy, Users };
+
+function SlideCarousel({ items, renderItem }) {
+  const [idx, setIdx] = useState(0);
+  const total = items.length;
+  const prev = () => setIdx((i) => (i - 1 + total) % total);
+  const next = () => setIdx((i) => (i + 1) % total);
+
+  return (
+    <div>
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-300 ease-in-out"
+          style={{ transform: `translateX(-${idx * 100}%)` }}
+        >
+          {items.map((item, i) => (
+            <div key={i} className="min-w-full">
+              {renderItem(item, i)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          onClick={prev}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-text-dark shadow-sm transition hover:border-primary-orange hover:text-primary-orange active:scale-95"
+          aria-label="Trước"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+
+        <div className="flex gap-1.5">
+          {items.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setIdx(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${i === idx ? 'w-6 bg-primary-orange' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={next}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-text-dark shadow-sm transition hover:border-primary-orange hover:text-primary-orange active:scale-95"
+          aria-label="Tiếp"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function SpecialOfferCountdown() {
   const { deadline, timeLeft } = useCountdown();
@@ -36,132 +88,145 @@ export default function SpecialOfferCountdown() {
     { label: 'Giây', value: timeLeft.seconds }
   ];
 
+  const allPromos = [
+    ...promotions.primary.map((p) => ({ ...p, _type: 'primary' })),
+    ...promotions.secondary.map((p) => ({ ...p, _type: 'secondary' }))
+  ];
+
+  const renderPrimaryCard = (promo) => {
+    const Icon = iconMap[promo.icon] ?? Flame;
+    return (
+      <article
+        className={`flex h-full flex-col rounded-3xl border bg-white p-5 shadow-card sm:p-6 ${
+          promo.featured
+            ? 'border-primary-orange/40 bg-gradient-to-br from-white via-white to-soft-cream'
+            : 'border-gray-100'
+        }`}
+      >
+        <div className="mb-4 flex items-start gap-4">
+          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-primary-orange/20 bg-soft-cream">
+            <Icon className="h-6 w-6 text-primary-orange" />
+          </div>
+          <div>
+            <h3 className="text-lg font-black text-text-dark">{promo.title}</h3>
+            <div className="mt-1 text-3xl font-black leading-tight text-primary-orange">
+              {promo.highlight}
+            </div>
+          </div>
+        </div>
+
+        <p className="mb-4 text-sm leading-relaxed text-text-muted">{promo.description}</p>
+
+        <ul className="mb-5 space-y-2">
+          {promo.details.slice(0, 3).map((detail) => (
+            <li key={detail} className="grid grid-cols-[1.25rem_1fr] gap-2 text-xs leading-relaxed text-text-dark">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 text-success" />
+              <span>{detail}</span>
+            </li>
+          ))}
+        </ul>
+
+        <button
+          type="button"
+          onClick={() => scrollTo(promo.target)}
+          className="mt-auto inline-flex items-center justify-center gap-2 rounded-xl border-2 border-primary-orange/30 bg-white px-4 py-2.5 text-sm font-black text-primary-orange transition hover:bg-primary-orange hover:text-white"
+        >
+          {promo.cta}
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </article>
+    );
+  };
+
+  const renderSecondaryCard = (promo) => {
+    const Icon = iconMap[promo.icon] ?? Gift;
+    return (
+      <article className="rounded-3xl border border-gray-100 bg-white p-5 shadow-card">
+        <div className="mb-4 flex items-start gap-4">
+          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border border-primary-orange/20 bg-soft-cream">
+            <Icon className="h-5 w-5 text-primary-orange" />
+          </div>
+          <div>
+            <h3 className="text-base font-black text-text-dark">{promo.title}</h3>
+            <div className="mt-1 text-xl font-black leading-tight text-primary-orange">
+              {promo.highlight}
+            </div>
+          </div>
+        </div>
+
+        <p className="mb-3 text-sm leading-relaxed text-text-muted">{promo.description}</p>
+
+        <div className="rounded-2xl border border-gray-100 bg-gray-50 p-3">
+          <p className="text-xs leading-relaxed text-text-muted">{promo.condition}</p>
+          <p className="mt-2 text-xs font-semibold leading-relaxed text-primary-orange">{promo.note}</p>
+        </div>
+      </article>
+    );
+  };
+
+  const renderCard = (promo, i) =>
+    promo._type === 'primary' ? renderPrimaryCard(promo, i) : renderSecondaryCard(promo, i);
+
   return (
-    <section id="special-offer" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-soft-cream via-white to-soft-purple/50 relative overflow-hidden">
+    <section id="special-offer" className="relative overflow-hidden bg-gradient-to-br from-soft-cream via-white to-soft-purple/50 py-12 sm:py-16 lg:py-20">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-orange/30 to-transparent" />
 
       <div className="container-site relative">
-        <div className="max-w-4xl mx-auto text-center mb-7 sm:mb-9">
-          <div className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-white border border-primary-orange/25 shadow-card text-primary-orange">
-            <Flame className="w-4 h-4 animate-pulse" />
-            <span className="font-black text-xs sm:text-sm uppercase tracking-wider">
+        <div className="mx-auto mb-7 max-w-4xl text-center sm:mb-9">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary-orange/25 bg-white px-4 py-2 text-primary-orange shadow-card">
+            <Flame className="h-4 w-4 animate-pulse" />
+            <span className="text-xs font-black uppercase tracking-wider sm:text-sm">
               Áp dụng từ 01/05 đến {formatDeadline(deadline)}
             </span>
           </div>
 
-          <h2 className="heading-2 text-text-dark mb-4">
-            Ưu đãi khai trương tháng 5
-          </h2>
+          <h2 className="heading-2 mb-4 text-text-dark">Ưu đãi khai trương tháng 5</h2>
 
-          <p className="text-sm sm:text-base text-text-muted leading-relaxed max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-text-muted sm:text-base">
             Đăng ký sớm để giữ học phí tốt cho Sata1–Sata7. Sata8 là gói riêng, giá cố định.
           </p>
         </div>
 
-        <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-xl mx-auto mb-7 sm:mb-9">
+        {/* Countdown */}
+        <div className="mx-auto mb-7 grid max-w-xl grid-cols-4 gap-2 sm:mb-9 sm:gap-3">
           {countdownItems.map((item) => (
-            <div key={item.label} className="bg-white/90 rounded-2xl border border-primary-purple/10 shadow-card p-3 sm:p-4 text-center">
-              <div className="font-black text-2xl sm:text-4xl text-primary-purple tabular-nums leading-none">
+            <div key={item.label} className="rounded-2xl border border-primary-purple/10 bg-white/90 p-3 text-center shadow-card sm:p-4">
+              <div className="font-black tabular-nums leading-none text-primary-purple" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.25rem)' }}>
                 {pad(item.value)}
               </div>
-              <div className="text-[10px] sm:text-xs text-text-muted font-bold uppercase tracking-wider mt-1.5">
+              <div className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-text-muted sm:text-xs">
                 {item.label}
               </div>
             </div>
           ))}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-5 sm:mb-6">
-          {promotions.primary.map((promo) => {
-            const Icon = iconMap[promo.icon] ?? Flame;
-
-            return (
-              <article
-                key={promo.id}
-                className={`rounded-3xl bg-white p-5 sm:p-6 border shadow-card hover:shadow-card-hover transition-all flex flex-col ${
-                  promo.featured
-                    ? 'border-primary-orange/40 bg-gradient-to-br from-white via-white to-soft-cream'
-                    : 'border-gray-100'
-                }`}
-              >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-2xl bg-soft-cream border border-primary-orange/20 flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-6 h-6 text-primary-orange" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-black text-text-dark">{promo.title}</h3>
-                    <div className="text-3xl font-black text-primary-orange leading-tight mt-1">
-                      {promo.highlight}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-sm text-text-muted leading-relaxed mb-4">
-                  {promo.description}
-                </p>
-
-                <ul className="space-y-2 mb-5">
-                  {promo.details.slice(0, 3).map((detail) => (
-                    <li key={detail} className="grid grid-cols-[1.25rem_1fr] gap-2 text-xs text-text-dark leading-relaxed">
-                      <CheckCircle2 className="w-4 h-4 text-success mt-0.5" />
-                      <span>{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  type="button"
-                  onClick={() => scrollTo(promo.target)}
-                  className="mt-auto inline-flex items-center justify-center gap-2 rounded-xl border-2 border-primary-orange/30 bg-white px-4 py-2.5 text-sm font-black text-primary-orange transition hover:bg-primary-orange hover:text-white"
-                >
-                  {promo.cta}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </article>
-            );
-          })}
+        {/* Mobile: unified carousel */}
+        <div className="mb-7 md:hidden">
+          <SlideCarousel items={allPromos} renderItem={renderCard} />
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-7">
-          {promotions.secondary.map((promo) => {
-            const Icon = iconMap[promo.icon] ?? Gift;
-
-            return (
-              <article
-                key={promo.id}
-                className="rounded-3xl bg-white p-5 border border-gray-100 shadow-card hover:shadow-card-hover transition-all"
-              >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-11 h-11 rounded-2xl bg-soft-cream border border-primary-orange/20 flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-5 h-5 text-primary-orange" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-black text-text-dark">{promo.title}</h3>
-                    <div className="text-xl font-black text-primary-orange leading-tight mt-1">
-                      {promo.highlight}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-sm text-text-muted leading-relaxed mb-3">
-                  {promo.description}
-                </p>
-
-                <div className="rounded-2xl bg-gray-50 border border-gray-100 p-3">
-                  <p className="text-xs text-text-muted leading-relaxed">{promo.condition}</p>
-                  <p className="mt-2 text-xs font-semibold text-primary-orange leading-relaxed">{promo.note}</p>
-                </div>
-              </article>
-            );
-          })}
+        {/* Desktop: two grids */}
+        <div className="hidden md:block">
+          <div className="mb-5 grid gap-4 sm:mb-6 md:grid-cols-2 lg:grid-cols-3">
+            {promotions.primary.map((promo) => (
+              <div key={promo.id}>{renderPrimaryCard(promo)}</div>
+            ))}
+          </div>
+          <div className="mb-7 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {promotions.secondary.map((promo) => (
+              <div key={promo.id}>{renderSecondaryCard(promo)}</div>
+            ))}
+          </div>
         </div>
 
-        <div className="rounded-3xl border border-primary-orange/20 bg-soft-cream p-4 sm:p-5 mb-7 shadow-card">
-          <div className="flex flex-col sm:flex-row gap-3 sm:items-start">
-            <div className="w-11 h-11 rounded-2xl bg-white border border-primary-orange/20 flex items-center justify-center flex-shrink-0">
-              <Clock3 className="w-5 h-5 text-primary-orange" />
+        {/* Note */}
+        <div className="mb-7 rounded-3xl border border-primary-orange/20 bg-soft-cream p-4 shadow-card sm:p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border border-primary-orange/20 bg-white">
+              <Clock3 className="h-5 w-5 text-primary-orange" />
             </div>
-            <p className="text-sm text-text-dark leading-relaxed">
+            <p className="text-sm leading-relaxed text-text-dark">
               <strong>Lưu ý:</strong> Các ưu đãi trên không áp dụng cho Sata8 — Vé Vàng Chung Kết.
               Sata8 là gói cam kết độc lập, giá cố định <strong>2.500.000đ</strong> và có chính sách
               hoàn tiền 100% theo điều kiện cam kết.
@@ -169,10 +234,11 @@ export default function SpecialOfferCountdown() {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-3">
+        {/* CTA */}
+        <div className="flex flex-col justify-center gap-3 sm:flex-row">
           <button onClick={() => scrollTo('registration-form')} className="btn-primary w-full sm:w-auto">
             Đăng ký nhận ưu đãi
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="h-5 w-5" />
           </button>
           <button onClick={() => scrollTo('roadmap')} className="btn-outline w-full sm:w-auto">
             Tư vấn khóa phù hợp

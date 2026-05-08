@@ -32,7 +32,9 @@ function AnswerBlock({ answer }) {
 }
 
 export default function FAQ() {
-  const [openId, setOpenId] = useState(1);
+  const [openId, setOpenId] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth >= 640 ? 1 : null
+  );
 
   const toggle = (id) => setOpenId(openId === id ? null : id);
 

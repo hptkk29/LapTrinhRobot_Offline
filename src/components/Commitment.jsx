@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { commitments } from '../data/commitments';
 import {
   BadgeDollarSign,
+  ChevronLeft,
+  ChevronRight,
   FileText,
   Plane,
   Presentation,
@@ -8,14 +11,7 @@ import {
   Users
 } from 'lucide-react';
 
-const iconMap = {
-  BadgeDollarSign,
-  FileText,
-  Plane,
-  Presentation,
-  ShieldCheck,
-  Users
-};
+const iconMap = { BadgeDollarSign, FileText, Plane, Presentation, ShieldCheck, Users };
 
 const toneClasses = [
   'bg-orange-50 text-primary-orange border-orange-200',
@@ -23,7 +19,88 @@ const toneClasses = [
   'bg-green-50 text-success border-green-200'
 ];
 
+function SlideCarousel({ items, renderItem }) {
+  const [idx, setIdx] = useState(0);
+  const total = items.length;
+  const prev = () => setIdx((i) => (i - 1 + total) % total);
+  const next = () => setIdx((i) => (i + 1) % total);
+
+  return (
+    <div>
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-300 ease-in-out"
+          style={{ transform: `translateX(-${idx * 100}%)` }}
+        >
+          {items.map((item, i) => (
+            <div key={i} className="min-w-full">
+              {renderItem(item, i)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          onClick={prev}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-text-dark shadow-sm transition hover:border-primary-purple hover:text-primary-purple active:scale-95"
+          aria-label="Trước"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+
+        <div className="flex gap-1.5">
+          {items.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setIdx(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${i === idx ? 'w-6 bg-primary-purple' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={next}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-text-dark shadow-sm transition hover:border-primary-purple hover:text-primary-purple active:scale-95"
+          aria-label="Tiếp"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Commitment() {
+  const renderCard = (commitment, index) => {
+    const Icon = iconMap[commitment.icon] ?? ShieldCheck;
+    const tone = toneClasses[index % toneClasses.length];
+
+    return (
+      <article className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card sm:p-6">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${tone}`}>
+            <Icon className="h-6 w-6" />
+          </div>
+          <span className="text-3xl font-black text-primary-purple/15">
+            {String(commitment.id).padStart(2, '0')}
+          </span>
+        </div>
+
+        <h3 className="mb-3 text-lg font-black leading-tight text-text-dark">
+          {commitment.title}
+        </h3>
+        <p className="text-sm leading-relaxed text-text-muted">
+          {commitment.description}
+        </p>
+      </article>
+    );
+  };
+
   return (
     <section id="commitment" className="section-padding bg-soft-cream">
       <div className="container-site">
@@ -40,34 +117,18 @@ export default function Commitment() {
           </p>
         </div>
 
-        <div className="mb-10 grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {commitments.map((commitment, index) => {
-            const Icon = iconMap[commitment.icon] ?? ShieldCheck;
-            const tone = toneClasses[index % toneClasses.length];
+        {/* Mobile: carousel */}
+        <div className="mb-10 md:hidden">
+          <SlideCarousel items={commitments} renderItem={renderCard} />
+        </div>
 
-            return (
-              <article
-                key={commitment.id}
-                className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition hover:-translate-y-1 hover:shadow-card-hover sm:p-6"
-              >
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${tone}`}>
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <span className="text-3xl font-black text-primary-purple/15">
-                    {String(commitment.id).padStart(2, '0')}
-                  </span>
-                </div>
-
-                <h3 className="mb-3 text-lg font-black leading-tight text-text-dark">
-                  {commitment.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-text-muted">
-                  {commitment.description}
-                </p>
-              </article>
-            );
-          })}
+        {/* Desktop: grid */}
+        <div className="mb-10 hidden gap-4 sm:gap-5 md:grid md:grid-cols-2 lg:grid-cols-3">
+          {commitments.map((commitment, index) => (
+            <div key={commitment.id} className="transition hover:-translate-y-1 hover:shadow-card-hover">
+              {renderCard(commitment, index)}
+            </div>
+          ))}
         </div>
 
         <div className="mx-auto max-w-3xl rounded-2xl border-2 border-primary-purple/20 bg-white p-6 text-center shadow-md sm:p-8">
