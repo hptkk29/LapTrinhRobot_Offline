@@ -28,47 +28,43 @@ export const selectCourse = (productCode, extra = {}) => {
 
 export const ageCourseOptions = [
   {
-    label: 'Lớp 1-2',
-    grade: 'Sata3',
+    label: 'Sata3',
+    grade: 'Lớp 1-2',
     productCode: 'Sata3',
     courseName: 'Ươm Mầm Tài Năng',
     yearIndex: 0
   },
   {
-    label: 'Lớp 3-4',
-    grade: 'Sata4',
+    label: 'Sata4',
+    grade: 'Lớp 3-4',
     productCode: 'Sata4',
     courseName: 'Bứt Phá Giới Hạn',
     yearIndex: 1
   },
   {
-    label: 'Lớp 5',
-    grade: 'Sata5',
+    label: 'Sata5',
+    grade: 'Lớp 5',
     productCode: 'Sata5',
     courseName: 'Khơi Nguồn Sáng Tạo',
     yearIndex: 2
   },
   {
-    label: 'Lớp 6-7',
-    grade: 'Sata6',
+    label: 'Sata6',
+    grade: 'Lớp 6-7',
     productCode: 'Sata6',
     courseName: 'Chinh Phục Đấu Trường',
     yearIndex: 3
   },
   {
-    label: 'Lớp 8',
-    grade: 'Sata7',
+    label: 'Sata7',
+    grade: 'Lớp 8',
     productCode: 'Sata7',
     courseName: 'Kiến Tạo Tương Lai',
     yearIndex: 4
   }
 ].map((option) => ({
   ...option,
-  courseValue: getCourseValue(option.productCode),
-  durationSummary: (() => {
-    const course = getCourseById(option.productCode);
-    return course ? `${course.sessions} buổi - ${course.durationPerSession}/buổi - Tổng ${course.totalDuration}` : '';
-  })()
+  courseValue: getCourseValue(option.productCode)
 }));
 
 export const isValidCourseSelection = (payload) =>

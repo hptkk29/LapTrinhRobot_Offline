@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Bot, CheckCircle2, X } from 'lucide-react';
+import { Bot, CheckCircle2, GraduationCap, Target, X } from 'lucide-react';
 import { ageCourseOptions, getCourseById, selectCourse } from '../utils/courseSelection';
 
 const POPUP_SHOWN_KEY = 'sata-age-popup-shown';
@@ -177,10 +177,11 @@ export default function AgeCoursePopup() {
 
         <div className="mb-4 grid gap-3 sm:grid-cols-2">
           {[
-            { id: 'exam', title: 'Mục tiêu luyện thi', text: 'RoboSim, robot Beta, Combo hoặc Vé Vàng' },
-            { id: 'deep', title: 'Học chuyên sâu dài hạn', text: 'Chọn theo lớp cho Sata3-Sata7' }
+            { id: 'exam', title: 'Mục tiêu luyện thi', text: 'RoboSim, robot Beta, Combo hoặc Vé Vàng', Icon: Target },
+            { id: 'deep', title: 'Học chuyên sâu dài hạn', text: 'Chọn theo lớp cho Sata3-Sata7', Icon: GraduationCap }
           ].map((item) => {
             const active = goal === item.id;
+            const Icon = item.Icon;
             return (
               <button
                 key={item.id}
@@ -190,12 +191,23 @@ export default function AgeCoursePopup() {
                   setSelectedIdx(null);
                   setError('');
                 }}
-                className={`rounded-2xl border-2 p-4 text-left transition-all ${
-                  active ? 'border-primary-orange bg-soft-cream shadow-orange-glow' : 'border-gray-200 bg-white hover:border-primary-orange/50'
+                className={`group rounded-3xl border-2 p-4 text-left transition-all sm:p-5 ${
+                  active
+                    ? 'border-primary-purple bg-gradient-to-br from-primary-purple to-primary-orange text-white shadow-purple-glow'
+                    : 'border-gray-200 bg-gray-50 text-text-dark hover:border-primary-purple/50 hover:bg-white'
                 }`}
               >
-                <div className="font-black text-text-dark">{item.title}</div>
-                <div className="mt-1 text-xs text-text-muted">{item.text}</div>
+                <div className="flex items-start gap-3">
+                  <span className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl ${
+                    active ? 'bg-white/20 text-white' : 'bg-white text-primary-purple shadow-sm group-hover:text-primary-orange'
+                  }`}>
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span>
+                    <span className={`block font-black ${active ? 'text-white' : 'text-text-dark'}`}>{item.title}</span>
+                    <span className={`mt-1 block text-xs ${active ? 'text-white/85' : 'text-text-muted'}`}>{item.text}</span>
+                  </span>
+                </div>
               </button>
             );
           })}
@@ -222,11 +234,13 @@ export default function AgeCoursePopup() {
                   {active && <CheckCircle2 className="h-4 w-4 text-success" />}
                 </div>
                 <div className="mb-1 text-base font-black text-text-dark">{option.label}</div>
-                {option.grade && <div className="mb-2 text-xs font-bold text-primary-purple">{option.grade}</div>}
+                {option.grade && <div className="mb-2 text-sm font-black text-primary-purple">{option.grade}</div>}
                 <div className="text-xs leading-relaxed text-text-muted">{option.courseName}</div>
-                <div className="mt-2 text-[11px] font-bold text-primary-orange">
-                  {option.durationSummary ?? durationSummary(option.productCode)}
-                </div>
+                {goal === 'exam' && (
+                  <div className="mt-2 text-[11px] font-bold text-primary-orange">
+                    {durationSummary(option.productCode)}
+                  </div>
+                )}
               </button>
             );
           })}
