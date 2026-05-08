@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Bot, CheckCircle2, GraduationCap, Target, X } from 'lucide-react';
-import { ageCourseOptions, getCourseById, selectCourse } from '../utils/courseSelection';
+import { useEffect, useRef, useState } from 'react';
+import { Bot, CheckCircle2, ChevronDown, GraduationCap, Target, X } from 'lucide-react';
+import { ageCourseOptions, selectCourse } from '../utils/courseSelection';
 
 const POPUP_SHOWN_KEY = 'sata-age-popup-shown';
 const SELECTED_COURSE_KEY = 'sata-selected-age-course';
@@ -30,19 +30,15 @@ const examGoalOptions = [
   }
 ];
 
-const durationSummary = (productCode) => {
-  const course = getCourseById(productCode);
-  if (!course) return '';
-  return `${course.sessions} buổi - ${course.durationPerSession}/buổi - Tổng ${course.totalDuration}`;
-};
-
 export default function AgeCoursePopup() {
   const [isOpen, setIsOpen] = useState(false);
   const [goal, setGoal] = useState('exam');
   const [selectedIdx, setSelectedIdx] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [error, setError] = useState('');
   const [useFallbackMascot, setUseFallbackMascot] = useState(false);
   const [hasStartedPrompting, setHasStartedPrompting] = useState(false);
+  const dropdownRef = useRef(null);
 
   const hasSelectedCourse = () => Boolean(sessionStorage.getItem(SELECTED_COURSE_KEY));
 
@@ -52,6 +48,7 @@ export default function AgeCoursePopup() {
   };
 
   const currentOptions = goal === 'exam' ? examGoalOptions : ageCourseOptions;
+  const selectedOption = selectedIdx !== null ? currentOptions[selectedIdx] : null;
 
   const handleConfirm = () => {
     const selected = currentOptions[selectedIdx];
@@ -119,12 +116,34 @@ export default function AgeCoursePopup() {
     if (!isOpen) return;
 
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') closePopup();
+      if (event.key === 'Escape') {
+        if (dropdownOpen) setDropdownOpen(false);
+        else closePopup();
+      }
     };
 
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [isOpen]);
+  }, [isOpen, dropdownOpen]);
+
+  useEffect(() => {
+    if (!dropdownOpen) return;
+
+    const onClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [dropdownOpen]);
+
+  useEffect(() => {
+    setSelectedIdx(null);
+    setDropdownOpen(false);
+    setError('');
+  }, [goal]);
 
   if (!isOpen) return null;
 
@@ -134,17 +153,18 @@ export default function AgeCoursePopup() {
       onClick={closePopup}
     >
       <div
-        className="max-h-[92vh] w-full max-w-4xl animate-slide-up overflow-y-auto rounded-3xl border border-white/50 bg-white p-5 shadow-2xl sm:p-7"
+        className="w-full max-w-lg animate-slide-up rounded-3xl border border-white/50 bg-white p-5 shadow-2xl sm:p-7"
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="age-course-popup-title"
       >
+        {/* Header */}
         <div className="mb-5 flex items-start justify-between gap-3">
           <div className="flex items-center gap-4">
-            <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-primary-orange/20 bg-gradient-cream sm:h-24 sm:w-24">
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-primary-orange/20 bg-gradient-cream">
               {useFallbackMascot ? (
-                <Bot className="h-12 w-12 text-primary-purple" />
+                <Bot className="h-10 w-10 text-primary-purple" />
               ) : (
                 <img
                   src="/image/LinhVat.png"
@@ -155,13 +175,10 @@ export default function AgeCoursePopup() {
               )}
             </div>
             <div>
-              <div className="badge-orange mb-2">Chọn lộ trình</div>
-              <h2 id="age-course-popup-title" className="text-xl font-black leading-tight text-text-dark sm:text-2xl">
+              <div className="badge-orange mb-1.5">Chọn lộ trình</div>
+              <h2 id="age-course-popup-title" className="text-lg font-black leading-tight text-text-dark sm:text-xl">
                 Bố/Mẹ muốn con học theo mục tiêu nào?
               </h2>
-              <p className="mt-1 text-sm leading-relaxed text-text-muted">
-                Chọn mục tiêu luyện thi hoặc lớp hiện tại để Sata Robo gợi ý khóa phù hợp.
-              </p>
             </div>
           </div>
 
@@ -175,10 +192,11 @@ export default function AgeCoursePopup() {
           </button>
         </div>
 
-        <div className="mb-4 grid gap-3 sm:grid-cols-2">
+        {/* Goal selector */}
+        <div className="mb-5 grid gap-2 sm:grid-cols-2">
           {[
             { id: 'exam', title: 'Mục tiêu luyện thi', text: 'RoboSim, robot Beta, Combo hoặc Vé Vàng', Icon: Target },
-            { id: 'deep', title: 'Học chuyên sâu dài hạn', text: 'Chọn theo lớp cho Sata3-Sata7', Icon: GraduationCap }
+            { id: 'deep', title: 'Học chuyên sâu dài hạn', text: 'Chọn theo lớp cho Sata3–Sata7', Icon: GraduationCap }
           ].map((item) => {
             const active = goal === item.id;
             const Icon = item.Icon;
@@ -186,26 +204,22 @@ export default function AgeCoursePopup() {
               <button
                 key={item.id}
                 type="button"
-                onClick={() => {
-                  setGoal(item.id);
-                  setSelectedIdx(null);
-                  setError('');
-                }}
-                className={`group rounded-3xl border-2 p-4 text-left transition-all sm:p-5 ${
+                onClick={() => setGoal(item.id)}
+                className={`group rounded-2xl border-2 p-3.5 text-left transition-all ${
                   active
                     ? 'border-primary-purple bg-gradient-to-br from-primary-purple to-primary-orange text-white shadow-purple-glow'
                     : 'border-gray-200 bg-gray-50 text-text-dark hover:border-primary-purple/50 hover:bg-white'
                 }`}
               >
-                <div className="flex items-start gap-3">
-                  <span className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl ${
+                <div className="flex items-center gap-3">
+                  <span className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl ${
                     active ? 'bg-white/20 text-white' : 'bg-white text-primary-purple shadow-sm group-hover:text-primary-orange'
                   }`}>
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4" />
                   </span>
                   <span>
-                    <span className={`block font-black ${active ? 'text-white' : 'text-text-dark'}`}>{item.title}</span>
-                    <span className={`mt-1 block text-xs ${active ? 'text-white/85' : 'text-text-muted'}`}>{item.text}</span>
+                    <span className={`block text-sm font-black ${active ? 'text-white' : 'text-text-dark'}`}>{item.title}</span>
+                    <span className={`block text-[11px] ${active ? 'text-white/80' : 'text-text-muted'}`}>{item.text}</span>
                   </span>
                 </div>
               </button>
@@ -213,44 +227,87 @@ export default function AgeCoursePopup() {
           })}
         </div>
 
-        <div className={`grid gap-3 ${goal === 'exam' ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-5'}`}>
-          {currentOptions.map((option, idx) => {
-            const active = selectedIdx === idx;
-            return (
-              <button
-                key={option.courseName}
-                type="button"
-                onClick={() => {
-                  setSelectedIdx(idx);
-                  setError('');
-                }}
-                className={`rounded-2xl border-2 p-4 text-left transition-all active:scale-95 ${
-                  active
-                    ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
-                    : 'border-gray-200 bg-white hover:border-primary-orange/50 hover:bg-soft-cream/40'
-                }`}
+        {/* Dropdown selector */}
+        <div className="mb-1" ref={dropdownRef}>
+          <div className="mb-2 text-sm font-black text-text-dark">
+            {goal === 'exam' ? 'Chọn mục tiêu luyện thi' : 'Chọn lớp của con'}
+          </div>
+
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className={`flex w-full items-center justify-between gap-3 rounded-2xl border-2 px-4 py-3.5 text-left transition-all ${
+                dropdownOpen
+                  ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
+                  : selectedOption
+                  ? 'border-primary-orange/50 bg-soft-cream/60 hover:border-primary-orange'
+                  : 'border-gray-200 bg-white hover:border-primary-orange/50 hover:bg-soft-cream/30'
+              }`}
+              aria-haspopup="listbox"
+              aria-expanded={dropdownOpen}
+            >
+              {selectedOption ? (
+                <span className="min-w-0">
+                  <span className="block font-black text-text-dark">{selectedOption.label}</span>
+                  <span className="block text-xs text-text-muted">{selectedOption.courseName}</span>
+                </span>
+              ) : (
+                <span className="text-sm text-text-muted">
+                  {goal === 'exam' ? 'Chọn mục tiêu...' : 'Chọn lớp của con...'}
+                </span>
+              )}
+              <ChevronDown
+                className={`h-5 w-5 flex-shrink-0 text-primary-orange transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            {dropdownOpen && (
+              <ul
+                role="listbox"
+                className="absolute left-0 right-0 top-full z-20 mt-1.5 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl animate-fade-in"
               >
-                <div className="mb-3 flex min-h-4 items-center justify-end">
-                  {active && <CheckCircle2 className="h-4 w-4 text-success" />}
-                </div>
-                <div className="mb-1 text-base font-black text-text-dark">{option.label}</div>
-                {option.grade && <div className="mb-2 text-sm font-black text-primary-purple">{option.grade}</div>}
-                <div className="text-xs leading-relaxed text-text-muted">{option.courseName}</div>
-                {goal === 'exam' && (
-                  <div className="mt-2 text-[11px] font-bold text-primary-orange">
-                    {durationSummary(option.productCode)}
-                  </div>
-                )}
-              </button>
-            );
-          })}
+                {currentOptions.map((option, idx) => {
+                  const active = selectedIdx === idx;
+                  return (
+                    <li key={option.courseName} role="option" aria-selected={active}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedIdx(idx);
+                          setDropdownOpen(false);
+                          setError('');
+                        }}
+                        className={`flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors ${
+                          active
+                            ? 'bg-soft-cream'
+                            : 'hover:bg-gray-50'
+                        } ${idx < currentOptions.length - 1 ? 'border-b border-gray-100' : ''}`}
+                      >
+                        <span className="min-w-0">
+                          <span className={`block text-sm font-black ${active ? 'text-primary-orange' : 'text-text-dark'}`}>
+                            {option.label}
+                          </span>
+                          {option.grade && (
+                            <span className="block text-[11px] font-bold text-primary-purple">{option.grade}</span>
+                          )}
+                          <span className="block text-xs text-text-muted">{option.courseName}</span>
+                        </span>
+                        {active && <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-success" />}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
         </div>
 
         {error && (
-          <p className="mt-3 text-sm font-semibold text-urgent">{error}</p>
+          <p className="mt-2 text-sm font-semibold text-urgent">{error}</p>
         )}
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
           <button type="button" onClick={closePopup} className="btn-outline sm:py-3">
             Để sau
           </button>

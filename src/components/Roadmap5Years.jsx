@@ -214,7 +214,7 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
 
   return (
     <article
-      className={`rounded-3xl border-2 p-5 shadow-card md:flex md:h-full md:flex-col sm:p-6 ${
+      className={`rounded-3xl border-2 p-5 shadow-card sm:p-6 ${
         isCombo
           ? 'border-primary-orange/40 bg-gradient-to-br from-orange-50 via-yellow-50 to-white'
           : 'border-primary-purple/35 bg-gradient-to-br from-purple-50 via-white to-orange-50'
@@ -238,9 +238,9 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
           <>
             <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Bao gồm Robosim Master + Đấu trường Robot</div>
             <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> 32 buổi - 90 phút/buổi - Tổng 48 giờ</div>
+            <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Tiết kiệm {fmt(course.savedAmount)} so với mua lẻ</div>
             <div className="rounded-2xl bg-white/80 p-4">
               <PriceLine label="Giá combo" value={fmt(course.comboPrice)} />
-              <PriceLine label="Tiết kiệm" value={fmt(course.savedAmount)} />
             </div>
           </>
         ) : (
@@ -255,7 +255,7 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
         )}
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row md:mt-auto">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <button
           type="button"
           onClick={() => chooseCourse(course.id)}
@@ -286,7 +286,6 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
                 'Phạm vi: vòng loại quốc gia / vòng loại cuộc thi Robotics 2026.',
                 'Học sinh đi đủ 5/5 buổi chuyên sâu.',
                 'Hoàn thành học liệu E-learning được giao.',
-                'Giáo viên đồng hành nhắc tiến độ, phụ huynh không phải tự theo dõi một mình.',
                 'Nếu đã đi đủ lộ trình mà vẫn không vượt vòng loại, Sata Robo hoàn 100% học phí gói Sata8.'
               ].map((text) => (
                 <div key={text} className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2 text-sm text-text-dark">
@@ -571,7 +570,7 @@ export default function Roadmap5Years() {
               ))}
             </div>
 
-            <div className="grid gap-5 md:items-stretch lg:grid-cols-2">
+            <div className="grid gap-5 md:items-start lg:grid-cols-2">
               {focusItems.map((item) => (
                 <FocusCourseBox
                   key={item.id}
