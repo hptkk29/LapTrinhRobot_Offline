@@ -221,17 +221,16 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
           : 'border-primary-purple bg-gradient-to-br from-purple-100 via-purple-50 to-orange-50 shadow-xl shadow-primary-purple/20'
       }`}
     >
-      <div className="animate-hot-pulse absolute -right-3 -top-4 z-20 flex flex-col items-center">
-        <span className="text-3xl leading-none drop-shadow-lg">🔥</span>
-        <span className="mt-0.5 rounded-full bg-gradient-to-b from-red-500 to-orange-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white shadow-lg shadow-red-500/50">
-          HOT
-        </span>
-      </div>
-
-      <div className={`-mx-5 -mt-5 mb-5 rounded-t-3xl px-5 py-2.5 text-center text-xs font-black uppercase tracking-widest text-white sm:-mx-6 sm:-mt-6 sm:px-6 ${
+      <div className={`-mx-5 -mt-5 mb-5 rounded-t-3xl px-5 py-3 text-center text-xs font-black uppercase tracking-widest text-white sm:-mx-6 sm:-mt-6 sm:px-6 ${
         isCombo ? 'bg-primary-orange' : 'bg-primary-purple'
       }`}>
         {isCombo ? '⭐ Gói đề xuất — Tiết kiệm nhất' : '💎 Cam kết hoàn tiền 100%'}
+        <div className="animate-hot-pulse absolute right-4 top-2 z-20 flex flex-col items-center gap-0.5">
+          <span className="text-5xl leading-none drop-shadow-lg">🔥</span>
+          <span className="rounded-full bg-white/30 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white backdrop-blur-sm shadow-sm">
+            HOT
+          </span>
+        </div>
       </div>
 
       <div className="mb-4 flex items-start gap-3">
