@@ -141,7 +141,7 @@ export default function SpecialOfferCountdown() {
   const renderSecondaryCard = (promo) => {
     const Icon = iconMap[promo.icon] ?? Gift;
     return (
-      <article className="rounded-3xl border border-gray-100 bg-white p-5 shadow-card">
+      <article className="flex h-full flex-col rounded-3xl border border-gray-100 bg-white p-5 shadow-card">
         <div className="mb-4 flex items-start gap-4">
           <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border border-primary-orange/20 bg-soft-cream">
             <Icon className="h-5 w-5 text-primary-orange" />
@@ -156,7 +156,7 @@ export default function SpecialOfferCountdown() {
 
         <p className="mb-3 text-sm leading-relaxed text-text-muted">{promo.description}</p>
 
-        <div className="rounded-2xl border border-gray-100 bg-gray-50 p-3">
+        <div className="mt-auto rounded-2xl border border-gray-100 bg-gray-50 p-3">
           <p className="text-xs leading-relaxed text-text-muted">{promo.condition}</p>
           <p className="mt-2 text-xs font-semibold leading-relaxed text-primary-orange">{promo.note}</p>
         </div>
@@ -210,12 +210,12 @@ export default function SpecialOfferCountdown() {
         <div className="hidden md:block">
           <div className="mb-5 grid gap-4 sm:mb-6 md:grid-cols-2 lg:grid-cols-3">
             {promotions.primary.map((promo) => (
-              <div key={promo.id}>{renderPrimaryCard(promo)}</div>
+              <div key={promo.id} className="h-full">{renderPrimaryCard(promo)}</div>
             ))}
           </div>
           <div className="mb-7 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {promotions.secondary.map((promo) => (
-              <div key={promo.id}>{renderSecondaryCard(promo)}</div>
+              <div key={promo.id} className="h-full">{renderSecondaryCard(promo)}</div>
             ))}
           </div>
         </div>
