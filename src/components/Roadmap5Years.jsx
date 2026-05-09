@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Award,
   BookOpen,
@@ -440,6 +440,8 @@ export default function Roadmap5Years() {
   const [yearIdx, setYearIdx] = useState(0);
   const [moduleIdx, setModuleIdx] = useState(0);
   const [lightboxProject, setLightboxProject] = useState(null);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const mobileDropdownRef = useRef(null);
 
   const currentYear = roadmap5Years[yearIdx];
   const currentModule = currentYear.modules[moduleIdx];
@@ -485,6 +487,16 @@ export default function Roadmap5Years() {
     window.addEventListener('sata-course-selected', handleCourseSelected);
     return () => window.removeEventListener('sata-course-selected', handleCourseSelected);
   }, []);
+
+  useEffect(() => {
+    if (!mobileDropdownOpen) return;
+    const onClickOutside = (e) => {
+      if (mobileDropdownRef.current && !mobileDropdownRef.current.contains(e.target))
+        setMobileDropdownOpen(false);
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [mobileDropdownOpen]);
 
   const goPrevModule = () => {
     if (moduleIdx > 0) setModuleIdx(moduleIdx - 1);
@@ -592,22 +604,77 @@ export default function Roadmap5Years() {
 
         {activeTrack === 'deep' && (
           <div className="animate-fade-in">
-            {/* Mobile: dropdown */}
-            <div className="mb-6 md:hidden">
-              <div className="relative">
-                <select
-                  value={yearIdx}
-                  onChange={(e) => { setYearIdx(Number(e.target.value)); setModuleIdx(0); }}
-                  className="w-full appearance-none rounded-2xl border-2 border-primary-orange/40 bg-soft-cream py-4 pl-4 pr-12 text-base font-black text-text-dark focus:border-primary-orange focus:outline-none"
+            {/* Mobile: custom dropdown */}
+            <div className="relative mb-6 md:hidden" ref={mobileDropdownRef}>
+              {/* Trigger */}
+              <button
+                type="button"
+                onClick={() => setMobileDropdownOpen((v) => !v)}
+                className={`flex w-full items-center justify-between gap-3 rounded-2xl border-2 p-3.5 text-left transition-all ${
+                  mobileDropdownOpen
+                    ? 'border-primary-orange bg-soft-cream shadow-orange-glow'
+                    : 'border-primary-orange/40 bg-soft-cream hover:border-primary-orange'
+                }`}
+                aria-haspopup="listbox"
+                aria-expanded={mobileDropdownOpen}
+              >
+                <div className="flex items-center gap-3">
+                  <span className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border ${currentMeta.activeWrap}`}>
+                    <CurrentIcon className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-wider text-primary-orange">
+                      Đang xem · Sata{currentYear.year + 2}
+                    </div>
+                    <div className="text-base font-black leading-tight text-text-dark">{currentYear.productName}</div>
+                    <div className="text-xs text-text-muted">{currentYear.grade}</div>
+                  </div>
+                </div>
+                <ChevronDown className={`h-5 w-5 flex-shrink-0 text-primary-orange transition-transform duration-200 ${mobileDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Panel */}
+              {mobileDropdownOpen && (
+                <div
+                  role="listbox"
+                  className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl animate-fade-in"
                 >
-                  {roadmap5Years.map((year, i) => (
-                    <option key={year.productCode} value={i}>
-                      Sata{year.year + 2} – {year.productName} ({year.grade})
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-orange" />
-              </div>
+                  <div className="border-b border-gray-100 px-4 py-2.5">
+                    <p className="text-xs font-bold text-text-muted">Chọn khóa học — 5 cấp độ từ lớp 1 đến lớp 8</p>
+                  </div>
+                  {roadmap5Years.map((year, i) => {
+                    const meta = courseMeta[year.productCode] ?? courseMeta.Sata3;
+                    const Icon = meta.Icon;
+                    const active = i === yearIdx;
+                    return (
+                      <button
+                        key={year.productCode}
+                        role="option"
+                        aria-selected={active}
+                        type="button"
+                        onClick={() => { setYearIdx(i); setModuleIdx(0); setMobileDropdownOpen(false); }}
+                        className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors ${
+                          active ? 'bg-soft-cream' : 'hover:bg-gray-50'
+                        } ${i < roadmap5Years.length - 1 ? 'border-b border-gray-100' : ''}`}
+                      >
+                        <span className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border ${active ? meta.activeWrap : meta.iconWrap}`}>
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-black uppercase text-primary-orange">Sata{year.year + 2}</span>
+                            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-text-muted">{year.grade}</span>
+                          </div>
+                          <div className={`text-sm font-black leading-tight ${active ? 'text-primary-orange' : 'text-text-dark'}`}>
+                            {year.productName}
+                          </div>
+                        </div>
+                        {active && <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-success" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Desktop: horizontal scroll */}
