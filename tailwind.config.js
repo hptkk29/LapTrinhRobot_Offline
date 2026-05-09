@@ -29,6 +29,7 @@ export default {
         'fade-in': 'fadeIn 0.4s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'shake': 'shake 0.5s ease-in-out',
+        'hot-pulse': 'hotPulse 1.4s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -43,7 +44,11 @@ export default {
           '0%, 100%': { transform: 'translateX(0)' },
           '25%': { transform: 'translateX(-5px)' },
           '75%': { transform: 'translateX(5px)' },
-        }
+        },
+        hotPulse: {
+          '0%, 100%': { transform: 'scale(1) rotate(-4deg)' },
+          '50%': { transform: 'scale(1.22) rotate(4deg)' },
+        },
       },
       boxShadow: {
         'card': '0 4px 12px rgba(0,0,0,0.08)',
