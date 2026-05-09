@@ -265,7 +265,7 @@ export default function AgeCoursePopup() {
             {dropdownOpen && (
               <ul
                 role="listbox"
-                className="absolute left-0 right-0 top-full z-20 mt-1.5 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl animate-fade-in"
+                className="absolute left-0 right-0 top-full z-20 mt-1.5 max-h-56 overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-xl animate-fade-in"
               >
                 {currentOptions.map((option, idx) => {
                   const active = selectedIdx === idx;

@@ -214,7 +214,7 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
 
   return (
     <article
-      className={`rounded-3xl border-2 p-5 shadow-card sm:p-6 ${
+      className={`flex h-full flex-col rounded-3xl border-2 p-5 shadow-card sm:p-6 ${
         isCombo
           ? 'border-primary-orange/40 bg-gradient-to-br from-orange-50 via-yellow-50 to-white'
           : 'border-primary-purple/35 bg-gradient-to-br from-purple-50 via-white to-orange-50'
@@ -233,7 +233,7 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
         </div>
       </div>
 
-      <div className="mb-5 grid gap-2 text-sm text-text-dark">
+      <div className="mb-5 flex-1 grid gap-2 text-sm text-text-dark">
         {isCombo ? (
           <>
             <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-success" /> Bao gồm Robosim Master + Đấu trường Robot</div>
@@ -570,7 +570,7 @@ export default function Roadmap5Years() {
               ))}
             </div>
 
-            <div className="grid gap-5 md:items-start lg:grid-cols-2">
+            <div className="grid gap-5 lg:grid-cols-2">
               {focusItems.map((item) => (
                 <FocusCourseBox
                   key={item.id}

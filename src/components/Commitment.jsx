@@ -81,7 +81,7 @@ export default function Commitment() {
     const tone = toneClasses[index % toneClasses.length];
 
     return (
-      <article className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card sm:p-6">
+      <article className="h-full rounded-2xl border border-gray-100 bg-white p-5 shadow-card sm:p-6">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${tone}`}>
             <Icon className="h-6 w-6" />
@@ -125,7 +125,7 @@ export default function Commitment() {
         {/* Desktop: grid */}
         <div className="mb-10 hidden gap-4 sm:gap-5 md:grid md:grid-cols-2 lg:grid-cols-3">
           {commitments.map((commitment, index) => (
-            <div key={commitment.id} className="transition hover:-translate-y-1 hover:shadow-card-hover">
+            <div key={commitment.id} className="h-full transition hover:-translate-y-1 hover:shadow-card-hover">
               {renderCard(commitment, index)}
             </div>
           ))}
