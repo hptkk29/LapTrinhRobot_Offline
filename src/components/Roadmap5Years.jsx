@@ -225,9 +225,16 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
         isCombo ? 'bg-primary-orange' : 'bg-primary-purple'
       }`}>
         {isCombo ? '⭐ Gói đề xuất — Tiết kiệm nhất' : '💎 Cam kết hoàn tiền 100%'}
-        <div className="animate-hot-pulse absolute right-4 top-6 z-20 flex flex-col items-center gap-0.5">
-          <span className="text-5xl leading-none drop-shadow-lg">🔥</span>
-          <span className="rounded-full bg-white/30 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white backdrop-blur-sm shadow-sm">
+        <div className="animate-hot-pulse absolute right-3 top-1 z-20 flex flex-col items-center gap-1">
+          <span className="animate-fire-glow select-none text-7xl leading-none">🔥</span>
+          <span
+            className="rounded-full px-3 py-1 text-sm font-black uppercase tracking-widest text-white"
+            style={{
+              background: 'linear-gradient(160deg, #ff6500 0%, #ff1a00 55%, #ff8c00 100%)',
+              boxShadow: '0 0 10px rgba(255,60,0,0.95), 0 0 22px rgba(255,40,0,0.6), inset 0 1px 0 rgba(255,255,255,0.25)',
+              textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+            }}
+          >
             HOT
           </span>
         </div>

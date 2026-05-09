@@ -46,8 +46,10 @@ export default {
           '75%': { transform: 'translateX(5px)' },
         },
         hotPulse: {
-          '0%, 100%': { transform: 'scale(1) rotate(-4deg)' },
-          '50%': { transform: 'scale(1.22) rotate(4deg)' },
+          '0%':   { transform: 'scale(1)    rotate(-6deg)' },
+          '30%':  { transform: 'scale(1.28) rotate(5deg)'  },
+          '65%':  { transform: 'scale(1.32) rotate(-3deg)' },
+          '100%': { transform: 'scale(1)    rotate(-6deg)' },
         },
       },
       boxShadow: {
