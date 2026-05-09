@@ -225,7 +225,7 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
         isCombo ? 'bg-primary-orange' : 'bg-primary-purple'
       }`}>
         {isCombo ? '⭐ Gói đề xuất — Tiết kiệm nhất' : '💎 Cam kết hoàn tiền 100%'}
-        <div className="animate-hot-pulse absolute right-4 top-2 z-20 flex flex-col items-center gap-0.5">
+        <div className="animate-hot-pulse absolute right-4 top-6 z-20 flex flex-col items-center gap-0.5">
           <span className="text-5xl leading-none drop-shadow-lg">🔥</span>
           <span className="rounded-full bg-white/30 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white backdrop-blur-sm shadow-sm">
             HOT
