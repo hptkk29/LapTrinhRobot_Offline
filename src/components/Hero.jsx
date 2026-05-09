@@ -77,7 +77,7 @@ export default function Hero() {
                 <p>
                   <Highlight tone="purple">Với lộ trình 5 năm</Highlight> bài bản
                   cho con từ <Highlight>lớp 1 đến lớp 8</Highlight>. Bố mẹ hãy cho con bắt đầu{' '}
-                  <Highlight tone="purple">HỌC NGAY - TỪ HÔM NAY</Highlight> tại <Highlight>các trung tâm</Highlight> ở Đà Nẵng, 
+                  <Highlight tone="purple">HỌC NGAY - TỪ HÔM NAY</Highlight> ở <Highlight>các trung tâm</Highlight> tại Đà Nẵng, 
                 </p>
               </div>
             </div>

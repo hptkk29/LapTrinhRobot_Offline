@@ -105,8 +105,8 @@ export default function FAQ() {
 
         <div className="mx-auto mt-10 max-w-2xl rounded-2xl border-2 border-primary-purple/20 bg-white p-6 text-center shadow-md sm:p-7">
           <p className="mb-4 text-sm text-text-dark sm:text-base">
-            Còn câu hỏi khác? <strong>Inbox Zalo</strong> - Sata Robo phản hồi trong{' '}
-            <strong className="text-primary-orange">30 phút</strong>.
+            Còn câu hỏi khác? <strong>Inbox Zalo</strong> - Sata Robo sẽ phản hồi trong{' '}
+            <strong className="text-primary-orange">ít phút</strong>.
           </p>
           <a
             href="https://zalo.me/0818823720"

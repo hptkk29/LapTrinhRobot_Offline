@@ -215,12 +215,18 @@ function FocusCourseBox({ item, course, isOpen, onToggle }) {
 
   return (
     <article
-      className={`flex h-full flex-col rounded-3xl border-2 p-5 shadow-card sm:p-6 ${
+      className={`flex h-full flex-col rounded-3xl border-2 p-5 sm:p-6 ${
         isCombo
-          ? 'border-primary-orange/40 bg-gradient-to-br from-orange-50 via-yellow-50 to-white'
-          : 'border-primary-purple/35 bg-gradient-to-br from-purple-50 via-white to-orange-50'
+          ? 'border-primary-orange bg-gradient-to-br from-orange-100 via-yellow-50 to-white shadow-xl shadow-primary-orange/25'
+          : 'border-primary-purple bg-gradient-to-br from-purple-100 via-purple-50 to-orange-50 shadow-xl shadow-primary-purple/20'
       }`}
     >
+      <div className={`-mx-5 -mt-5 mb-5 rounded-t-3xl px-5 py-2.5 text-center text-xs font-black uppercase tracking-widest text-white sm:-mx-6 sm:-mt-6 sm:px-6 ${
+        isCombo ? 'bg-primary-orange' : 'bg-primary-purple'
+      }`}>
+        {isCombo ? '⭐ Gói đề xuất — Tiết kiệm nhất' : '💎 Cam kết hoàn tiền 100%'}
+      </div>
+
       <div className="mb-4 flex items-start gap-3">
         <span className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl text-white shadow-md ${isCombo ? 'bg-primary-orange' : 'bg-primary-purple'}`}>
           <Icon className="h-6 w-6" />
