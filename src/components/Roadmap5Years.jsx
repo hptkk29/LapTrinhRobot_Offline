@@ -4,6 +4,7 @@ import {
   BookOpen,
   Bot,
   CheckCircle2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Clock,
@@ -591,7 +592,26 @@ export default function Roadmap5Years() {
 
         {activeTrack === 'deep' && (
           <div className="animate-fade-in">
-            <div className="mb-8 flex justify-center overflow-x-auto py-2">
+            {/* Mobile: dropdown */}
+            <div className="mb-6 md:hidden">
+              <div className="relative">
+                <select
+                  value={yearIdx}
+                  onChange={(e) => { setYearIdx(Number(e.target.value)); setModuleIdx(0); }}
+                  className="w-full appearance-none rounded-2xl border-2 border-primary-orange/40 bg-soft-cream py-4 pl-4 pr-12 text-base font-black text-text-dark focus:border-primary-orange focus:outline-none"
+                >
+                  {roadmap5Years.map((year, i) => (
+                    <option key={year.productCode} value={i}>
+                      Sata{year.year + 2} – {year.productName} ({year.grade})
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-orange" />
+              </div>
+            </div>
+
+            {/* Desktop: horizontal scroll */}
+            <div className="mb-8 hidden justify-center overflow-x-auto py-2 md:flex">
               <div className="flex min-w-max gap-3 px-1">
                 {roadmap5Years.map((year, idx) => {
                   const meta = courseMeta[year.productCode] ?? courseMeta.Sata3;

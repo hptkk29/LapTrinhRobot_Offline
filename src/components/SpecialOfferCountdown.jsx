@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useCountdown from '../hooks/useCountdown';
 import { formatDeadline } from '../utils/deadlines';
 import { promotions } from '../data/promotions';
@@ -20,13 +20,39 @@ const iconMap = { CreditCard, Flame, Gift, Sparkles, Trophy, Users };
 
 function SlideCarousel({ items, renderItem }) {
   const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchX = useRef(null);
+  const resumeTimer = useRef(null);
   const total = items.length;
+
   const prev = () => setIdx((i) => (i - 1 + total) % total);
   const next = () => setIdx((i) => (i + 1) % total);
 
+  const pauseAndResume = () => {
+    setPaused(true);
+    clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => setPaused(false), 5000);
+  };
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setIdx((i) => (i + 1) % total), 4000);
+    return () => clearInterval(id);
+  }, [paused, total]);
+
+  useEffect(() => () => clearTimeout(resumeTimer.current), []);
+
+  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e) => {
+    if (touchX.current === null) return;
+    const delta = touchX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) { delta > 0 ? next() : prev(); pauseAndResume(); }
+    touchX.current = null;
+  };
+
   return (
     <div>
-      <div className="overflow-hidden">
+      <div className="overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <div
           className="flex transition-transform duration-300 ease-in-out"
           style={{ transform: `translateX(-${idx * 100}%)` }}
@@ -42,7 +68,7 @@ function SlideCarousel({ items, renderItem }) {
       <div className="mt-4 flex items-center justify-center gap-4">
         <button
           type="button"
-          onClick={prev}
+          onClick={() => { prev(); pauseAndResume(); }}
           className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-text-dark shadow-sm transition hover:border-primary-orange hover:text-primary-orange active:scale-95"
           aria-label="Trước"
         >
@@ -54,7 +80,7 @@ function SlideCarousel({ items, renderItem }) {
             <button
               key={i}
               type="button"
-              onClick={() => setIdx(i)}
+              onClick={() => { setIdx(i); pauseAndResume(); }}
               className={`h-2 rounded-full transition-all duration-300 ${i === idx ? 'w-6 bg-primary-orange' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
               aria-label={`Slide ${i + 1}`}
             />
@@ -63,7 +89,7 @@ function SlideCarousel({ items, renderItem }) {
 
         <button
           type="button"
-          onClick={next}
+          onClick={() => { next(); pauseAndResume(); }}
           className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-text-dark shadow-sm transition hover:border-primary-orange hover:text-primary-orange active:scale-95"
           aria-label="Tiếp"
         >
