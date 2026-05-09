@@ -26,18 +26,18 @@ export default function Locations() {
             <div
               key={loc.id}
               className={`card-base p-3 sm:p-4 border-2 transition flex flex-col
-                ${loc.isHQ ? 'border-primary-orange' : 'border-gray-200'}`}
+                ${loc.isHO ? 'border-primary-orange' : 'border-gray-200'}`}
             >
               <div className="flex items-center justify-between gap-2 mb-2 sm:mb-3">
                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center flex-shrink-0
-                  ${loc.isHQ ? 'bg-primary-orange text-white' : 'bg-soft-purple text-primary-purple'}`}>
+                  ${loc.isHO ? 'bg-primary-orange text-white' : 'bg-soft-purple text-primary-purple'}`}>
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                {loc.isHQ && (
+                {loc.isHO && (
                   <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-primary-orange text-white text-[9px] sm:text-xs font-bold rounded-full">
                     <Star className="w-2.5 h-2.5 fill-current" />
                     <span className="hidden sm:inline">Trụ sở</span>
-                    <span className="sm:hidden">HQ</span>
+                    <span className="sm:hidden">HO</span>
                   </span>
                 )}
               </div>

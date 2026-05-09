@@ -193,10 +193,6 @@ export default function Footer() {
             <a href="#" className="hover:text-primary-orange transition">Điều Khoản</a>
           </div>
         </div>
-
-        <div className="text-center text-xs text-gray-500 mt-3">
-          SP2 — Sata Robo Offline · Đà Nẵng
-        </div>
       </div>
     </footer>
   );

@@ -74,7 +74,7 @@ export default function FinalCTA() {
               Liên hệ trực tiếp Học viện Sata Robo
             </h3>
             <p className="text-sm text-white/70 mt-1">
-              Tư vấn lịch học, chọn cơ sở gần nhà và đặt buổi test miễn phí cho con.
+              Và đặt lịch buổi học trải nghiệm miễn phí cho con.
             </p>
           </div>
 

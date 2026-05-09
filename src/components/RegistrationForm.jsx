@@ -222,7 +222,7 @@ export default function RegistrationForm() {
               Thông Tin Đăng Ký
             </h3>
             <p className="text-xs text-text-muted sm:text-sm">
-              Buổi học thử 90 phút miễn phí - Không ràng buộc - Phụ huynh được tư vấn lộ trình phù hợp.
+              Đăng ký tham gia học trải nghiệm miễn phí - Tư vấn lộ trình học phù hợp nhất cho con.
             </p>
           </div>
 

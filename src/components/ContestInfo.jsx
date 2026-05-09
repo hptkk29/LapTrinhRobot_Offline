@@ -97,7 +97,7 @@ export default function ContestInfo() {
             rel="noopener noreferrer"
             className="lp-contest__cta-btn"
           >
-            📋 Xem thể lệ cuộc thi Sáng tạo Robotics 2026 đầy đủ →
+            📋 Xem thể lệ cuộc thi Sáng tạo Robotics 2026 →
           </a>
         </div>
       </div>
