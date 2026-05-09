@@ -92,7 +92,7 @@ export default function ContestInfo() {
 
         <div className="text-center mt-8">
           <a
-            href="https://drive.google.com/drive/folders/12DTFji_NWDg_i3d1SGgjKKp8vxjF1seL?usp=drive_link"
+            href="https://drive.google.com/file/d/1fE3ALCboUanJlLxFb6Uq7iiJqYu7y4mC/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             className="lp-contest__cta-btn"

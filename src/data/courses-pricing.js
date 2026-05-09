@@ -71,7 +71,7 @@ export const courseGroups = [
         listPrice: 5440000,
         comboPrice: 3808000,
         savedAmount: 1632000,
-        badge: 'Gói đề xuất',
+        badge: 'Combo đề xuất',
         note: 'Bao gồm Robosim Master + Đấu trường Robot cho phụ huynh muốn con học trọn lộ trình luyện thi từ RoboSim đến robot Beta.',
         value: 'Combo Sata1 + Sata2 - Lớp 3-9 - 32 buổi - 90 phút/buổi - Tổng 48 giờ - Giá combo 3.808.000đ'
       }),
@@ -86,7 +86,7 @@ export const courseGroups = [
         device: 'RoboSim + Sa bàn thực chiến',
         listPrice: 2500000,
         fixedPrice: 2500000,
-        badge: 'Gói Chiến binh cam kết hoàn tiền 100%',
+        badge: 'Sata 8 Cam kết hoàn tiền 100%',
         note: 'Giá cố định 2.500.000đ, không áp dụng giảm giá. Hoàn 100% học phí gói Sata8 nếu học sinh đi đủ lộ trình nhưng không vượt vòng loại theo điều kiện cam kết.',
         value: 'Sata8 - Vé Vàng Chung Kết - Lớp 1-8 - 5 buổi - 90 phút/buổi - Tổng 7,5 giờ - Giá cố định 2.500.000đ'
       })

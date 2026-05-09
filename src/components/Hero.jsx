@@ -75,8 +75,8 @@ export default function Hero() {
                   Toán học rèn tư duy. Công nghệ mở thế giới.
                 </div>
                 <p>
-                  <Highlight>4 trung tâm</Highlight> tại Đà Nẵng, <Highlight tone="purple">lộ trình 5 năm</Highlight> bài bản
-                  cho con từ <Highlight>lớp 1 đến lớp 8</Highlight>. Mình giúp con bố mẹ{' '}
+                  <Highlight tone="purple">Với lộ trình 5 năm</Highlight> bài bản
+                  cho con từ <Highlight>lớp 1 đến lớp 8</Highlight>. Đồng hành cùng <Highlight>4 trung tâm</Highlight> tại Đà Nẵng,  Bố mẹ có thể cho con{' '}
                   <Highlight tone="purple">HỌC NGAY - TỪ HÔM NAY</Highlight> tại trung tâm gần nhà nhất.
                 </p>
               </div>
@@ -84,7 +84,7 @@ export default function Hero() {
 
             <div className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
               <button onClick={() => scrollTo('registration-form')} className="btn-primary group w-full text-sm sm:w-auto sm:text-base">
-                Đăng ký học thử miễn phí
+                Đăng ký học trải nghiệm miễn phí
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </button>
               <button onClick={() => scrollTo('roadmap')} className="btn-outline w-full text-sm sm:w-auto sm:text-base">
