@@ -340,7 +340,7 @@ function FeaturedProjects({ productCode, onOpen, paused = false }) {
 
       <button
         type="button"
-        onClick={() => onOpen(project)}
+        onClick={() => onOpen({ projects, idx: active })}
         className="group relative w-full overflow-hidden rounded-2xl text-left"
         aria-label={`Mở ảnh ${project.title}`}
       >
@@ -380,7 +380,7 @@ function FeaturedProjects({ productCode, onOpen, paused = false }) {
 
       <button
         type="button"
-        onClick={() => onOpen(project)}
+        onClick={() => onOpen({ projects, idx: active })}
         className="mt-2 inline-flex w-full items-center justify-center rounded-xl border border-primary-purple/25 bg-soft-purple px-3 py-2 text-xs font-black text-primary-purple transition hover:bg-primary-purple hover:text-white sm:hidden"
       >
         Xem chi tiết
@@ -389,37 +389,104 @@ function FeaturedProjects({ productCode, onOpen, paused = false }) {
   );
 }
 
-function ProjectLightbox({ project, onClose }) {
+function ProjectLightbox({ projects, startIdx, onClose }) {
+  const [idx, setIdx] = useState(startIdx ?? 0);
+  const total = projects?.length ?? 0;
+  const project = projects?.[idx];
+
+  const prev = () => setIdx((i) => (i - 1 + total) % total);
+  const next = () => setIdx((i) => (i + 1) % total);
+
   useEffect(() => {
-    if (!project) return undefined;
+    if (!total) return undefined;
     const onKeyDown = (event) => {
       if (event.key === 'Escape') onClose();
+      if (event.key === 'ArrowLeft') setIdx((i) => (i - 1 + total) % total);
+      if (event.key === 'ArrowRight') setIdx((i) => (i + 1) % total);
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [project, onClose]);
+  }, [total, onClose]);
 
-  if (!project) return null;
+  if (!total || !project) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
       <div
-        className="max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl"
-        onClick={(event) => event.stopPropagation()}
+        className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
-        <div className="flex items-center justify-between gap-3 border-b border-gray-100 p-4">
-          <div>
-            <h3 className="text-lg font-black text-text-dark">{project.title}</h3>
-            <p className="text-sm text-text-muted">{project.caption}</p>
+        {/* Header */}
+        <div className="flex flex-shrink-0 items-center justify-between gap-3 border-b border-gray-100 px-5 py-3.5">
+          <div className="min-w-0">
+            <div className="mb-0.5 text-[11px] font-bold uppercase tracking-wider text-primary-orange">
+              Dự án {idx + 1} / {total}
+            </div>
+            <h3 className="line-clamp-1 text-base font-black text-text-dark">{project.title}</h3>
+            <p className="line-clamp-1 text-xs text-text-muted">{project.caption}</p>
           </div>
-          <button type="button" onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200" aria-label="Đóng ảnh">
-            <X className="h-5 w-5" />
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 transition hover:bg-gray-200"
+            aria-label="Đóng ảnh"
+          >
+            <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="max-h-[72vh] overflow-auto bg-gray-50 p-3">
-          <img src={project.image} alt={project.title} className="mx-auto max-h-[68vh] rounded-2xl object-contain" />
+
+        {/* Image area */}
+        <div className="relative flex-1 overflow-hidden bg-gray-950">
+          <img
+            key={project.image}
+            src={project.image}
+            alt={project.title}
+            className="mx-auto block max-h-[62vh] w-full object-contain"
+          />
+
+          {/* Prev / Next */}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+            className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/75 active:scale-95"
+            aria-label="Ảnh trước"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); next(); }}
+            className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/75 active:scale-95"
+            aria-label="Ảnh tiếp"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </div>
+
+        {/* Thumbnail strip + dots */}
+        <div className="flex-shrink-0 border-t border-gray-100 bg-white px-4 py-3">
+          <div className="flex items-center justify-center gap-1.5 overflow-x-auto">
+            {projects.map((item, i) => (
+              <button
+                key={item.title}
+                type="button"
+                onClick={() => setIdx(i)}
+                className={`h-12 w-12 flex-shrink-0 overflow-hidden rounded-xl border-2 transition ${
+                  i === idx
+                    ? 'border-primary-orange shadow-sm shadow-primary-orange/30'
+                    : 'border-transparent opacity-50 hover:opacity-90'
+                }`}
+                aria-label={`Xem dự án ${i + 1}`}
+              >
+                <img src={item.image} alt="" className="h-full w-full object-cover" />
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-center text-[11px] text-text-muted">
+            ← → để điều hướng · Esc để đóng
+          </p>
         </div>
       </div>
     </div>
@@ -439,7 +506,7 @@ export default function Roadmap5Years() {
   const isTabletUp = useMediaQuery('(min-width: 768px)');
   const [yearIdx, setYearIdx] = useState(0);
   const [moduleIdx, setModuleIdx] = useState(0);
-  const [lightboxProject, setLightboxProject] = useState(null);
+  const [lightboxState, setLightboxState] = useState(null);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const mobileDropdownRef = useRef(null);
 
@@ -786,8 +853,8 @@ export default function Roadmap5Years() {
                   </div>
                   <FeaturedProjects
                     productCode={currentYear.productCode}
-                    onOpen={setLightboxProject}
-                    paused={Boolean(lightboxProject)}
+                    onOpen={setLightboxState}
+                    paused={Boolean(lightboxState)}
                   />
                 </aside>
               </div>
@@ -925,7 +992,7 @@ export default function Roadmap5Years() {
         )}
       </div>
 
-      <ProjectLightbox project={lightboxProject} onClose={() => setLightboxProject(null)} />
+      <ProjectLightbox projects={lightboxState?.projects} startIdx={lightboxState?.idx ?? 0} onClose={() => setLightboxState(null)} />
     </section>
   );
 }

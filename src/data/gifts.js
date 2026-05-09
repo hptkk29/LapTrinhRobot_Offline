@@ -29,7 +29,7 @@ export const gifts = [
   {
     id: 4,
     icon: '🎯',
-    title: '1 buổi học thử MIỄN PHÍ tại trung tâm',
+    title: '1 buổi học MIỄN PHÍ tại trung tâm',
     value: '1.000.000đ',
     description:
       '90 phút — con tự tay lập trình robot đầu tiên, bố mẹ ngồi quan sát trực tiếp.'
