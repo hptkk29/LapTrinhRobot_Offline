@@ -132,7 +132,7 @@ export const roadmap5Years = [
     name: 'Khơi Nguồn Sáng Tạo',
     academicName: 'Robotics Khơi Nguồn Sáng Tạo',
     grade: 'Lớp 5',
-    device: 'Hệ thống chuyên gia Storm',
+    device: 'Hệ sinh thái Storm',
     structure: '4 học phần × 12 buổi',
     color: 'primary-orange',
     description:
@@ -174,15 +174,15 @@ export const roadmap5Years = [
   makeCourse({
     year: 5,
     productCode: 'Sata7',
-    productName: 'Chấp Cánh Tương Lai',
-    name: 'Chấp Cánh Tương Lai',
+    productName: 'Chắp Cánh Tương Lai',
+    name: 'Chắp Cánh Tương Lai',
     academicName: 'Robotics Chắp Cánh Tương Lai',
     grade: 'Lớp 8',
     device: 'Storm + AI (Computer Vision Modules)',
     structure: '4 học phần × 12 buổi',
     color: 'primary-orange',
     description:
-      'Robotics Chấp Cánh Tương Lai cập nhật nội dung học thuật Chắp Cánh Tương Lai, tập trung vào AI, thị giác máy tính, logistics, AGV và capstone project.',
+      'Robotics Chắp Cánh Tương Lai cập nhật nội dung học thuật Chắp Cánh Tương Lai, tập trung vào AI, thị giác máy tính, logistics, AGV và capstone project.',
     mission:
       'Con đi qua quy trình AI đầy đủ: thu thập dữ liệu, training, triển khai, tinh chỉnh và bảo vệ giải pháp công nghệ trước hội đồng chuyên môn.',
     note: 'Phương pháp đào tạo: AI Workflow, Thu thập dữ liệu → Training → Triển khai → Tinh chỉnh, Capstone Project, bảo vệ giải pháp công nghệ trước hội đồng chuyên môn.',
