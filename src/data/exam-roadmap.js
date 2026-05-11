@@ -26,7 +26,7 @@ export const examRoadmap = [
     id: 'Sata1',
     displayName: 'Robosim Master',
     groupName: 'Khóa luyện thi',
-    educationLevel: 'Tiểu học',
+    educationLevel: 'Tiểu học, Trung học cơ sở',
     grade: 'Lớp 3-8',
     sessions: 16,
     totalDuration: '24 giờ',
@@ -50,7 +50,7 @@ export const examRoadmap = [
     id: 'Sata2',
     displayName: 'Đấu trường Robot',
     groupName: 'Khóa luyện thi',
-    educationLevel: 'Trung học cơ sở',
+    educationLevel: 'Tiểu học, Trung học cơ sở',
     grade: 'Lớp 3-8',
     sessions: 16,
     totalDuration: '24 giờ',
@@ -62,12 +62,12 @@ export const examRoadmap = [
       'Bồi dưỡng kỹ năng lập trình, lắp ráp Robotics, năng lực phối hợp đội thi và bản lĩnh thi đấu.',
     outcomes: [
       'Hiểu chức năng hệ cơ khí, truyền động, cảm biến và bộ điều khiển robot.',
-      'Lập trình robot xử lý nhiệm vụ thi đấu phù hợp cấp THCS.',
+      'Lập trình robot xử lý nhiệm vụ thi đấu .',
       'Phân tích đề bài, thử nghiệm và tối ưu chương trình.',
       'Làm việc nhóm, phối hợp đội thi và trình bày giải pháp kỹ thuật.'
     ],
     methods: ['Blended Learning', 'Flipped Classroom', 'Luyện tập theo nhiệm vụ bài thi', 'Tự học có hướng dẫn và kiểm soát'],
-    lessons: contestLessons.map((lesson) => lesson.replace('thi đấu', 'thi đấu cấp THCS')),
+    lessons: contestLessons,
     ...examDuration
   },
   {
